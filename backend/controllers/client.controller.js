@@ -71,7 +71,6 @@ export const clientLogin = async (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
 
-  console.log(email, password);
   User.find({ email: email })
     .then((data) => {
       if (data.length > 0) {
