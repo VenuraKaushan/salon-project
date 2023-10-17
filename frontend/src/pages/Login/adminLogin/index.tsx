@@ -11,6 +11,7 @@ import {
     rem,
   } from '@mantine/core';
 
+  import AdminAPI from '../../../API/adminAPI/admin.api';
   import {useForm} from "@mantine/form";
   import { showNotification } from '@mantine/notifications';
   import { IconX } from '@tabler/icons-react';
@@ -49,44 +50,44 @@ const AdminLoginPage = () =>{
     const { classes } = useStyles();
 
     //Checking login data
-    // const login = async (values: { emailOrNic: string; password: string }) => {
-    //   AdminAPI.login(values)
-    //     .then((response: any) => {
+    const login = async (values: { email: string; password: string }) => {
+      AdminAPI.login(values)
+        .then((response: any) => {
   
-    //       // save user details in the local storage
-    //       localStorage.setItem("user-admin-session",JSON.stringify(response.data));
+          // save user details in the local storage
+          localStorage.setItem("user-admin-session",JSON.stringify(response.data));
   
-    //       // navigate to the worker dashboard
-    //       window.location.href = '/admin/manageworker';
-    //     })
-    //     .catch((error) => {
-    //       showNotification({
-    //         title : 'User credentials are wrong',
-    //         message :"check your user credentials again",
-    //         color : "red",
-    //         autoClose:1500,
-    //         icon : <IconX size={16}/>
-    //       })
-    //     });
-    // };
+          // navigate to the worker dashboard
+          window.location.href = '/admin/dashboard';
+        })
+        .catch((error) => {
+          showNotification({
+            title : 'User credentials are wrong',
+            message :"check your user credentials again",
+            color : "red",
+            autoClose:1500,
+            icon : <IconX size={16}/>
+          })
+        });
+    };
 
 
     const loginForm = useForm({
         validateInputOnChange: true,
     
         initialValues: {
-          emailOrNic: "",
+          email: "",
           password: "",
         },
     
        // Validate data in real-time
     validate: {
-      emailOrNic: (value) => {
+      email: (value) => {
         if (!value) {
           return 'This field is required';
         }
-        if (!/^\S+@\S+$/.test(value) && !/^([0-9]{9}[v|V]|[0-9]{12})$/.test(value)) {
-          return 'Invalid  NIC';
+        if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value)) {
+          return 'Invalid Email';
         }
         return null;
       },
@@ -102,19 +103,19 @@ const AdminLoginPage = () =>{
       </Title>
 
       {/* form */}
-      {/* <form
+      <form
           onSubmit={loginForm.onSubmit(
-            (values: { emailOrNic: string; password: string }) => {
+            (values: { email: string; password: string }) => {
               login(values);
             }
           )}
         >
 
       <TextInput 
-        label=" NIC number"
-        placeholder="NIC"
+        label=" Email"
+        placeholder="Email"
         size="md"  
-        {...loginForm.getInputProps("emailOrNic")}/>
+        {...loginForm.getInputProps("email")}/>
 
       <PasswordInput 
         label="Password" 
@@ -128,7 +129,7 @@ const AdminLoginPage = () =>{
         Login
       </Button>
 
-      </form> */}
+      </form>
 
       
     </Paper>
