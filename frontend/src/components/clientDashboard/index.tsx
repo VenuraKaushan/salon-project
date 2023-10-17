@@ -225,13 +225,13 @@ const ClientDashboardHeader = () => {
         >
           <Tabs.List grow>{items}</Tabs.List>
 
-          <Tabs.Panel value="Received Tickets">
+          <Tabs.Panel value="Add Appointment">
             {/* <ReceivedTicketsTable /> */}
           </Tabs.Panel>
-          <Tabs.Panel value="Manage FAQ's">
+          <Tabs.Panel value="Past Appointment">
             {/* <ManageFAQ /> */}
           </Tabs.Panel>
-          <Tabs.Panel value="Generate Reports">
+          <Tabs.Panel value="Other Services">
             {/* <ReceivedTicketsTableForReportGeneration /> */}
           </Tabs.Panel>
         </Tabs>
