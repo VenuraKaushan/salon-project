@@ -118,11 +118,15 @@ const ClientLogingPage = () => {
     ClientAPI.login(values)
       .then((response: any) => {
 
-        // save user details in the local storage
-        localStorage.setItem("user-client-session", JSON.stringify(response.data));
-
+        // Save the user details in the local storage
+        const user = {
+          name: response.data.name, // Assuming the user data has a 'name' field
+          email: response.data.email, // Assuming the user data has an 'email' field
+        };
+        localStorage.setItem("user-client-session", JSON.stringify(user));
+        console.log(test);
         // navigate to the worker dashboard
-        window.location.href = '/client/profile';
+        window.location.href = '/client/dashboard';
       })
       .catch((error) => {
         showNotification({

@@ -6,6 +6,7 @@ const BASE_URL = "http://localhost:3001";
 class ClientAPI{
 
 
+    //reg to the system
     static clientReg (values : {name : string, email : string,password : string, phone : string,address:string}) {
         console.log(values);
         return axios.post(`${BASE_URL}/client/register`,values,{withCredentials:true});
