@@ -29,8 +29,8 @@ const ClientLogin = () =>{
         </Card.Section>
         <Card.Section>
           <Group position="center" grow m={10}>
-            {/* <Button color="blue" p={10} component="a" href="/login/client"> */}
-            <Button variant="gradient" component="a" href="/login/client" gradient={{ from: 'indigo', to: 'cyan' }}>
+            {/* <Button color="blue" p={10} component="a" href="/client/login"> */}
+            <Button variant="gradient" component="a" href="/client/login" gradient={{ from: 'indigo', to: 'cyan' }}>
               Client Login
             </Button>
           </Group>

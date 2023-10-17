@@ -2,6 +2,10 @@ import express from 'express';
 import "dotenv/config";
 import cors from 'cors';
 import dbConnect from './configs/dbConfig.js';
+import AdminRoutes from './routes/admin.routes.js';
+import ClientRoutes from './routes/client.routes.js';
+import cookieParser from "cookie-parser";
+
 
 //initialized express
 const app = express();
@@ -9,8 +13,11 @@ const app = express();
 // SERVER PORT
 const PORT = process.env.PORT || 6001;
 
-//initialized cors
-app.use(cors());
+// CORS [allow the pass the cookies to orin localhost]
+app.use(cors({credentials : true,origin : 'http://localhost:3000'}));
+
+// initialized cookie parser middleware
+app.use(cookieParser());
 
 // accept JSONS
 app.use(express.json());
@@ -28,6 +35,13 @@ app.use((req,res,next)=>{
 app.get("/",(req,res)=>{
     res.send("Welcome to Salon!"); 
 });
+
+
+// redirect to admin routes
+app.use('/admin',AdminRoutes);
+
+// redirects to client routes
+app.use('/client',ClientRoutes);
 
 app.listen(PORT,()=>{
     console.log(`🚀💀 Server is started on port ${PORT}!`);

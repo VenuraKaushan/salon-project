@@ -6,28 +6,34 @@ import {
   Button,
   Title,
   rem,
+  Modal,
+  Text,
 } from "@mantine/core";
 
-import { useForm } from "@mantine/form";
-import { showNotification } from "@mantine/notifications";
-import { IconX } from "@tabler/icons-react";
-// import ClientAPI from "../../../API/ClientAPI/Client.api";
+import { Form, useForm } from "@mantine/form";
+import { showNotification, updateNotification } from "@mantine/notifications";
+import {
+  IconX,
+  IconCheck,
+} from "@tabler/icons-react";
+import ClientAPI from "../../../API/client.api";
+import { useState } from "react";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
-    minHeight: rem(900),
+    minHeight: rem(700),
     backgroundSize: "cover",
     backgroundImage:
       "url(https://images.unsplash.com/photo-1484242857719-4b9144542727?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1280&q=80)",
   },
 
   form: {
-    borderRight: `${rem(1)} solid ${
-      theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.colors.gray[3]
-    }`,
-    minHeight: rem(900),
+    borderRight: `${rem(1)} solid ${theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.colors.gray[3]
+      }`,
+    minHeight: rem(500),
     maxWidth: rem(450),
-    paddingTop: rem(80),
+    paddingTop: rem(800),
+    marginLeft: rem(600),
 
     [theme.fn.smallerThan("sm")]: {
       maxWidth: "100%",
@@ -43,82 +49,223 @@ const useStyles = createStyles((theme) => ({
 // login component
 const ClientLogingPage = () => {
   const { classes } = useStyles();
+  const [regOpened, setRegOpened] = useState(false);
+
+  //declare edit form
+  const regForm = useForm({
+    validateInputOnChange: true,
+    initialValues: {
+      name: "",
+      email: "",
+      phone: "",
+      address: "",
+      password: "",
+
+    },
+  });
+
+  // Function to open the registration modal
+  const openRegistrationModal = () => {
+    setRegOpened(true);
+  };
+
+
+  //register function
+  const clientReg = async (values: {
+    name: string;
+    email: string;
+    password: string;
+    phone: string;
+    address: string;
+  }) => {
+    showNotification({
+      id: "Add Client",
+      loading: true,
+      title: "Adding Your record",
+      message: "Please wait while we add Your record..",
+      autoClose: false,
+    });
+    ClientAPI.clientReg(values)
+      .then((Response) => {
+        updateNotification({
+          id: "Add Client",
+          color: "teal",
+          title: "Adding Your record",
+          message: "Please wait while we add Your record..",
+          icon: <IconCheck />,
+          autoClose: 2500,
+        });
+
+        regForm.reset();
+        setRegOpened(false);
+
+      })
+      .catch((error) => {
+        updateNotification({
+          id: "Add Client",
+          color: "red",
+          title: "Something went wrong!",
+          message: "There is a problem when adding Your Details",
+          icon: <IconX />,
+          autoClose: 2500,
+        });
+      });
+
+  };
 
   // Checking login data
-  // const login = async (values: { nic: string; password: string }) => {
-  //   ClientAPI.login(values)
-  //     .then((response: any) => {
+  const login = async (values: { email: string; password: string }) => {
+    ClientAPI.login(values)
+      .then((response: any) => {
 
-  //       // save user details in the local storage
-  //       localStorage.setItem("user-worker-session",JSON.stringify(response.data));
+        // save user details in the local storage
+        localStorage.setItem("user-client-session", JSON.stringify(response.data));
 
-  //       // navigate to the worker dashboard
-  //       window.location.href = '/worker/managestock';
-  //     })
-  //     .catch((error) => {
-  //       showNotification({
-  //         title : 'User credentials are wrong',
-  //         message :"check your user credentials again",
-  //         color : "red",
-  //         autoClose:1500,
-  //         icon : <IconX size={16}/>
-  //       })
-  //     });
-  // };
+        // navigate to the worker dashboard
+        window.location.href = '/client/profile';
+      })
+      .catch((error) => {
+        showNotification({
+          title: 'User credentials are wrong',
+          message: "check your user credentials again",
+          color: "red",
+          autoClose: 1500,
+          icon: <IconX size={16} />
+        })
+      });
+  };
+
+
 
   const loginForm = useForm({
     validateInputOnChange: true,
 
     initialValues: {
-      nic: "",
+      email: "",
       password: "",
     },
 
     // validate data realtime
     validate: {
-      nic: (value) =>
-        /^([0-9]{9}[v|V]|[0-9]{12})$/.test(value) ? null : "Invalid NIC",
+      email: (value) => {
+        if (!value) {
+          return 'This field is required';
+        }
+        if (!/^\S+@\S+$/.test(value)) {
+          return 'Invalid  Email';
+        }
+        return null;
+      },
     },
   });
 
   return (
-    <div className={classes.wrapper}>
-      <Paper className={classes.form} radius={0} p={30}>
-        <Title order={2} className={classes.title} ta="center" mt="md" mb={50}>
-          Welcome back Client!
-        </Title>
+    <>
+      {/* client register modal */}
+      <Modal
+        opened={regOpened}
+        onClose={() => setRegOpened(false)}
+        size={"50%"}
+      >
+        <form
+          onSubmit={regForm.onSubmit((values) => clientReg(values))}
+        >
+          <Text fw={700} style={{ textAlign: "center" }}>Enter Your Details</Text>
 
-        {/* form */}
-        {/* <form
-          onSubmit={loginForm.onSubmit(
-            (values: { nic: string; password: string }) => {
-              login(values);
-            }
-          )}
-        > */}
-          {/* email */}
-          {/* <TextInput
-            label="NIC"
-            placeholder="871301450V"
-            size="md"
-            {...loginForm.getInputProps("nic")}
-          /> */}
-          {/* password */}
-          {/* <PasswordInput
+          <TextInput
+            placeholder="Enter Full Name"
+            label="Full Name"
+            {...regForm.getInputProps("name")}
+            radius="lg"
+            withAsterisk
+            required
+          />
+          <TextInput
+            placeholder="Enter Working Email"
+            label="Email"
+            {...regForm.getInputProps("email")}
+            radius="lg"
+            withAsterisk
+            required
+          />
+          <TextInput
+            placeholder="Enter Phone number"
+            label="Phone Number"
+            {...regForm.getInputProps("phone")}
+            radius="lg"
+            withAsterisk
+            required
+          />
+          <TextInput
+            placeholder="Enter Address"
+            label="Address"
+            {...regForm.getInputProps("address")}
+            radius="lg"
+            withAsterisk
+            required
+          />
+          <TextInput
+            placeholder="Enter Password"
             label="Password"
-            placeholder="Your password"
-            mt="md"
-            size="md"
-            {...loginForm.getInputProps("password")}
-          /> */}
+            {...regForm.getInputProps("password")}
+            radius="lg"
+            withAsterisk
+            required
+          />
 
-          {/* login button */}
-          {/* <Button fullWidth mt="xl" size="md" type="submit">
-            Login
-          </Button> */}
-        {/* </form> */}
-      </Paper>
-    </div>
+          <Button color="blue" radius="lg" type="submit"
+            style={{ marginLeft: "290px", marginTop: '10px' }}
+          >
+            Register
+          </Button>
+        </form>
+      </Modal>
+      <div className={classes.wrapper}>
+        <Paper className={classes.form} radius={0} p={30}>
+          <Title order={2} className={classes.title} ta="center" mt="md" mb={50}>
+            Welcome back!
+          </Title>
+
+          {/* form */}
+          <form
+            onSubmit={loginForm.onSubmit(
+              (values: { email: string; password: string }) => {
+                login(values);
+              }
+            )}
+          >
+            {/* email */}
+            <TextInput
+              label="Enter Your Email Address"
+              placeholder="Your email"
+              size="md"
+              {...loginForm.getInputProps("email")}
+            />
+            {/* password */}
+            <PasswordInput
+              label="Password"
+              placeholder="Your password"
+              mt="md"
+              size="md"
+              {...loginForm.getInputProps("password")}
+            />
+
+            {/* login button */}
+            <Button fullWidth mt="xl" size="md" type="submit">
+              Login
+            </Button>
+          </form>
+          {/* Link to registration page */}
+          <p>
+            If you don't have an account,{" "}
+            <a href="#" onClick={openRegistrationModal}>
+              register here
+            </a>
+            .
+          </p>
+        </Paper>
+      </div>
+    </>
   );
 };
 
