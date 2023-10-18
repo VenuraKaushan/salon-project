@@ -59,6 +59,9 @@ export const registerClient = async (req, res) => {
     });
 
     const savedClient = await newClient.save();
+
+    console.log(savedClient)
+
     res.status(201).json(savedClient);
   } catch (error) {
     res.status(500).json({ message: "Failed to register to the system", error });
