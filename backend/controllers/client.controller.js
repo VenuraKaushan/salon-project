@@ -58,6 +58,9 @@ export const registerClient = async (req, res) => {
       address: req.body.address,
     });
 
+    console.log(newClient);
+
+
 
     const savedClient = await newClient.save();
 
