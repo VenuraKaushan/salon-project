@@ -8,6 +8,7 @@ import ClientDashboar from "../pages/clientDashboard";
 //admin
 import AdminLoginPage from "../pages/Login/adminLogin";
 import AdminDashboard from "../pages/adminDashboard";
+import CatalogPage from "../pages/CatalogPage";
 
 const AllRoutes = () => {
   const client = new QueryClient();//config query client
@@ -23,6 +24,8 @@ const AllRoutes = () => {
         {/* admin route */}
         <Route path="/login/admin" element={<AdminLoginPage />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        <Route path="/admin/catalog" element={<CatalogPage />} />
+
 
       </Routes>
     </Router>
