@@ -1,5 +1,5 @@
 import react from 'react';
-import { Group, Code, ScrollArea, rem, createStyles } from '@mantine/core';
+import { Group ,Code, ScrollArea, rem, createStyles} from '@mantine/core';
 import {LinksGroup} from '../adminDashboard/linkGroup'
 import {UserButton} from '../adminDashboard/userButton'
 import {
@@ -23,7 +23,7 @@ import {
         paddingBottom: 0,
         display: 'flex',
         flexDirection: 'column',
-        borderRight: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]}`,
+        borderRight: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[3] : theme.colors.gray[4]}`,
       },
 
     header: {
@@ -103,16 +103,18 @@ import {
   ];
 
 const AdminDashboardNav = () => {
+    const name = localStorage.getItem("name");
     const {classes, cx} = adminDashboardNav();
     const links = mockdata.map((item) => <LinksGroup {...item} key={item.label} />);
+
   return (
     <nav className={classes.navbar}>
       <div className={classes.header}>
-        <Group>
-            <h3>Admin Dashboard</h3>
-          {/* <Logo style={{ width: rem(120) }} /> */}
-          {/* <Code fw={700}>v3.1.2</Code> */}
-        </Group>
+        <h3>Admin Dashboard</h3>
+          <Group>
+              <Code fw={700}>User : </Code> 
+              <Code fw={900}>{name}</Code>
+          </Group>
       </div>
 
       <ScrollArea className={classes.links}>
