@@ -17,6 +17,11 @@ const userButton = createStyles((theme) => ({
 
 export function UserButton() {
     const {classes, cx} = userButton();
+
+    //retrieving user details from local storage
+    const name = localStorage.getItem("name");
+    const email = localStorage.getItem("email");
+
   return (
     <UnstyledButton className={classes.user}>
       <Group>
@@ -27,11 +32,11 @@ export function UserButton() {
 
         <div style={{ flex: 1 }}>
           <Text size="sm" fw={500}>
-            Harriette Spoonlicker
+            {name}
           </Text>
 
           <Text c="dimmed" size="xs">
-            hspoonlicker@outlook.com
+           {email}
           </Text>
         </div>
 

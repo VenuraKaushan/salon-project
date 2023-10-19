@@ -56,6 +56,8 @@ const AdminLoginPage = () =>{
   
           // save user details in the local storage
           localStorage.setItem("user-admin-session",JSON.stringify(response.data));
+          localStorage.setItem("name",response.data.name);
+          localStorage.setItem("email",response.data.email);
   
           // navigate to the worker dashboard
           window.location.href = '/admin/dashboard';

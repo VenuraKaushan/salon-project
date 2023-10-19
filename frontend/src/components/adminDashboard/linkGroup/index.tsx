@@ -33,7 +33,7 @@ const linkGroup = createStyles((theme) => ({
     
         '&:hover': {
           backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[0],
-          color: theme.colorScheme === 'dark' ? theme.colors.dark[3] : theme.colors.black,
+          color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.colors.black,
         },
       },
     
