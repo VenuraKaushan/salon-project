@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Group, Code, createStyles, rem, getStylesRef } from '@mantine/core';
+import { Group, Code, createStyles, rem, getStylesRef, Navbar } from '@mantine/core';
 import {
   IconBellRinging,
   IconFingerprint,
@@ -16,34 +16,23 @@ import {
   IconBuildingStore,
   IconLock
 } from '@tabler/icons-react';
-// import { MantineLogo } from '@mantine/ds';
-// import classes from './NavbarSimple.module.css';
 
 const adminDashboardNav = createStyles((theme) => ({
-
-  navbar: {
-    height: `${rem(700)}`,
-    width: `${rem(300)}`,
-    padding: theme.spacing.md,
-    display: 'flex',
-    flexDirection: 'column',
-    borderRight: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[3] : theme.colors.gray[4]}`,
-  },
-
-  navbarMain: {
-    flex: 1,
-  },
 
   header: {
     paddingBottom: theme.spacing.md,
     marginBottom: `calc(${theme.spacing.md} * 1.5)`,
-    borderBottom: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]}`,
+    borderBottom: `${rem(1)} solid ${
+      theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[2]
+    }`,
   },
 
   footer: {
     paddingTop: theme.spacing.md,
     marginTop: theme.spacing.md,
-    borderTop: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]}`,
+    borderTop: `${rem(1)} solid ${
+      theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[2]
+    }`,
   },
 
   link: {
@@ -136,27 +125,30 @@ const AdminDashboardNav = ({link_id} : any) => {
   ));
 
   return (
-    <nav className={classes.navbar}>
-      <div className={classes.navbarMain}>
-        <Group className={classes.header} style={{ justifyContent:'space-between' }} >
-          {/* <MantineLogo size={28} /> */}
-          <Code fw={700}>v3.1.2</Code>
-        </Group>
-        {items}
-      </div>
+    <div  style={{ display: "grid", gridTemplateColumns: "250px 1fr" }}>
+    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <Navbar width={{ sm: 250 }} p="md" style={{ flex: 1 }}>
+        <Navbar.Section grow>
+          <Group className={classes.header} position="apart">
+          </Group>
+          {items}
+        </Navbar.Section>
 
-      <div className={classes.footer}>
-        <a href="#" className={classes.link} onClick={(event) => event.preventDefault()}>
-          <IconSwitchHorizontal className={classes.linkIcon} stroke={1.5} />
-          <span>Change account</span>
-        </a>
-
-        <a href="#" className={classes.link} onClick={(event) => event.preventDefault()}>
-          <IconLogout className={classes.linkIcon} stroke={1.5} />
-          <span>Logout</span>
-        </a>
-      </div>
-    </nav>
+        <Navbar.Section className={classes.footer} >
+          <a
+          
+            href="/admin/logout"
+            className={classes.link}
+          >
+            <IconLogout className={classes.linkIcon} stroke={1.5} />
+            <span >Logout</span>
+          </a>
+        </Navbar.Section>
+      </Navbar>
+    </div>
+    <div>
+    </div>
+  </div>
   )
 }
 
