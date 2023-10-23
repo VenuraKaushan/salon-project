@@ -27,7 +27,7 @@ import {
   IconAlignJustified,
 } from "@tabler/icons-react";
 import Logo from "../../assets/userlogo.png"
-
+import ManageAppointment from "../appointmentMange";
 
 // Custom Theme
 const useStyles = createStyles((theme) => ({
@@ -118,8 +118,7 @@ const user = {
     "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=255&q=80",
 };
 const tabs = [
-  { tab: "Add Appointment", icon: <IconAlignJustified size={10} /> },
-  { tab: "Past Appointment", icon: null },
+  { tab: "Appointment", icon: <IconAlignJustified size={10} /> },
   { tab: "Other Services", icon: null },
 
 ];
@@ -215,7 +214,7 @@ const ClientDashboardHeader = () => {
       </div>
       <Container size="md">
         <Tabs
-          defaultValue="Add Appointment"
+          defaultValue="Appointment"
           variant="outline"
           classNames={{
             root: classes.tabs,
@@ -225,12 +224,10 @@ const ClientDashboardHeader = () => {
         >
           <Tabs.List grow>{items}</Tabs.List>
 
-          <Tabs.Panel value="Add Appointment">
-            {/* <ReceivedTicketsTable /> */}
+          <Tabs.Panel value="Appointment">
+            {/* <ManageAppointment /> */}
           </Tabs.Panel>
-          <Tabs.Panel value="Past Appointment">
-            {/* <ManageFAQ /> */}
-          </Tabs.Panel>
+          
           <Tabs.Panel value="Other Services">
             {/* <ReceivedTicketsTableForReportGeneration /> */}
           </Tabs.Panel>

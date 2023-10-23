@@ -16,7 +16,7 @@ import {
   IconX,
   IconCheck,
 } from "@tabler/icons-react";
-import ClientAPI from "../../../API/client.api";
+import ClientAPI from "../../../API/clientAPI/client.api";
 import { useState } from "react";
 
 const useStyles = createStyles((theme) => ({
@@ -51,7 +51,7 @@ const ClientLogingPage = () => {
   const { classes } = useStyles();
   const [regOpened, setRegOpened] = useState(false);
 
-  //declare edit form
+  //declare reg form
   const regForm = useForm({
     validateInputOnChange: true,
     initialValues: {

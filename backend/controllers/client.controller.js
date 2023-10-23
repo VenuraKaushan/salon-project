@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 
 
 //generate client Id
-const generateWClientId = async () => {
+const generateClientId = async () => {
   //get last client object, if there is a client, then return that client object, otherwise return empty array
   const lastClientDetails = await User.find({ role: "CLIENT" }).sort({ _id: -1 }).limit(1);
 
@@ -41,7 +41,7 @@ export const registerClient = async (req, res) => {
     }
 
     // generating the custom ID
-    const customId = await generateWClientId();
+    const customId = await generateClientId();
 
     // hashing the password
     const salt = await bcrypt.genSalt(10);
@@ -59,8 +59,6 @@ export const registerClient = async (req, res) => {
     });
 
     console.log(newClient);
-
-
 
     const savedClient = await newClient.save();
 
