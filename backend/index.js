@@ -5,7 +5,7 @@ import dbConnect from './configs/dbConfig.js';
 import AdminRoutes from './routes/admin.routes.js';
 import ClientRoutes from './routes/client.routes.js';
 import cookieParser from "cookie-parser";
-
+import AppointmentRoutes from "./routes/appointment.routes.js";
 
 //initialized express
 const app = express();
@@ -42,6 +42,10 @@ app.use('/admin',AdminRoutes);
 
 // redirects to client routes
 app.use('/client',ClientRoutes);
+
+// redirects to appointment routes
+app.use('/appointment',AppointmentRoutes)
+
 
 app.listen(PORT,()=>{
     console.log(`🚀💀 Server is started on port ${PORT}!`);
