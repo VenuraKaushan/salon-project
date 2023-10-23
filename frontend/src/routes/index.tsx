@@ -9,6 +9,7 @@ import ManageAppointment from "../components/appointmentMange";
 //admin
 import AdminLoginPage from "../pages/Login/adminLogin";
 import AdminDashboard from "../pages/adminDashboard";
+import CatalogPage from "../pages/CatalogPage";
 
 const AllRoutes = () => {
   const client = new QueryClient();//config query client
@@ -32,6 +33,7 @@ const AllRoutes = () => {
           </Routes>
         </Router>
       </QueryClientProvider>
+
     </div>
   );
 };
