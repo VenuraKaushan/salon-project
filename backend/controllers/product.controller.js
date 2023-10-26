@@ -34,6 +34,7 @@ export const addProduct = async (req, res) => {
       const newProduct = new Product({
         product_id: customStockId,
         name: req.body.name,
+        brand: req.body.brand,
         price: req.body.price,
         description: req.body.description,
         category: req.body.category,
@@ -64,3 +65,54 @@ export const getAllItems = async (req, res) => {
   }
 };
 
+
+//update product details
+export const updateProduct = async (req, res) => {
+  const product_id = req.params.id;
+
+  console.log(req.body);
+  const updateFields = {
+    name: req.body.name,
+    brand: req.body.brand,
+    price: req.body.price,
+    description: req.body.description,
+    category: req.body.category,
+    code: req.body.code,
+    quantity: req.body.quantity,
+  };
+
+  try {
+    const updateProduct = await Product.findByIdAndUpdate(
+      product_id,
+      updateFields,
+      { new: true }
+    );
+
+    if (!updateProduct) {
+      // If the product is not found, send a 404 status code with a message
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    res.status(200).json(updateProduct); // Send the updated Product as the response
+  } catch (error) {
+    res.status(500).json({ message: "Failed to update Product", error });
+  }
+};
+
+//delete product details
+export const deleteProduct = async (req, res) => {
+  const _id = req.params.id;
+
+  try {
+    const productDelete = await Product.findByIdAndDelete(_id);
+
+    if (!productDelete) {
+      // If the product is not found, send a 404 status code with a message
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    res.status(200).json({ message: "Product deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to delete Product", error });
+  }
+};

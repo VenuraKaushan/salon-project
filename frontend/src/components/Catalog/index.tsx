@@ -12,12 +12,16 @@ import {
   LoadingOverlay,
   Modal,
   Select,
+  Tooltip,
+  ActionIcon,
+  Progress 
 } from '@mantine/core';
 import {
   IconSearch,
   IconCheck,
   IconX,
   IconPlus,
+  IconEdit,
 } from '@tabler/icons-react';
 import { useForm } from '@mantine/form';
 import { showNotification, updateNotification } from '@mantine/notifications';
@@ -63,6 +67,7 @@ const useStyles = createStyles((theme) => ({
 
 interface Data {
   name: string;
+  brand: string;
   price: string;
   description: string;
   category: string;
@@ -88,9 +93,11 @@ const Catalog = () => {
     { initialData: [] }
   );
 
+  //define form for adding   
   const productForm = useForm({
     initialValues: {
       name: '',
+      brand: '',
       price: '',
       description: '',
       category: '',
@@ -99,6 +106,22 @@ const Catalog = () => {
     },
   });
 
+  //define form for editing
+  const productEditForm = useForm({
+    initialValues: {
+      _id: '',
+      product_id: '',
+      name: '',
+      brand: '',
+      price: '',
+      description: '',
+      category: '',
+      code: '',
+      quantity: '',
+    },
+  });
+
+  //add product
   const addProduct = async (values: Data) => {
     try {
       const response = await ProductsAPI.addProduct(values);
@@ -126,6 +149,56 @@ const Catalog = () => {
     }
   };
 
+  //edit product details
+  const updateProduct = async (values: {
+        _id: string;
+        product_id: string;
+        name: string;
+        brand: string;
+        price: string;
+        description: string;
+        category: string;
+        code: string;
+        quantity: string;
+  }) => {
+    showNotification({
+      id: "update-Product",
+      loading: true,
+      title: "Updating Product record",
+      message: "Please wait while we update Product record..",
+      autoClose: false,
+    });
+    ProductsAPI.updateProduct(values)
+      .then((response) => {
+        updateNotification({
+          id: "update-Product",
+          color: "teal",
+          icon: <IconCheck />,
+          title: "Product updated successfully",
+          message: "Product data updated successfully.",
+          //icon: <IconCheck />,
+          autoClose: 5000,
+        });
+        productForm.reset();
+        close();
+
+        //getting updated items from database
+        refetch();
+      })
+      .catch((error) => {
+        updateNotification({
+          id: "update-Product",
+          color: "red",
+          title: "Product updating failed",
+          icon: <IconX />,
+          message: "We were unable to update the Product",
+          // icon: <IconAlertTriangle />,
+          autoClose: 5000,
+        });
+      });
+  };
+
+
   if (isLoading) {
     return <LoadingOverlay visible={isLoading} overlayBlur={2} />;
   }
@@ -138,6 +211,18 @@ const Catalog = () => {
       color: 'red',
       icon: <IconX />,
     });
+  }
+
+  // Add this function to calculate the availability percentage
+  function calculateAvailabilityPercentage(quantity: number) {
+    // Define a threshold for what is considered "available"
+    const availableThreshold = 50; 
+
+    // Calculate the percentage
+    const percentage = (quantity / availableThreshold) * 100;
+
+    // Ensure the percentage is within the range [0, 100]
+    return Math.min(100, Math.max(0, percentage));
   }
 
   const rows = Array.isArray(data)
@@ -165,6 +250,54 @@ const Catalog = () => {
           <td>
             <Text size={15}>{row.quantity}</Text>
           </td>
+          <td>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            {/* <div style={{ flex: 1 }}>
+              <Text size={15}>{row.quantity}</Text>
+            </div> */}
+            <div style={{ flex: 2 }}>
+              <Progress
+                value={calculateAvailabilityPercentage(Number(row.quantity))}
+                color={
+                  calculateAvailabilityPercentage(Number(row.quantity)) >= 50
+                    ? 'green'
+                    : 'red'
+                }
+              />
+            </div>
+          </div>
+        </td>
+          <td>
+            {
+              <>
+                <Group spacing={"sm"}>
+                  {/* edit button */}
+                  <Tooltip label="Edit Product">
+                    <ActionIcon
+                      color="teal"
+                      onClick={() => {
+                        productEditForm.setValues({
+                          _id: row._id,
+                          product_id: row.product_id,
+                          name: row.name,
+                          brand: row.brand,
+                          price: row.price,
+                          description: row.description,
+                          category: row.category,
+                          code: row.code,
+                          quantity: row.quantity,
+                        });
+                        open();
+                      }}
+                    >
+                      <IconEdit size={30} />
+                    </ActionIcon>
+                  </Tooltip>
+
+                </Group>
+              </>
+            }
+          </td>
         </tr>
       ))
     : null;
@@ -185,6 +318,7 @@ const Catalog = () => {
 
   return (
     <>
+      {/* Add new product modal */}
       <Modal
         opened={opened}
         onClose={() => {
@@ -203,6 +337,14 @@ const Catalog = () => {
             placeholder="Enter product name"
             required
             {...productForm.getInputProps('name')}
+          />
+
+          <TextInput
+            name="barnd"
+            label="Brand Name"
+            placeholder="Enter brand name"
+            required
+            {...productForm.getInputProps('brand')}
           />
 
           <TextInput
@@ -248,6 +390,86 @@ const Catalog = () => {
             placeholder="Enter quantity"
             required
             {...productForm.getInputProps('quantity')}
+          />
+
+          <Button color="blue" sx={{ marginTop: '10px', width: '100%' }} type="submit">
+            Save
+          </Button>
+        </form>
+      </Modal>
+
+      {/* Edit product modal */}
+      <Modal
+        opened={opened}
+        onClose={() => {
+          productEditForm.reset();
+          close();
+        }}
+        overlayProps={{
+          blur: 3,
+        }}
+        title="Add New Product"
+      >
+        <form onSubmit={productEditForm.onSubmit((values) => updateProduct(values))}>
+          <TextInput
+            label="Product Name"
+            name="name"
+            placeholder="Enter product name"
+            required
+            {...productEditForm.getInputProps('name')}
+          />
+
+          <TextInput
+            name="barnd"
+            label="Brand Name"
+            placeholder="Enter brand name"
+            required
+            {...productEditForm.getInputProps('brand')}
+          />
+
+          <TextInput
+            name="price"
+            label="Price"
+            placeholder="Enter price"
+            required
+            {...productEditForm.getInputProps('price')}
+          />
+
+          <TextInput
+            name="description"
+            label="Description"
+            placeholder="Enter description"
+            required
+            {...productEditForm.getInputProps('description')}
+          />
+
+          <Select
+            name="category"
+            label="Category"
+            placeholder="Select category"
+            required
+            data={[
+              { value: 'face', label: 'Face' },
+              { value: 'hair', label: 'Hair' },
+              { value: 'body', label: 'Body' },
+            ]}
+            {...productEditForm.getInputProps('category')}
+          />
+
+          <TextInput
+            label="Code"
+            name="code"
+            placeholder="Enter Code"
+            required
+            {...productEditForm.getInputProps('code')}
+          />
+
+          <TextInput
+            name="quantity"
+            label="Quantity"
+            placeholder="Enter quantity"
+            required
+            {...productEditForm.getInputProps('quantity')}
           />
 
           <Button color="blue" sx={{ marginTop: '10px', width: '100%' }} type="submit">
