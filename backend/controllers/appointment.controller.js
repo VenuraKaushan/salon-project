@@ -94,5 +94,25 @@ export const addGuestAppointment = async (req, res) => {
     }
 };
 
+export const checkDate = async (req, res) => {
 
+    try {
+        const date = req.body.date
+
+        // Use Mongoose to find all appointments with the given date
+        const appointments = await Appointment.find({ date })
+
+        // Extract the appointment times from the appointments
+        const appointmentTimes = appointments.map(appointment => appointment.time);
+
+        console.log(appointmentTimes)
+        res.status(200).json(appointmentTimes);
+
+
+    } catch (error) {
+        res.status(500).json({ message: "Failed to retrieve appointment times", error });
+
+
+    }
+}
 

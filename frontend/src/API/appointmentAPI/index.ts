@@ -11,12 +11,18 @@ class AppointmentAPI{
         clientEmail:string,
         clientPhone:string,
         time :Date,
-        date :string,
         serviceType :string,
     }){
         console.log(values)
         return axios.post(`${BASE_URL}/appointment/add`,values,{withCredentials:true});
 
+    };
+
+    static checkDate (values:{
+        date:string,
+    }){
+        console.log(values)
+        return axios.post(`${BASE_URL}/appointment/date`,values,{withCredentials:true});
     }
 
 
