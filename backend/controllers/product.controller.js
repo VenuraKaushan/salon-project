@@ -40,6 +40,10 @@ export const addProduct = async (req, res) => {
         category: req.body.category,
         code: req.body.code,
         quantity: req.body.quantity,
+        added_date: req.body.added_date,
+        expire_date: req.body.expire_date,
+        supplier: req.body.supplier,
+        // image: req.body.image,
 
       });
   
@@ -79,6 +83,9 @@ export const updateProduct = async (req, res) => {
     category: req.body.category,
     code: req.body.code,
     quantity: req.body.quantity,
+    added_date: req.body.added_date,
+    expire_date: req.body.expire_date,
+    supplier: req.body.supplier,
   };
 
   try {

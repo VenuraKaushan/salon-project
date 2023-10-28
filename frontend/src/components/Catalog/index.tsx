@@ -14,7 +14,8 @@ import {
   Select,
   Tooltip,
   ActionIcon,
-  Progress 
+  Progress, 
+  Box,
 } from '@mantine/core';
 import {
   IconSearch,
@@ -22,11 +23,14 @@ import {
   IconX,
   IconPlus,
   IconEdit,
+  IconFileBarcode,
 } from '@tabler/icons-react';
 import { useForm } from '@mantine/form';
 import { showNotification, updateNotification } from '@mantine/notifications';
 import ProductsAPI from '../../API/productsAPI/products.api';
 import { useQuery } from '@tanstack/react-query';
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import { ProductPDF } from '../PDFRender/productPDF';
 
 const useStyles = createStyles((theme) => ({
   tableHeader: {
@@ -73,6 +77,10 @@ interface Data {
   category: string;
   code: string;
   quantity: string;
+  added_date: string;
+  expire_date: string;
+  supplier: string;
+  image: any;
 }
 
 const Catalog = () => {
@@ -103,6 +111,10 @@ const Catalog = () => {
       category: '',
       code: '',
       quantity: '',
+      added_date:'',
+      expire_date:'',
+      supplier:'',
+      image: '',
     },
   });
 
@@ -118,6 +130,9 @@ const Catalog = () => {
       category: '',
       code: '',
       quantity: '',
+      added_date:'',
+      expire_date:'',
+      supplier:'',
     },
   });
 
@@ -160,6 +175,9 @@ const Catalog = () => {
         category: string;
         code: string;
         quantity: string;
+        added_date:string;
+        expire_date:string;
+        supplier:string;
   }) => {
     showNotification({
       id: "update-Product",
@@ -198,25 +216,10 @@ const Catalog = () => {
       });
   };
 
-
-  if (isLoading) {
-    return <LoadingOverlay visible={isLoading} overlayBlur={2} />;
-  }
-
-  if (isError) {
-    showNotification({
-      title: 'Something went wrong!',
-      message: 'There was an error while fetching data',
-      autoClose: 1500,
-      color: 'red',
-      icon: <IconX />,
-    });
-  }
-
   // Add this function to calculate the availability percentage
   function calculateAvailabilityPercentage(quantity: number) {
     // Define a threshold for what is considered "available"
-    const availableThreshold = 50; 
+    const availableThreshold = 10; 
 
     // Calculate the percentage
     const percentage = (quantity / availableThreshold) * 100;
@@ -243,12 +246,23 @@ const Catalog = () => {
           <td>
             <Text size={15}>{row.category}</Text>
           </td>
-
+          <td>
+            <Text size={15}>{row.price}</Text>
+          </td>
+          <td>
+            <Text size={15}>{row.price}</Text>
+          </td>
           <td>
             <Text size={15}>{row.price}</Text>
           </td>
           <td>
             <Text size={15}>{row.quantity}</Text>
+          </td>
+          <td>
+            <Text size={15}>{row.quantity}</Text>
+          </td>
+          <td>
+            <Text size={15}>{row.added_date}</Text>
           </td>
           <td>
           <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -259,7 +273,7 @@ const Catalog = () => {
               <Progress
                 value={calculateAvailabilityPercentage(Number(row.quantity))}
                 color={
-                  calculateAvailabilityPercentage(Number(row.quantity)) >= 50
+                  calculateAvailabilityPercentage(Number(row.quantity)) >= 10
                     ? 'green'
                     : 'red'
                 }
@@ -316,8 +330,15 @@ const Catalog = () => {
     });
   }
 
+
+  
+
+
   return (
-    <>
+    <Box
+    sx={{justifyContent: "space-between" }}
+      pos="relative"
+      >
       {/* Add new product modal */}
       <Modal
         opened={opened}
@@ -411,6 +432,12 @@ const Catalog = () => {
         title="Add New Product"
       >
         <form onSubmit={productEditForm.onSubmit((values) => updateProduct(values))}>
+        <TextInput
+            label="Product Id"
+            name="product_id"
+            disabled
+            {...productEditForm.getInputProps('product_id')}
+          />
           <TextInput
             label="Product Name"
             name="name"
@@ -491,6 +518,18 @@ const Catalog = () => {
         <Button leftIcon={<IconPlus size={20} />} ml={10} onClick={open}>
           Add New Product
         </Button>
+        <PDFDownloadLink
+              document={<ProductPDF data={data} />}
+              fileName={`Product Report ${new Date().toLocaleDateString()}`}
+            >
+              <Button
+                variant="outline"
+                ml={10}
+                leftIcon={<IconFileBarcode size={20} />}
+              >
+                Generate Report
+              </Button>
+        </PDFDownloadLink>
       </div>
 
       <div>
@@ -504,6 +543,7 @@ const Catalog = () => {
             horizontalSpacing={30}
             verticalSpacing="lg"
             miw={700}
+            sx={{ tableLayout: "fixed" }}
           >
             <thead className={cx(classes.header, classes.tableHeader, { [classes.scrolled]: scrolled })}>
               <tr>
@@ -512,8 +552,12 @@ const Catalog = () => {
                 <th>Name</th>
                 <th>Brand</th>
                 <th>Category</th>
-                <th>Unit Price</th>
+                <th>Total Price(rs.)</th>
+                <th>Acutal Price(rs.)</th>
+                <th>Selling Price(rs.)</th>
                 <th>Quantity</th>
+                <th>Sold</th>
+                <th>Added Date</th>
                 <th>Available</th>
                 <th>Action</th>
               </tr>
@@ -539,7 +583,7 @@ const Catalog = () => {
           </Table>
         </ScrollArea>
       </div>
-    </>
+    </Box>
   );
 };
 
