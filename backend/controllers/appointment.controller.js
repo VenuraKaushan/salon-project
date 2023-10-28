@@ -42,77 +42,73 @@ export const addGuestAppointment = async (req, res) => {
             date: req.body.date,
         });
 
-        //get last Appointment object, if there is a Appointment, then return that Appointment object, otherwise return empty array
-        const lastGuestAppointment = await Appointment.findOne({ role: "GUEST" }).sort({ _id: -1 }).select('time');
+        console.log(newAppointment);
 
-        if (lastGuestAppointment) {
-            const lastGuestAppointmentTime = lastGuestAppointment.time;
-            console.log("Original Time:", lastGuestAppointmentTime);
+        const savedAppointment = await newAppointment.save()
 
-            // Split the time into hours, minutes, and period (AM or PM)
-            const timeParts = lastGuestAppointmentTime.split(' ');
-            const time = timeParts[0]; // "HH:mm"
-            const period = timeParts[1]; // "AM" or "PM"
-
-            // Split the time into hours and minutes
-            const [hours, minutes] = time.split(':').map(Number);
-
-            // Convert to 24-hour format
-            let updatedHours = hours;
-            if (period === 'PM' && hours !== 12) {
-                updatedHours += 12;
-            }
-
-            // Add one hour
-            updatedHours += 1;
-
-            // Format hours and minutes as "HH:mm"
-            const updatedTime = `${updatedHours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
-
-            console.log("Updated Time:", updatedTime);
-
-            if (lastGuestAppointmentTime === newAppointment.time) {
-                res.status(400).send("There is already an appointment within one hour of your requested time. Please choose another time.");
-
-            }
-            else if (updatedTime <= newAppointment.time) {
-
-                const savedAppointment = await newAppointment.save();
-                res.status(201).json(savedAppointment);
-            }
-            else {
-                res.status(400).send("There is already an appointment within one hour of your requested time. Please choose another time.");
-            }
-        } else {
-            // Handle the case where there are no "GUEST" appointments.
-            console.log("No GUEST appointments found.");
-        }
-
+        res.status(201).json(savedAppointment);
 
     } catch (error) {
         res.status(500).json({ message: "Failed to add Appointment", error });
     }
 };
 
-export const checkDate = async (req, res) => {
 
+export const checkDate = async (req, res) => {
     try {
-        const date = req.body.date
+        const date = req.body.date;
+        const booked = [];
+        const free = [];
 
         // Use Mongoose to find all appointments with the given date
-        const appointments = await Appointment.find({ date })
+        const appointments = await Appointment.find({ date });
 
-        // Extract the appointment times from the appointments
-        const appointmentTimes = appointments.map(appointment => appointment.time);
+        // Get all appointments time
+        appointments.forEach((index) => {
+            if (index.status === "PENDING") {
+                booked.push(index.time);
+            }
+        });
 
-        console.log(appointmentTimes)
-        res.status(200).json(appointmentTimes);
+        console.log("Booked slots:", booked);
 
+        // Generate times between 8:00 AM and 9:00 PM
+        const startTime = new Date();
+        startTime.setHours(8, 0, 0, 0);
+        const endTime = new Date();
+        endTime.setHours(21, 0, 0, 0);
 
+        const currentTime = new Date(startTime);
+
+        // Function to check if a time is at least 60 minutes away from any other time
+        const isTimeFree = (timeToCheck) => {
+            for (const bookedTime of booked) {
+                const bookedDate = new Date(`2000-01-01 ${bookedTime}`);
+                const currentDate = new Date(`2000-01-01 ${timeToCheck}`);
+                const diffInMinutes = (bookedDate - currentDate) / (1000 * 60);
+                if (Math.abs(diffInMinutes) < 60) {
+                    return false;
+                }
+            }
+            return true;
+        };
+
+        // Loop through times and check if they are in the booked array and have at least 60 minutes before and after
+        while (currentTime <= endTime) {
+            const timeString = currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            if (!booked.includes(timeString) && isTimeFree(timeString)) {
+                free.push(timeString);
+            }
+
+            currentTime.setMinutes(currentTime.getMinutes() + 60); // Increment by 15 minutes
+        }
+
+        console.log("Free slots:", free);
+
+        res.status(200).json({ free });
     } catch (error) {
-        res.status(500).json({ message: "Failed to retrieve appointment times", error });
-
-
+        res.status(500).json({ message: "Failed to Check appointment times", error });
     }
 }
+
 

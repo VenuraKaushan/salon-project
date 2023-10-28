@@ -10,8 +10,9 @@ class AppointmentAPI{
         clientName:string,
         clientEmail:string,
         clientPhone:string,
-        time :Date,
+        time :String,
         serviceType :string,
+        date :string,
     }){
         console.log(values)
         return axios.post(`${BASE_URL}/appointment/add`,values,{withCredentials:true});

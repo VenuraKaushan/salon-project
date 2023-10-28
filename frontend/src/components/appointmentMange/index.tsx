@@ -1,5 +1,5 @@
 import {
-    Box, Button, Modal, TextInput, Text, ActionIcon, ScrollArea
+    Box, Button, Modal, TextInput, Text, ActionIcon, ScrollArea, Table, Badge, Center
 } from '@mantine/core';
 import { showNotification, updateNotification } from '@mantine/notifications';
 import AppointmentAPI from '../../API/appointmentAPI';
@@ -12,14 +12,17 @@ import {
 } from "@tabler/icons-react";
 import { useState } from "react";
 import { TimeInput, DateInput, DateTimePicker } from '@mantine/dates';
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 
 const ManageAppointment = () => {
     const [appointmentOpended, setAppointmentOpended] = useState(false);
     const timeInputRef = useRef<HTMLInputElement | null>(null);
     const [dateModalOpened, setDateModalOpened] = useState(false);
-    const [appointmentTimes, setAppointmentTimes] = useState([]); // Initialize with an empty array
+    const [appointmentTime, setAppointmentTime] = useState([]); // Initialize with an empty array
     const [timeSlotOpened, setTimeSlotOpened] = useState(false);
+    const [selectedTimeSlot, setSelectedTimeSlot] = useState("");
+    const [selectedDate, setSelectedDate] = useState(""); // Add selectedDate state
+
 
     //declare add date form
     const dateForm = useForm({
@@ -30,7 +33,6 @@ const ManageAppointment = () => {
         },
     });
 
-
     //declare add appointment form
     const appointmentForm = useForm({
         validateInputOnChange: true,
@@ -38,15 +40,22 @@ const ManageAppointment = () => {
             clientName: "",
             clientEmail: "",
             clientPhone: "",
-            time: new Date(),
+            time: selectedTimeSlot,
             serviceType: "",
 
         },
     });
 
+    useEffect(() => {
+        appointmentForm.setFieldValue("time", selectedTimeSlot);
+    }, [selectedTimeSlot]);
+
     // Function to open the appointment modal
     const openAppointmentModal = () => {
         setAppointmentOpended(true);
+        setTimeSlotOpened(false);
+
+        console.log(selectedTimeSlot)
     };
 
     // Function to open the modal
@@ -64,9 +73,10 @@ const ManageAppointment = () => {
         clientName: string,
         clientEmail: string,
         clientPhone: string,
-        time: Date,
+        time: String,
         serviceType: string,
     }) => {
+        console.log(values.time)
         showNotification({
             id: "Add appointment",
             loading: true,
@@ -74,7 +84,10 @@ const ManageAppointment = () => {
             message: "Please wait while we add Your record..",
             autoClose: false,
         });
-        AppointmentAPI.addAppointment(values)
+        AppointmentAPI.addAppointment({
+            ...values,
+            date: selectedDate,
+        })
             .then((Response) => {
                 updateNotification({
                     id: "Add appointment",
@@ -137,11 +150,15 @@ const ManageAppointment = () => {
 
                 dateForm.reset();
                 setDateModalOpened(false);
+                setAppointmentTime(Response.data.free);
 
-                setAppointmentTimes(Response.data);
+                // Store the selected date in the state
+                setSelectedDate(values.date);
 
                 // Open the timeSlotOpened modal only if a date has been selected
                 setTimeSlotOpened(true);
+
+
             })
             .catch((error) => {
                 updateNotification({
@@ -154,7 +171,6 @@ const ManageAppointment = () => {
                 });
             });
     }
-
 
     return (
         <Box>
@@ -193,29 +209,7 @@ const ManageAppointment = () => {
                         withAsterisk
                         required
                     />
-                    <TimeInput
-                        label="Click icon to show browser picker"
-                        ref={timeInputRef}
-                        rightSection={
-                            <ActionIcon onClick={() => timeInputRef.current?.showPicker()}>
-                                <IconClock size="1rem" stroke={1.5} />
-                            </ActionIcon>
-                        }
-                        {...appointmentForm.getInputProps("time")}
 
-                    />
-
-                    {/* <DateInput
-                        defaultValue={new Date()}
-                        placeholder="Adding date"
-                        label="Adding date"
-                        valueFormat="YYYY MMM DD"
-                        withAsterisk
-                        {...appointmentForm.getInputProps("date")}
-                        radius="xl"
-                        icon={<IconCalendar size={16} />}
-
-                    /> */}
                     <TextInput
                         placeholder="Enter Service type"
                         label="Service type"
@@ -274,19 +268,49 @@ const ManageAppointment = () => {
                 </form>
             </Modal>
 
-            {/* free slot modal */}
+            {/* free time slot modal */}
             <Modal
                 opened={timeSlotOpened}
                 onClose={() => setTimeSlotOpened(false)}
-                title="Avalible Time Slots"
+                title="Available Time Slots"
                 size="50%"
             >
-                <form>
-                    
+                <Text fw={600} style={{ textAlign: "left" }}>To add an appointment click top of the time you want</Text>
+                <ScrollArea h={450}>
+                    <Table striped highlightOnHover withBorder withColumnBorders>
+                        <thead>
+                            <tr>
+                                <th>Time Slot</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {appointmentTime.length > 0 ? (
+                                appointmentTime.map((timeSlot: any) => (
+                                    <tr
+                                        key={timeSlot}
+                                        onClick={() => {
+                                            setSelectedTimeSlot(timeSlot); // Set the selected time slot
+                                            openAppointmentModal(); // Open the appointment modal
+                                        }}
+                                    >
+                                        <td>{timeSlot}</td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan={1}>
+                                        <Text align="center" weight={"bold"} size={20} pb={70}>
+                                            No Time slots available!
+                                        </Text>
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
 
-                </form>
+                    </Table>
+
+                </ScrollArea>
             </Modal>
-
 
             <Button
                 color="yellow"
