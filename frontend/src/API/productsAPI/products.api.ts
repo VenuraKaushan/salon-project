@@ -12,6 +12,10 @@ class ProductsAPI{
         category: string;
         code: string;
         quantity: string;
+        added_date: string;
+        expire_date: string;
+        supplier: string;
+        // image: any;
       }) => {
         console.log(values);
         return axios.post(`${BASE_URL}/product/addProduct`, values, {
@@ -35,8 +39,18 @@ class ProductsAPI{
         category: string;
         code: string;
         quantity: string;
+        added_date: string;
+        expire_date: string;
+        supplier: string;
       }) => {
         return axios.put(`${BASE_URL}/product/update/${values._id}`, values, {
+          withCredentials: true,
+        });
+      };
+
+      //delete a product
+      static deleteProduct = (values : {_id : string}) => {
+        return axios.delete(`${BASE_URL}/product/delete/${values._id}`, {
           withCredentials: true,
         });
       };

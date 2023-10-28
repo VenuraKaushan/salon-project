@@ -15,7 +15,7 @@ const productSchema = new mongoose.Schema({
         required : true,
     },
     price :{
-        type : String,
+        type : Number,
         required : true,
     },
     description : {
@@ -31,9 +31,24 @@ const productSchema = new mongoose.Schema({
         required : true,
     },
     quantity: {
-        type : String,
+        type : Number,
         required : true,
     },
+    added_date : {
+        type : String,
+        required : true
+    },
+    expire_date:{
+        type : String,
+        required : true
+    },
+    supplier : {
+        type : String,
+        required : true
+    },
+    // image: {
+    //     type : String,
+    // },
     
 
 },{timeStamps : true});
