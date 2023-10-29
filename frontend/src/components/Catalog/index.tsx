@@ -16,6 +16,7 @@ import {
   ActionIcon,
   Progress, 
   Box,
+  FileInput,
 } from '@mantine/core';
 import {
   IconSearch,
@@ -80,13 +81,15 @@ interface Data {
   added_date: string;
   expire_date: string;
   supplier: string;
-  image: any;
+  image: string;
 }
 
 const Catalog = () => {
   const { classes, cx } = useStyles();
   const [scrolled, setScrolled] = useState(false);
-  const [opened, { open, close }] = useDisclosure(false);
+  // const [opened, { open, close }] = useDisclosure(false);
+  const [opened, setOpened] = useState(false);
+  const [editOpened, setEditOpened] = useState(false);
 
   const {
     data = [],
@@ -150,7 +153,7 @@ const Catalog = () => {
       });
 
       productForm.reset();
-      close();
+      setOpened(false);
       refetch(); // Refresh the data
     } catch (error) {
       updateNotification({
@@ -198,7 +201,7 @@ const Catalog = () => {
           autoClose: 5000,
         });
         productForm.reset();
-        close();
+        setEditOpened(false);
 
         //getting updated items from database
         refetch();
@@ -301,7 +304,7 @@ const Catalog = () => {
                           code: row.code,
                           quantity: row.quantity,
                         });
-                        open();
+                        setEditOpened(true);
                       }}
                     >
                       <IconEdit size={30} />
@@ -344,12 +347,14 @@ const Catalog = () => {
         opened={opened}
         onClose={() => {
           productForm.reset();
-          close();
+          setOpened(false);
         }}
         overlayProps={{
           blur: 3,
         }}
         title="Add New Product"
+
+        centered
       >
         <form onSubmit={productForm.onSubmit((values) => addProduct(values))}>
           <TextInput
@@ -358,6 +363,7 @@ const Catalog = () => {
             placeholder="Enter product name"
             required
             {...productForm.getInputProps('name')}
+            style={{ display:'inline-block' }}
           />
 
           <TextInput
@@ -366,6 +372,7 @@ const Catalog = () => {
             placeholder="Enter brand name"
             required
             {...productForm.getInputProps('brand')}
+            style={{ display:'inline-block', marginLeft:'10px', width:'50%' }}
           />
 
           <TextInput
@@ -374,6 +381,7 @@ const Catalog = () => {
             placeholder="Enter price"
             required
             {...productForm.getInputProps('price')}
+            
           />
 
           <TextInput
@@ -413,6 +421,38 @@ const Catalog = () => {
             {...productForm.getInputProps('quantity')}
           />
 
+            <TextInput
+            name="added_date"
+            label="added_date"
+            placeholder="Enter added_date"
+            required
+            {...productForm.getInputProps('added_date')}
+          />
+
+<TextInput
+            name="expire_date"
+            label="expire_date"
+            placeholder="Enter expire_date"
+            required
+            {...productForm.getInputProps('expire_date')}
+          />
+
+<TextInput
+            name="supplier"
+            label="supplier"
+            placeholder="Enter supplier"
+            required
+            {...productForm.getInputProps('supplier')}
+          />
+
+          <FileInput 
+          label="Upload Image" 
+          placeholder="Upload files"
+          accept="image/*" 
+          required
+          {...productForm.getInputProps('image')}
+          />
+
           <Button color="blue" sx={{ marginTop: '10px', width: '100%' }} type="submit">
             Save
           </Button>
@@ -421,10 +461,10 @@ const Catalog = () => {
 
       {/* Edit product modal */}
       <Modal
-        opened={opened}
+        opened={editOpened}
         onClose={() => {
           productEditForm.reset();
-          close();
+          setEditOpened(false);
         }}
         overlayProps={{
           blur: 3,
@@ -515,7 +555,7 @@ const Catalog = () => {
           icon={<IconSearch size="0.9rem" stroke={1.5} />}
           w={800}
         />
-        <Button leftIcon={<IconPlus size={20} />} ml={10} onClick={open}>
+        <Button leftIcon={<IconPlus size={20} />} ml={10} onClick={()=>setOpened(true)}>
           Add New Product
         </Button>
         <PDFDownloadLink
