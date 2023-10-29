@@ -15,7 +15,7 @@ class ProductsAPI{
         added_date: string;
         expire_date: string;
         supplier: string;
-        // image: any;
+        image: string;
       }) => {
         console.log(values);
         return axios.post(`${BASE_URL}/product/addProduct`, values, {

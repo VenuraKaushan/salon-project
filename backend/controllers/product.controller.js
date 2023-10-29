@@ -43,7 +43,7 @@ export const addProduct = async (req, res) => {
         added_date: req.body.added_date,
         expire_date: req.body.expire_date,
         supplier: req.body.supplier,
-        // image: req.body.image,
+        image: req.body.image,
 
       });
   
