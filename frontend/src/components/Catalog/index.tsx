@@ -30,7 +30,7 @@ import { useForm } from '@mantine/form';
 import { showNotification, updateNotification } from '@mantine/notifications';
 import ProductsAPI from '../../API/productsAPI/products.api';
 import { useQuery } from '@tanstack/react-query';
-import { PDFDownloadLink } from "@react-pdf/renderer";
+import { PDFDownloadLink } from '@react-pdf/renderer';
 import { ProductPDF } from '../PDFRender/productPDF';
 
 const useStyles = createStyles((theme) => ({
