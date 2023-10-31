@@ -1,6 +1,6 @@
 import Appointment from "../models/appointment.model.js"
 import "dotenv/config";
-
+import { sendAppointmentMail } from "../mails/appointment.mails.js";
 
 
 
@@ -42,9 +42,19 @@ export const addGuestAppointment = async (req, res) => {
             date: req.body.date,
         });
 
+        const cusName = req.body.clientName;
+        const cusEmail = req.body.clientEmail;
+        const time = req.body.time;
+        const date = new Date(req.body.date);
+        const formattedDate = date.toDateString();
+
+
         console.log(newAppointment);
 
         const savedAppointment = await newAppointment.save()
+
+        //send an email to the user
+        sendAppointmentMail(cusName, cusEmail,time, formattedDate)
 
         res.status(201).json(savedAppointment);
 
