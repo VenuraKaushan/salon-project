@@ -17,6 +17,8 @@ import {
   Progress, 
   Box,
   FileInput,
+  Image,
+  NumberInput,
 } from '@mantine/core';
 import {
   IconSearch,
@@ -25,13 +27,23 @@ import {
   IconPlus,
   IconEdit,
   IconFileBarcode,
+  IconMinus,
+  IconUpload,
+  IconPhoto,
 } from '@tabler/icons-react';
+import {
+  Dropzone,
+  IMAGE_MIME_TYPE,
+  DropzoneProps,
+  FileWithPath,
+} from "@mantine/dropzone";
 import { useForm } from '@mantine/form';
 import { showNotification, updateNotification } from '@mantine/notifications';
 import ProductsAPI from '../../API/productsAPI/products.api';
 import { useQuery } from '@tanstack/react-query';
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { ProductPDF } from '../PDFRender/productPDF';
+import { DateInput } from '@mantine/dates';
 
 const useStyles = createStyles((theme) => ({
   tableHeader: {
@@ -84,12 +96,30 @@ interface Data {
   image: string;
 }
 
+
 const Catalog = () => {
   const { classes, cx } = useStyles();
   const [scrolled, setScrolled] = useState(false);
-  // const [opened, { open, close }] = useDisclosure(false);
   const [opened, setOpened] = useState(false);
   const [editOpened, setEditOpened] = useState(false);
+  const [files, setFiles] = useState<FileWithPath[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  
+  const previews = files.map((file, index) => {
+    const imageUrl = URL.createObjectURL(file);
+
+    return (
+      <Group position="center">
+        <Image
+          src={imageUrl}
+          key={index}
+          width={"auto"}
+          height={150}
+          imageProps={{ onLoad: () => URL.revokeObjectURL(imageUrl) }}
+        />
+      </Group>
+    );
+  });
 
   const {
     data = [],
@@ -219,20 +249,31 @@ const Catalog = () => {
       });
   };
 
-  // Add this function to calculate the availability percentage
-  function calculateAvailabilityPercentage(quantity: number) {
-    // Define a threshold for what is considered "available"
-    const availableThreshold = 10; 
 
-    // Calculate the percentage
-    const percentage = (quantity / availableThreshold) * 100;
+  
+ // // Add this function to calculate the availability percentage
+  // function calculateAvailabilityPercentage(quantity: number) {
+  //   // Define a threshold for what is considered "available"
+  //   const availableThreshold = 10; 
 
-    // Ensure the percentage is within the range [0, 100]
-    return Math.min(100, Math.max(0, percentage));
-  }
+  //   // Calculate the percentage
+  //   const percentage = (quantity / availableThreshold) * 100;
 
-  const rows = Array.isArray(data)
-    ? data?.map((row: any) => (
+  //   // Ensure the percentage is within the range [0, 100]
+  //   return Math.min(100, Math.max(0, percentage));
+  // } 
+
+  //searching data
+  const filteredData = data.filter((product: Data) =>
+    product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    product.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    product.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    product.code.toLowerCase().includes(searchTerm.toLowerCase()) 
+
+  );
+
+  const rows = Array.isArray(filteredData)
+    ? filteredData?.map((row: any) => (
         <tr key={row._id}>
           <td>
             <Text size={15}>{row.product_id}</Text>
@@ -262,16 +303,35 @@ const Catalog = () => {
             <Text size={15}>{row.quantity}</Text>
           </td>
           <td>
-            <Text size={15}>{row.quantity}</Text>
+            <Text size={15}></Text>
           </td>
           <td>
-            <Text size={15}>{row.added_date}</Text>
+            <Text size={15}>
+              {new Date(row.added_date).toLocaleDateString("en-GB").split("T")[0]}
+            </Text>
           </td>
           <td>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            {/* <div style={{ flex: 1 }}>
+          {/* Use button to reduce quantity */}
+          
+          <>
+                <Group spacing={"sm"}>
+                  {/* edit button */}
+                  <Tooltip label="Use Product">
+                    <ActionIcon
+                      style={{ marginLeft: '10px', backgroundColor: 'red', borderRadius: '50%', padding: '5px' }}
+                    >
+                      <IconMinus 
+                      style={{ color: 'white'  }}
+                      size={30} />
+                    </ActionIcon>
+                  </Tooltip>
+
+                </Group>
+              </>
+          {/* <div style={{ display: 'flex', alignItems: 'center' }}>
+            <div style={{ flex: 1 }}>
               <Text size={15}>{row.quantity}</Text>
-            </div> */}
+            </div>
             <div style={{ flex: 2 }}>
               <Progress
                 value={calculateAvailabilityPercentage(Number(row.quantity))}
@@ -282,7 +342,7 @@ const Catalog = () => {
                 }
               />
             </div>
-          </div>
+          </div> */}
         </td>
           <td>
             {
@@ -333,7 +393,23 @@ const Catalog = () => {
     });
   }
 
+  const handleImageUpload = async (files: FileWithPath[]) => {
+    const formData = new FormData();
+    formData.append("file", files[0]);
+    formData.append("upload_preset", "Af_Assignment");
+    formData.append('cloud_name', 'drao60sj6')
+    const response = await fetch(
+      "https://api.cloudinary.com/v1_1/drao60sj6/image/upload",
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+    const data = await response.json();
+    return data.secure_url;
+  }
 
+  
   
 
 
@@ -367,7 +443,7 @@ const Catalog = () => {
           />
 
           <TextInput
-            name="barnd"
+            name="brand"
             label="Brand Name"
             placeholder="Enter brand name"
             required
@@ -413,7 +489,7 @@ const Catalog = () => {
             {...productForm.getInputProps('code')}
           />
 
-          <TextInput
+          <NumberInput
             name="quantity"
             label="Quantity"
             placeholder="Enter quantity"
@@ -421,7 +497,7 @@ const Catalog = () => {
             {...productForm.getInputProps('quantity')}
           />
 
-            <TextInput
+          <DateInput
             name="added_date"
             label="added_date"
             placeholder="Enter added_date"
@@ -429,7 +505,7 @@ const Catalog = () => {
             {...productForm.getInputProps('added_date')}
           />
 
-<TextInput
+          <DateInput
             name="expire_date"
             label="expire_date"
             placeholder="Enter expire_date"
@@ -437,7 +513,7 @@ const Catalog = () => {
             {...productForm.getInputProps('expire_date')}
           />
 
-<TextInput
+          <TextInput
             name="supplier"
             label="supplier"
             placeholder="Enter supplier"
@@ -445,13 +521,57 @@ const Catalog = () => {
             {...productForm.getInputProps('supplier')}
           />
 
-          <FileInput 
-          label="Upload Image" 
-          placeholder="Upload files"
-          accept="image/*" 
-          required
-          {...productForm.getInputProps('image')}
-          />
+          <FileInput
+            label="Image"
+            accept="image/*"
+            placeholder="Select image"
+            required
+            {...productForm.getInputProps('image')}
+            />
+
+            {/* <Dropzone
+            accept={IMAGE_MIME_TYPE}
+            onDrop={(files) => setFiles(files)}
+            onReject={(files) => {
+              showNotification({
+                title: "File upload Error",
+                message: "try to reupload another file",
+                autoClose: 1500,
+                icon: <IconX />,
+                color: "red",
+              });
+            }}
+            maxSize={3 * 1024 ** 2}
+            maxFiles={1}
+          >
+            <Group
+              position="center"
+              spacing="xl"
+              style={{ minHeight: rem(220), pointerEvents: "none" }}
+            >
+              <Dropzone.Accept>
+                <IconUpload
+                  size="3.2rem"
+                  stroke={1.5}
+                />
+              </Dropzone.Accept>
+              <Dropzone.Reject>
+                <IconX
+                  size="3.2rem"
+                  stroke={1.5}
+                />
+              </Dropzone.Reject>
+              <Dropzone.Idle>
+                <IconPhoto size="3.2rem" stroke={1.5} />
+              </Dropzone.Idle>
+  
+              <div>
+                <Text size="xl" align="center">
+                  Drag image here or click to select files
+                </Text>
+              </div>
+            </Group>
+          </Dropzone> */}
 
           <Button color="blue" sx={{ marginTop: '10px', width: '100%' }} type="submit">
             Save
@@ -554,6 +674,8 @@ const Catalog = () => {
           mb={50}
           icon={<IconSearch size="0.9rem" stroke={1.5} />}
           w={800}
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
         />
         <Button leftIcon={<IconPlus size={20} />} ml={10} onClick={()=>setOpened(true)}>
           Add New Product
@@ -598,7 +720,7 @@ const Catalog = () => {
                 <th>Quantity</th>
                 <th>Sold</th>
                 <th>Added Date</th>
-                <th>Available</th>
+                <th>Use</th>
                 <th>Action</th>
               </tr>
             </thead>
