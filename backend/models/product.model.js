@@ -49,20 +49,20 @@ const productSchema = new mongoose.Schema({
     image: {
         type : String,
     },
-    usageHistory: [
-        {
-            quantityUsed: {
-                type: Number,
-            },
-            reasonForUse: {
-                type: String,
-            },
-            timestamp: {
-                type: Date,
-                default: Date.now,
-            },
-        },
-    ],  
+    // usageHistory: [
+    //     {
+    //         quantityUsed: {
+    //             type: Number,
+    //         },
+    //         reasonForUse: {
+    //             type: String,
+    //         },
+    //         timestamp: {
+    //             type: Date,
+    //             default: Date.now,
+    //         },
+    //     },
+    // ],  
     
 
 },{timeStamps : true});

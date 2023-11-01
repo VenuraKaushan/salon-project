@@ -52,23 +52,32 @@ class ProductsAPI{
       static updateUseProduct = (values: {
         _id: string;
         product_id: string;
-        quantityUsed: number;
-        reasonForUse: string;
+        quantity: string;
       }) => {
-        return axios.put(`${BASE_URL}/product/updateUse/${values._id}`, {
-          quantityUsed: values.quantityUsed,
-          reasonForUse: values.reasonForUse,
-        }, {
+        return axios.put(`${BASE_URL}/product/updateUse/${values._id}`, values, {
           withCredentials: true,
         });
       };
+      // static updateUseProduct = (values: {
+      //   _id: string;
+      //   product_id: string;
+      //   quantityUsed: number;
+      //   reasonForUse: string;
+      // }) => {
+      //   return axios.put(`${BASE_URL}/product/updateUse/${values._id}`, {
+      //     quantityUsed: values.quantityUsed,
+      //     reasonForUse: values.reasonForUse,
+      //   }, {
+      //     withCredentials: true,
+      //   });
+      // };
 
-      //delete a product
-      static deleteProduct = (values : {_id : string}) => {
-        return axios.delete(`${BASE_URL}/product/delete/${values._id}`, {
-          withCredentials: true,
-        });
-      };
+      // //delete a product
+      // static deleteProduct = (values : {_id : string}) => {
+      //   return axios.delete(`${BASE_URL}/product/delete/${values._id}`, {
+      //     withCredentials: true,
+      //   });
+      // };
       
 }
 
