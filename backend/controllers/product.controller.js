@@ -107,71 +107,71 @@ export const updateProduct = async (req, res) => {
 };
 
 //update only use products
-export const updateUseProduct = async (req, res) => {
-  const product_id = req.params.id;
-
-  // Ensure that 'quantityUsed' is a valid positive number
-  const quantityUsed = parseInt(req.body.quantityUsed);
-
-  if (isNaN(quantityUsed) || quantityUsed <= 0) {
-      return res.status(400).json({ message: "Invalid quantityUsed value" });
-  }
-
-  try {
-      const product = await Product.findById(product_id);
-
-      if (!product) {
-          return res.status(404).json({ message: "Product not found" });
-      }
-
-      if (product.quantity < quantityUsed) {
-          return res.status(400).json({ message: "Not enough quantity available" });
-      }
-
-      // Subtract 'quantityUsed' from the current 'quantity'
-      product.quantity -= quantityUsed;
-
-      // Add usage history to the product
-      const newUsage = {
-          quantityUsed,
-          reasonForUse: req.body.reasonForUse,
-      };
-
-      product.usageHistory.push(newUsage);
-
-      // Save the updated product
-      const updatedProduct = await product.save();
-
-      res.status(200).json(updatedProduct);
-  } catch (error) {
-      res.status(500).json({ message: "Failed to update Product", error });
-  }
-};
 // export const updateUseProduct = async (req, res) => {
 //   const product_id = req.params.id;
 
-//   console.log(req.body);
-//   const updateFields = {
-//     quantity: req.body.quantity,
-//   };
+//   // Ensure that 'quantityUsed' is a valid positive number
+//   const quantityUsed = parseInt(req.body.quantityUsed);
+
+//   if (isNaN(quantityUsed) || quantityUsed <= 0) {
+//       return res.status(400).json({ message: "Invalid quantityUsed value" });
+//   }
 
 //   try {
-//     const updateProduct = await Product.findByIdAndUpdate(
-//       product_id,
-//       updateFields,
-//       { new: true }
-//     );
+//       const product = await Product.findById(product_id);
 
-//     if (!updateProduct) {
-//       // If the product is not found, send a 404 status code with a message
-//       return res.status(404).json({ message: "Product not found" });
-//     }
+//       if (!product) {
+//           return res.status(404).json({ message: "Product not found" });
+//       }
 
-//     res.status(200).json(updateProduct); // Send the updated Product as the response
+//       if (product.quantity < quantityUsed) {
+//           return res.status(400).json({ message: "Not enough quantity available" });
+//       }
+
+//       // Subtract 'quantityUsed' from the current 'quantity'
+//       product.quantity -= quantityUsed;
+
+//       // Add usage history to the product
+//       const newUsage = {
+//           quantityUsed,
+//           reasonForUse: req.body.reasonForUse,
+//       };
+
+//       product.usageHistory.push(newUsage);
+
+//       // Save the updated product
+//       const updatedProduct = await product.save();
+
+//       res.status(200).json(updatedProduct);
 //   } catch (error) {
-//     res.status(500).json({ message: "Failed to update Product", error });
+//       res.status(500).json({ message: "Failed to update Product", error });
 //   }
 // };
+export const updateUseProduct = async (req, res) => {
+  const product_id = req.params.id;
+
+  console.log(req.body);
+  const updateFields = {
+    quantity: req.body.quantity,
+  };
+
+  try {
+    const updateProduct = await Product.findByIdAndUpdate(
+      product_id,
+      updateFields,
+      { new: true }
+    );
+
+    if (!updateProduct) {
+      // If the product is not found, send a 404 status code with a message
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    res.status(200).json(updateProduct); // Send the updated Product as the response
+  } catch (error) {
+    res.status(500).json({ message: "Failed to update Product", error });
+  }
+};
 
 //delete product details
 export const deleteProduct = async (req, res) => {

@@ -250,6 +250,73 @@ const Catalog = () => {
   };
 
 
+   // Function to handle reducing stock quantity
+   const handleUseProduct = (productId: string, currentQuantity: number) => {
+    const updatedQuantity = currentQuantity - 1;
+
+    ProductsAPI.updateUseProduct({
+      _id: productId,
+      product_id: "", 
+      quantity: updatedQuantity.toString(), 
+    })
+      .then((response) => {
+        updateNotification({
+          id: "update-Product",
+          color: "teal",
+          icon: <IconCheck />,
+          title: "Product updated successfully",
+          message: "Product data updated successfully.",
+          autoClose: 5000,
+        });
+        refetch();
+      })
+      .catch((error) => {
+        updateNotification({
+          id: "update-Product",
+          color: "red",
+          title: "Product updating failed",
+          icon: <IconX />,
+          message: "We were unable to update the Product",
+          autoClose: 5000,
+        });
+      });
+  }
+  // Function to handle reducing stock quantity
+  // const handleUseProduct = (productId: string, currentQuantity: number) => {
+  //   // You can add your logic here to reduce the quantity
+  //   // For example, you can make an API request to update the quantity
+  //   const updatedQuantity = currentQuantity - 1;
+
+  //   // Update the quantity in the database or API
+  //   ProductsAPI.updateUseProduct({
+  //     _id: productId,
+  //     quantity: updatedQuantity, // Assuming quantity is a string in your data
+  //   })
+  //     .then((response) => {
+  //       updateNotification({
+  //         id: "update-Product",
+  //         color: "teal",
+  //         icon: <IconCheck />,
+  //         title: "Product updated successfully",
+  //         message: "Product data updated successfully.",
+  //         autoClose: 5000,
+  //       });
+
+  //       // Refresh the data after updating
+  //       refetch();
+  //     })
+  //     .catch((error) => {
+  //       updateNotification({
+  //         id: "update-Product",
+  //         color: "red",
+  //         title: "Product updating failed",
+  //         icon: <IconX />,
+  //         message: "We were unable to update the Product",
+  //         autoClose: 5000,
+  //       });
+  //     });
+  // };
+
   
  // // Add this function to calculate the availability percentage
   // function calculateAvailabilityPercentage(quantity: number) {
@@ -313,12 +380,13 @@ const Catalog = () => {
           <td>
           {/* Use button to reduce quantity */}
           
-          <>
+              <>
                 <Group spacing={"sm"}>
                   {/* edit button */}
                   <Tooltip label="Use Product">
                     <ActionIcon
                       style={{ marginLeft: '10px', backgroundColor: 'red', borderRadius: '50%', padding: '5px' }}
+                      onClick={() => handleUseProduct(row._id, Number(row.quantity))}
                     >
                       <IconMinus 
                       style={{ color: 'white'  }}
