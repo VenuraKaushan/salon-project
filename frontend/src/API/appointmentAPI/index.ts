@@ -5,7 +5,7 @@ const BASE_URL = "http://localhost:3001";
 
 class AppointmentAPI{
 
-    //add appointment
+    //add appointment as guest user
     static addAppointment (values:{
         clientName:string,
         clientEmail:string,
@@ -24,7 +24,9 @@ class AppointmentAPI{
     }){
         console.log(values)
         return axios.post(`${BASE_URL}/appointment/date`,values,{withCredentials:true});
-    }
+    };
+
+   
 
 
 }

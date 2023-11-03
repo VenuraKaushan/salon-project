@@ -8,7 +8,7 @@ const CatalogPage = () => {
     <div>
     <Grid>
         <Grid.Col span="content">
-          <AdminDashboardNav link_id={0}/>
+          <AdminDashboardNav link_id={2}/>
         </Grid.Col>
         <Grid.Col span={'auto'} >
           <Catalog/>

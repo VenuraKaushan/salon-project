@@ -92,8 +92,8 @@ const adminDashboardNav = createStyles((theme) => ({
 
 const links = [
   { label: 'Dashboard', icon: IconGauge, link: 'admin/catalog' },
-  { link: 'admin/catalog',label: 'Appointments',  icon: IconCalendarFilled},
-  { link: 'admin/catalog', label: 'Clients', icon: IconUsers, },
+  { link: '/admin/appointments',label: 'Appointments',  icon: IconCalendarFilled},
+  { link: '/admin/clients', label: 'Clients', icon: IconUsers, },
   { link: '/admin/catalog', label: 'Inventory', icon: IconBuildingStore },
   { link: 'admin/catalog', label: 'Databases', icon: IconDatabaseImport },
   { link: 'admin/catalog', label: 'Security', icon: IconLock },

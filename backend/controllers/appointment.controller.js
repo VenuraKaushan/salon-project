@@ -4,7 +4,7 @@ import { sendAppointmentMail } from "../mails/appointment.mails.js";
 
 
 
-//generate client Id
+//generate appintment Id
 const generateAppointmentID = async () => {
     //get last Appointment object, if there is a Appointment, then return that Appointment object, otherwise return empty array
     const lastAppointmentDetails = await Appointment.find({ role: "GUEST" }).sort({ _id: -1 }).limit(1);
@@ -119,6 +119,16 @@ export const checkDate = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: "Failed to Check appointment times", error });
     }
+};
+
+
+export const getAllAppointmentsByAdmin = async (req,res)=>{
+    try{
+        const appointments = await Appointment.find()
+
+        res.status(200).json(appointments)
+    }catch(err){
+        res.status(500).json({ message: "Failed to Get Appointments", err });
+    }
+
 }
-
-

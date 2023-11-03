@@ -10,6 +10,8 @@ import ManageAppointment from "../components/appointmentMange";
 import AdminLoginPage from "../pages/Login/adminLogin";
 import AdminDashboard from "../pages/adminDashboard";
 import CatalogPage from "../pages/CatalogPage";
+import ClientPage from "../pages/registeredClients";
+import AppointmentPage from "../pages/Appointment";
 
 const AllRoutes = () => {
   const client = new QueryClient();//config query client
@@ -30,6 +32,9 @@ const AllRoutes = () => {
             <Route path="/login/admin" element={<AdminLoginPage />} />
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/admin/catalog" element={<CatalogPage />} />
+            <Route path="/admin/clients" element={<ClientPage />} />
+            <Route path="/admin/appointments" element={<AppointmentPage />} />
+
 
           </Routes>
         </Router>
