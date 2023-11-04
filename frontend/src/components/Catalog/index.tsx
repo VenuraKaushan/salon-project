@@ -31,12 +31,6 @@ import {
   IconUpload,
   IconPhoto,
 } from '@tabler/icons-react';
-import {
-  Dropzone,
-  IMAGE_MIME_TYPE,
-  DropzoneProps,
-  FileWithPath,
-} from "@mantine/dropzone";
 import { useForm } from '@mantine/form';
 import { showNotification, updateNotification } from '@mantine/notifications';
 import ProductsAPI from '../../API/productsAPI/products.api';
@@ -102,24 +96,8 @@ const Catalog = () => {
   const [scrolled, setScrolled] = useState(false);
   const [opened, setOpened] = useState(false);
   const [editOpened, setEditOpened] = useState(false);
-  const [files, setFiles] = useState<FileWithPath[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   
-  const previews = files.map((file, index) => {
-    const imageUrl = URL.createObjectURL(file);
-
-    return (
-      <Group position="center">
-        <Image
-          src={imageUrl}
-          key={index}
-          width={"auto"}
-          height={150}
-          imageProps={{ onLoad: () => URL.revokeObjectURL(imageUrl) }}
-        />
-      </Group>
-    );
-  });
 
   const {
     data = [],
@@ -396,21 +374,6 @@ const Catalog = () => {
 
                 </Group>
               </>
-          {/* <div style={{ display: 'flex', alignItems: 'center' }}>
-            <div style={{ flex: 1 }}>
-              <Text size={15}>{row.quantity}</Text>
-            </div>
-            <div style={{ flex: 2 }}>
-              <Progress
-                value={calculateAvailabilityPercentage(Number(row.quantity))}
-                color={
-                  calculateAvailabilityPercentage(Number(row.quantity)) >= 10
-                    ? 'green'
-                    : 'red'
-                }
-              />
-            </div>
-          </div> */}
         </td>
           <td>
             {
@@ -461,23 +424,7 @@ const Catalog = () => {
     });
   }
 
-  const handleImageUpload = async (files: FileWithPath[]) => {
-    const formData = new FormData();
-    formData.append("file", files[0]);
-    formData.append("upload_preset", "Af_Assignment");
-    formData.append('cloud_name', 'drao60sj6')
-    const response = await fetch(
-      "https://api.cloudinary.com/v1_1/drao60sj6/image/upload",
-      {
-        method: "POST",
-        body: formData,
-      }
-    );
-    const data = await response.json();
-    return data.secure_url;
-  }
 
-  
   
 
 
@@ -596,50 +543,6 @@ const Catalog = () => {
             required
             {...productForm.getInputProps('image')}
             />
-
-            {/* <Dropzone
-            accept={IMAGE_MIME_TYPE}
-            onDrop={(files) => setFiles(files)}
-            onReject={(files) => {
-              showNotification({
-                title: "File upload Error",
-                message: "try to reupload another file",
-                autoClose: 1500,
-                icon: <IconX />,
-                color: "red",
-              });
-            }}
-            maxSize={3 * 1024 ** 2}
-            maxFiles={1}
-          >
-            <Group
-              position="center"
-              spacing="xl"
-              style={{ minHeight: rem(220), pointerEvents: "none" }}
-            >
-              <Dropzone.Accept>
-                <IconUpload
-                  size="3.2rem"
-                  stroke={1.5}
-                />
-              </Dropzone.Accept>
-              <Dropzone.Reject>
-                <IconX
-                  size="3.2rem"
-                  stroke={1.5}
-                />
-              </Dropzone.Reject>
-              <Dropzone.Idle>
-                <IconPhoto size="3.2rem" stroke={1.5} />
-              </Dropzone.Idle>
-  
-              <div>
-                <Text size="xl" align="center">
-                  Drag image here or click to select files
-                </Text>
-              </div>
-            </Group>
-          </Dropzone> */}
 
           <Button color="blue" sx={{ marginTop: '10px', width: '100%' }} type="submit">
             Save
@@ -769,11 +672,7 @@ const Catalog = () => {
           onScrollPositionChange={({ y }) => setScrolled(y !== 0)}
         >
           <Table
-            highlightOnHover
-            horizontalSpacing={30}
-            verticalSpacing="lg"
-            miw={700}
-            sx={{ tableLayout: "fixed" }}
+            striped highlightOnHover withBorder withColumnBorders
           >
             <thead className={cx(classes.header, classes.tableHeader, { [classes.scrolled]: scrolled })}>
               <tr>
