@@ -54,7 +54,7 @@ export const addGuestAppointment = async (req, res) => {
         const savedAppointment = await newAppointment.save()
 
         //send an email to the user
-        sendAppointmentMail(cusName, cusEmail,time, formattedDate)
+        sendAppointmentMail(cusName, cusEmail, time, formattedDate)
 
         res.status(201).json(savedAppointment);
 
@@ -122,13 +122,27 @@ export const checkDate = async (req, res) => {
 };
 
 
-export const getAllAppointmentsByAdmin = async (req,res)=>{
-    try{
-        const appointments = await Appointment.find()
+export const getAllAppointmentsByAdmin = async (req, res) => {
+    try {
+        const appointments = await Appointment.find({ workr: "NaN" })
 
         res.status(200).json(appointments)
-    }catch(err){
+    } catch (err) {
         res.status(500).json({ message: "Failed to Get Appointments", err });
     }
 
+}
+
+export const getAllAssignedAppointmentsByAdmin = async (req, res) => {
+
+    try {
+        const assignedAppointments = await Appointment.find({ workr: { $ne: "NaN" } });
+        res.status(200).json(assignedAppointments)
+
+
+    } catch (err) {
+
+        res.status(500).json({ message: "Failed to Get Appointments", err });
+
+    }
 }

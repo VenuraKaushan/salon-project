@@ -1,5 +1,5 @@
 import AdminDashboardNav from "../../components/adminDashboard";
-import { Appointments } from "../../components/AppointmentAdminPanel";
+import { Appointments } from "../../components/NewAppointmentAdminPanel";
 import { Grid } from "@mantine/core";
 
 const AppointmentPage = () => {
