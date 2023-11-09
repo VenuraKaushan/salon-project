@@ -20,11 +20,13 @@ export const Appointments = () => {
     const [appointmentTime, setAppointmentTime] = useState([]); // Initialize with an empty array
     const [selectedDate, setSelectedDate] = useState(""); // Add selectedDate state
     const [timeSlotOpened, setTimeSlotOpened] = useState(false);
+    const [assignWorkerModalOpen, setAssignWorkerModalOpen] = useState(false);
 
 
-    // specific ticket details
+    // specific appointment details
     const [appointmentInfo, setAppointmentInfo] = useState({
-        id: "",
+        _id: "",
+        aptid: "",
         clientName: "",
         clientEmail: "",
         clientPhone: "",
@@ -56,7 +58,15 @@ export const Appointments = () => {
         },
     });
 
-    //use react query and fetch FAQ data
+    //declare assign worker form
+    const assignWorkerForm = useForm({
+        validateInputOnChange: true,
+        initialValues: {
+            workerName: "",
+        }
+    })
+
+    //use react query and fetch appointment data
     const {
         data = [],
         isLoading,
@@ -65,7 +75,7 @@ export const Appointments = () => {
     } = useQuery(
         ["appointmentData"],
         () => {
-            return AdminAPI.getAllAppointmentsByAdmin().then((res) => res.data);
+            return AdminAPI.getAllNewAppointmentsByAdmin().then((res) => res.data);
         },
         { initialData: [] }
     );
@@ -119,6 +129,8 @@ export const Appointments = () => {
 
                 appointmentForm.reset();
                 setAppointmentOpended(false);
+
+                refetch();
 
             })
             .catch((error) => {
@@ -191,6 +203,37 @@ export const Appointments = () => {
             });
     }
 
+    //assign worker
+    const assignWorker = (values: {
+        _id: string,
+        workerName: string,
+    }) => {
+        AdminAPI.assignWorker(values)
+            .then((response) => {
+                showNotification({
+                    id: "Add worker",
+                    title: "Adding Your record",
+                    message: "Worker was submitted!",
+                    autoClose: 1500,
+                });
+
+                //reset assignworker form
+                assignWorkerForm.reset();
+                refetch();
+            })
+            .catch((err) => {
+                updateNotification({
+                    id: "Add worker",
+                    color: "red",
+                    title: "Something went wrong!",
+                    message: "There is a problem when adding Worker",
+                    icon: <IconX />,
+                    autoClose: 2500,
+                });
+            })
+
+    }
+
     // generate appointment table body
     const rows =
         data.length > 0 ? (
@@ -199,7 +242,8 @@ export const Appointments = () => {
                     key={appointment._id}
                     onClick={() => {
                         setAppointmentInfo({
-                            id: appointment.id,
+                            _id: appointment._id,
+                            aptid: appointment.id,
                             clientName: appointment.clientName,
                             clientEmail: appointment.clientEmail,
                             clientPhone: appointment.clientPhone,
@@ -209,8 +253,8 @@ export const Appointments = () => {
                             status: appointment.status,
                         });
 
-                        // open ticket modal
-                        // setTicketOpened(true);
+
+                        setAssignWorkerModalOpen(true);
                     }}
                     style={{ cursor: "pointer" }}
                 >
@@ -250,6 +294,98 @@ export const Appointments = () => {
 
     return (
         <div>
+
+            {/* appointment details modal */}
+            <Modal
+                opened={assignWorkerModalOpen}
+                onClose={() => setAssignWorkerModalOpen(false)}
+                size={"50%"}
+            >
+                <Modal.Header>
+                    <Text weight={"bold"} size={30}>
+                        Appointment Details
+                    </Text>
+                    <Badge
+                        size="lg"
+                        color={appointmentInfo.status === "COMPLETE" ? "teal" : "orange"}
+                    >
+                        {appointmentInfo.status === "COMPLETE" ? "COMPLETE" : "PENDING"}
+                    </Badge>
+                </Modal.Header>
+
+                <Modal.Body>
+                    <TextInput
+                        mb={10}
+                        label={"Customer Name"}
+                        readOnly
+                        value={appointmentInfo.clientName}
+                    />
+                    <TextInput
+                        mb={10}
+                        label={"Customer Email"}
+                        readOnly
+                        value={appointmentInfo.clientEmail}
+                    />
+                    <TextInput
+                        mt={20}
+                        mb={10}
+                        label={"Phone Number"}
+                        readOnly
+                        value={appointmentInfo.clientPhone}
+                    />
+                    <TextInput
+                        mt={20}
+                        mb={10}
+                        label={"Booked date and Time"}
+                        readOnly
+                        value={`${appointmentInfo.date}  ${appointmentInfo.time}`}
+                    />
+
+                    <TextInput
+                        mt={20}
+                        mb={10}
+                        label={"Service Name"}
+                        readOnly
+                        value={appointmentInfo.serviceType}
+                    />
+
+                    <TextInput
+                        mt={20}
+                        mb={10}
+                        label={"Assign worker"}
+                        required
+                        {...assignWorkerForm.getInputProps("workerName")}
+                    />
+
+                    {assignWorkerForm.values.workerName === '' && (
+                        <div style={{ color: 'red', marginTop: '10px' }}>
+                            Worker Name cannot be empty
+                        </div>
+                    )}
+
+                    <Center>
+                        <Button
+                            color="red"
+                            uppercase
+                            m={10}
+                            onClick={() => {
+                                if (!assignWorkerForm.values.workerName) {
+                                    // Display an error message within the modal
+                                } else {
+                                    setAssignWorkerModalOpen(false);
+                                    assignWorker({
+                                        _id: appointmentInfo._id,
+                                        workerName: assignWorkerForm.values.workerName,
+                                    });
+                                }
+                            }}
+                        >
+
+                            Assign worker
+                        </Button>
+                    </Center>
+                </Modal.Body>
+            </Modal>
 
             {/* admin add appointment modal */}
             <Modal
@@ -334,11 +470,13 @@ export const Appointments = () => {
                     <br></br>
                     <br></br>
                     <br></br>
-                    <Button color="blue" radius="lg" type="submit"
-                        style={{ marginLeft: "280px", marginTop: '10px' }}
-                    >
-                        Check
-                    </Button>
+                    <Center>
+                        <Button color="blue" radius="lg" type="submit"
+
+                        >
+                            Check
+                        </Button>
+                    </Center>
                 </form>
             </Modal>
 
@@ -385,7 +523,7 @@ export const Appointments = () => {
 
                 </ScrollArea>
             </Modal>
-            <Text fw={700} fz={30} style={{ textAlign: "center" }}>Appointments Management</Text>
+            <Text fw={700} fz={30} style={{ textAlign: "center" }}>New Appointments</Text>
 
             <Group spacing={"md"}>
                 <TextInput

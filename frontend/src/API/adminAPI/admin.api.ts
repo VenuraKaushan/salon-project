@@ -20,7 +20,7 @@ class AdminAPI {
         return axios.post(`${BASE_URL}/admin/appointment/add`,values,{withCredentials:true});
     }
 
-    static getAllAppointmentsByAdmin = () =>{
+    static getAllNewAppointmentsByAdmin = () =>{
 
         return axios.get(`${BASE_URL}/appointment`,{withCredentials:true})
     };
@@ -31,6 +31,18 @@ class AdminAPI {
         console.log(values)
         return axios.post(`${BASE_URL}/appointment/date`,values,{withCredentials:true});
     };
+
+    static assignWorker(values:{
+        _id:string,
+        workerName:string,
+    }){
+        console.log(values)
+        return axios.put(`${BASE_URL}/admin/assign/worker/${values._id}`,values,{withCredentials:true});
+    }
+
+    static getAllAssignedAppointmentsByAdmin =()=>{
+        return axios.get(`${BASE_URL}/appointment/assigned`,{withCredentials:true})
+    }
 }
 
 export default AdminAPI;

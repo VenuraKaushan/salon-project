@@ -92,10 +92,10 @@ const adminDashboardNav = createStyles((theme) => ({
 
 const links = [
   { label: 'Dashboard', icon: IconGauge, link: 'admin/catalog' },
-  { link: '/admin/appointments',label: 'Appointments',  icon: IconCalendarFilled},
+  { link: '/admin/appointments',label: 'New Appointments',  icon: IconCalendarFilled},
+  { link: '/admin/assigned', label: 'Assigned Appointments', icon: IconDatabaseImport },
   { link: '/admin/clients', label: 'Clients', icon: IconUsers, },
   { link: '/admin/catalog', label: 'Inventory', icon: IconBuildingStore },
-  { link: 'admin/catalog', label: 'Databases', icon: IconDatabaseImport },
   { link: 'admin/catalog', label: 'Security', icon: IconLock },
   { link: 'admin/catalog', label: 'Other Settings', icon: IconSettings },
 ];

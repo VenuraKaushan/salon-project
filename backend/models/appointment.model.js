@@ -41,7 +41,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         default: "PENDING",
-
+    },
+    workr:{
+        type: String,
+        default: "NaN",
     }
 }, { timeStamps: true });
 

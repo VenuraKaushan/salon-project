@@ -65,18 +65,6 @@ export const logout = (req, res) => {
   res.status(200).json({});
 };
 
-//get all appontment to admin dashboard
-export const getAllAppointmentsByAdmin = async (req, res) => {
-  try {
-    const appointments = await Appointment.find()
-
-    res.status(200).json(appointments)
-  } catch (err) {
-    res.status(500).json({ message: "Failed to Get Appointments", err });
-  }
-
-}
-
 //generate appintment Id
 const generateAppointmentID = async () => {
   //get last Appointment object, if there is a Appointment, then return that Appointment object, otherwise return empty array
@@ -136,7 +124,24 @@ export const addAppintmentAsAdmin = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: "Failed to add Appointment", error });
   }
+};
 
+export const assignWorker = async (req, res) => {
 
-}
+  const _id = req.params.id;
+
+  try {
+   const updateFields = {
+    workr : req.body.workerName
+   }
+    const savedWorker = await Appointment.findByIdAndUpdate(_id,updateFields,{new:true});
+
+    res.status(201).json(savedWorker);
+
+  } catch (err) {
+    res.status(500).json({ message: "Failed to assign worker", err });
+
+  }
+
+};
 
