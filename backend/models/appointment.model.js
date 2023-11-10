@@ -45,7 +45,10 @@ const userSchema = new mongoose.Schema({
     workr:{
         type: String,
         default: "NaN",
-    }
+    },
+    serviceCharge:{
+        type: String,
+    },
 }, { timeStamps: true });
 
 

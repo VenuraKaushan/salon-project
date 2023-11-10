@@ -3,12 +3,20 @@ import AdminAPI from "../../API/adminAPI/admin.api";
 import { useState } from "react";
 import { Badge, Button, Center, Group, Modal, ScrollArea, Table, Text, TextInput } from '@mantine/core';
 import { IconSearch, IconTicketOff } from '@tabler/icons-react';
-
+import { useForm } from "@mantine/form";
+import { showNotification, updateNotification } from "@mantine/notifications";
+import {
+    IconX,
+    IconCheck,
+    IconCalendar,
+    IconClock,
+} from "@tabler/icons-react";
 
 
 export const AssignedWorkerAppointments = () => {
 
     const [changeStatusOpended, setChangeStatusOpended] = useState(false);
+
 
 
     // specific appointment details
@@ -25,6 +33,14 @@ export const AssignedWorkerAppointments = () => {
         workr: "",
     });
 
+    //declare add service charge form
+    const addServiceChargeForm = useForm({
+        validateInputOnChange: true,
+        initialValues: {
+            amount: "",
+        }
+    })
+
     //use react query and fetch FAQ data
     const {
         data = [],
@@ -38,6 +54,37 @@ export const AssignedWorkerAppointments = () => {
         },
         { initialData: [] }
     );
+
+    //add service charge function
+    const addServiceCharge=(values:{
+        _id: string,
+        amount: string,
+    })=>{
+        AdminAPI.addServiceChargeAndChangeStatus(values)
+            .then((res)=>{
+                showNotification({
+                    id: "Add service charges",
+                    title: "Adding charges record",
+                    message: "Amount was submitted!",
+                    autoClose: 1500,
+                });
+
+
+                addServiceChargeForm.reset();
+                refetch();
+            })
+            .catch((err)=>{
+                updateNotification({
+                    id: "Add worker",
+                    color: "red",
+                    title: "Something went wrong!",
+                    message: "There is a problem when adding Worker",
+                    icon: <IconX />,
+                    autoClose: 2500,
+                });
+            })
+
+    }
 
     // generate appointment table body
     const rows =
@@ -103,6 +150,109 @@ export const AssignedWorkerAppointments = () => {
 
     return (
         <div>
+            {/* change status and add service charges modal */}
+            <Modal
+                opened={changeStatusOpended}
+                onClose={() => setChangeStatusOpended(false)}
+                size={'50%'}
+
+            >
+                <Modal.Header>
+                    <Text weight={"bold"} size={30}>
+                        Appointment Details
+                    </Text>
+                    <Badge
+                        size="lg"
+                        color={appointmentInfo.status === "COMPLETE" ? "teal" : "orange"}
+                    >
+                        {appointmentInfo.status === "COMPLETE" ? "COMPLETE" : "PENDING"}
+                    </Badge>
+                </Modal.Header>
+
+                <Modal.Body>
+                    <TextInput
+                        mb={10}
+                        label={"Customer Name"}
+                        readOnly
+                        value={appointmentInfo.clientName}
+                    />
+                    <TextInput
+                        mb={10}
+                        label={"Customer Email"}
+                        readOnly
+                        value={appointmentInfo.clientEmail}
+                    />
+                    <TextInput
+                        mt={20}
+                        mb={10}
+                        label={"Phone Number"}
+                        readOnly
+                        value={appointmentInfo.clientPhone}
+                    />
+                    <TextInput
+                        mt={20}
+                        mb={10}
+                        label={"Booked date and Time"}
+                        readOnly
+                        value={`${appointmentInfo.date}  ${appointmentInfo.time}`}
+                    />
+
+                    <TextInput
+                        mt={20}
+                        mb={10}
+                        label={"Service Name"}
+                        readOnly
+                        value={appointmentInfo.serviceType}
+                    />
+
+                    <TextInput
+                        mt={20}
+                        mb={10}
+                        label={"Assign worker"}
+                        readOnly
+                        value={appointmentInfo.workr}
+                    />
+
+                    <TextInput
+                        mt={20}
+                        mb={10}
+                        label={"Service charge"}
+                        placeholder="Rs."
+                        required
+                        {...addServiceChargeForm.getInputProps("amount")}
+
+                    />
+
+                    {addServiceChargeForm.values.amount === '' && (
+                        <div style={{ color: 'red', marginTop: '10px' }}>
+                            Amount cannot be empty
+                        </div>
+                    )}
+
+                    <Center>
+                        <Button
+                            color="red"
+                            uppercase
+                            m={10}
+                            onClick={() => {
+                                if (!addServiceChargeForm.values.amount) {
+                                    // Display an error message within the modal
+                                } else {
+                                    setChangeStatusOpended(false);
+                                    addServiceCharge({
+                                        _id: appointmentInfo._id,
+                                        amount: addServiceChargeForm.values.amount,
+                                    });
+                                }
+                            }}
+                        >
+
+                            Add Amount
+                        </Button>
+                    </Center>
+                </Modal.Body>
+
+            </Modal>
             <Text fw={700} fz={30} style={{ textAlign: "center" }}>Assigned Appointments</Text>
 
             <Group spacing={"md"}>
