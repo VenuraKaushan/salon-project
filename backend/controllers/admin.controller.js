@@ -145,3 +145,24 @@ export const assignWorker = async (req, res) => {
 
 };
 
+export const addServiceChargeAndChangeStatus = async(req,res)=>{
+
+  const _id = req.params.id;
+
+  try{
+
+    const updateFields = {
+      serviceCharge : req.body.amount,
+      status:"COMPLETE"
+    }
+
+    const savedCharge = await Appointment.findByIdAndUpdate(_id,updateFields,{new:true});
+
+    res.status(201).json(savedCharge);
+
+
+  }catch(err){
+    res.status(500).json({ message: "Failed to add service charge", err });
+  }
+}
+

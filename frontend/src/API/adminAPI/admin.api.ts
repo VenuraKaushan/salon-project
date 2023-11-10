@@ -43,6 +43,14 @@ class AdminAPI {
     static getAllAssignedAppointmentsByAdmin =()=>{
         return axios.get(`${BASE_URL}/appointment/assigned`,{withCredentials:true})
     }
+
+    static addServiceChargeAndChangeStatus(values:{
+        _id:string,
+        amount:string,
+    }){
+        console.log(values)
+        return axios.put(`${BASE_URL}/admin/add/amount/${values._id}`,values,{withCredentials:true});
+    }
 }
 
 export default AdminAPI;
