@@ -14,7 +14,8 @@ import {
   IconCalendarFilled,
   IconUsers,
   IconBuildingStore,
-  IconLock
+  IconLock,
+  IconSquareRoundedCheck
 } from '@tabler/icons-react';
 
 const adminDashboardNav = createStyles((theme) => ({
@@ -94,6 +95,7 @@ const links = [
   { label: 'Dashboard', icon: IconGauge, link: 'admin/catalog' },
   { link: '/admin/appointments',label: 'New Appointments',  icon: IconCalendarFilled},
   { link: '/admin/assigned', label: 'Assigned Appointments', icon: IconDatabaseImport },
+  { link: '/admin/completed', label: 'Completed Appointments', icon: IconSquareRoundedCheck},
   { link: '/admin/clients', label: 'Clients', icon: IconUsers, },
   { link: '/admin/catalog', label: 'Inventory', icon: IconBuildingStore },
   { link: 'admin/catalog', label: 'Security', icon: IconLock },

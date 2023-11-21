@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import AdminAPI from "../../API/adminAPI/admin.api";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { Badge, Button, Center, Group, Modal, ScrollArea, Table, Text, TextInput } from '@mantine/core';
 import { IconSearch, IconTicketOff } from '@tabler/icons-react';
 import { useForm } from "@mantine/form";
@@ -11,13 +11,18 @@ import {
     IconCalendar,
     IconClock,
 } from "@tabler/icons-react";
-
+import { CompleteAppointment } from "../completedAppointment";
+import InvoiceTemplate from "../invoiceForserviceCharge/invoiceTemplate";
+import InvoiceAPI from "../../API/invoiceAPI/Invoice.api";
 
 export const AssignedWorkerAppointments = () => {
 
     const [changeStatusOpended, setChangeStatusOpended] = useState(false);
-
-
+    const [openedInvoiceModal, setOpenedInvoiceModal] = useState(false);
+    const [invoiceData, setInvoiceData] = useState({});
+    const [charge,setCharge] = useState("")
+    // show the loading overlay when adding invoice to the database
+    const [invoiceOverlay, setInvoiceOverlay] = useState(false);
 
     // specific appointment details
     const [appointmentInfo, setAppointmentInfo] = useState({
@@ -41,7 +46,7 @@ export const AssignedWorkerAppointments = () => {
         }
     })
 
-    //use react query and fetch FAQ data
+    //use react query and fetch appointment data
     const {
         data = [],
         isLoading,
@@ -55,13 +60,16 @@ export const AssignedWorkerAppointments = () => {
         { initialData: [] }
     );
 
+    // Filter PENDING and COMPLETE tickets
+    const pendingAppointment = data.filter((appointment: any) => appointment.status === "PENDING");
+
     //add service charge function
-    const addServiceCharge=(values:{
+    const addServiceCharge = (values: {
         _id: string,
         amount: string,
-    })=>{
+    }) => {
         AdminAPI.addServiceChargeAndChangeStatus(values)
-            .then((res)=>{
+            .then((res) => {
                 showNotification({
                     id: "Add service charges",
                     title: "Adding charges record",
@@ -73,7 +81,7 @@ export const AssignedWorkerAppointments = () => {
                 addServiceChargeForm.reset();
                 refetch();
             })
-            .catch((err)=>{
+            .catch((err) => {
                 updateNotification({
                     id: "Add worker",
                     color: "red",
@@ -86,10 +94,69 @@ export const AssignedWorkerAppointments = () => {
 
     }
 
+    // save invoice data in the database
+    const saveInvoice = (values: any, amount: any) => {
+        // set invoice overlay visible
+        setInvoiceOverlay(true);
+
+        // create invoice object
+        const invoice = {
+            clientName: values.clientName,
+            clientPhone: values.clientPhone,
+            clientEmail: values.clientEmail,
+            issuedDate: new Date(),
+            time: values.time,
+            date: values.date,
+            serviceType: values.serviceType,
+            workr: values.workr,
+            serviceCharge: amount,
+        };
+
+        // invoice modal open
+        setInvoiceData(invoice);
+
+        // open invoice modal
+        setOpenedInvoiceModal(true);
+
+        // call to the API and send back to the backend
+        InvoiceAPI.addServiceInvoice(invoice)
+            .then((res) => {
+                // after successing the invoice saving set to overlay disappear
+                setInvoiceOverlay(false);
+
+                // refetch new Data
+                refetch();
+
+                // also show the notification
+                showNotification({
+                    title: "Invoice Saved Successful",
+                    message: "Invoice data saved successfully",
+                    autoClose: 2500,
+                    color: "teal",
+                    icon: <IconCheck />,
+                });
+            })
+            .catch((error) => {
+                // if error happens,
+
+                // 1. overlay will be disappeared
+                setInvoiceOverlay(false);
+
+                // then show the error notification
+                showNotification({
+                    title: "Saving invoice failed",
+                    message: "Something went wrong while saving invoice data",
+                    autoClose: 2500,
+                    color: "red",
+                    icon: <IconX />,
+                });
+            });
+    };
+
     // generate appointment table body
     const rows =
-        data.length > 0 ? (
-            data.map((appointment: any) => (
+        pendingAppointment.length > 0 ? (
+            pendingAppointment.map((appointment: any) => (
                 <tr
                     key={appointment._id}
                     onClick={() => {
@@ -133,7 +200,7 @@ export const AssignedWorkerAppointments = () => {
             ))
         ) : (
             <tr>
-                <td colSpan={8}>
+                <td colSpan={10}>
                     <>
                         <Center mt={60}>
                             <IconTicketOff size={100} color="gray" opacity={0.2} />
@@ -146,10 +213,29 @@ export const AssignedWorkerAppointments = () => {
             </tr>
         );
 
+    // useEffect to call saveInvoice after the component has rendered
+    useEffect(() => {
+        if (appointmentInfo._id && charge) {
+            saveInvoice(appointmentInfo, charge);
+        }
+    }, [appointmentInfo, charge]);
 
 
     return (
         <div>
+
+            {/* invoice moda */}
+            <Modal
+                onClose={() => {
+                    // refetch the stocks data
+                    refetch();
+                    setOpenedInvoiceModal(false);
+                }}
+                opened={openedInvoiceModal}
+                size={"50%"}
+            >
+                <InvoiceTemplate data={invoiceData} />
+            </Modal>
             {/* change status and add service charges modal */}
             <Modal
                 opened={changeStatusOpended}
@@ -239,10 +325,12 @@ export const AssignedWorkerAppointments = () => {
                                     // Display an error message within the modal
                                 } else {
                                     setChangeStatusOpended(false);
+                                    setCharge(addServiceChargeForm.values.amount);
                                     addServiceCharge({
                                         _id: appointmentInfo._id,
                                         amount: addServiceChargeForm.values.amount,
                                     });
+                                    setOpenedInvoiceModal(true)
                                 }
                             }}
                         >
@@ -256,16 +344,19 @@ export const AssignedWorkerAppointments = () => {
             <Text fw={700} fz={30} style={{ textAlign: "center" }}>Assigned Appointments</Text>
 
             <Group spacing={"md"}>
-                <TextInput
-                    icon={<IconSearch size={15} />}
-                    placeholder="Search..."
-                    size="xs"
-                    style={{
-                        width: '900px', // Increase length
-                        padding: '10px', // Add margin to the bottom
-                    }}
+                <Center ml={140}>
 
-                />
+                    <TextInput
+                        icon={<IconSearch size={15} />}
+                        placeholder="Search..."
+                        size="xs"
+                        style={{
+                            width: '900px', // Increase length
+                            padding: '10px', // Add margin to the bottom
+                        }}
+
+                    />
+                </Center>
                 <ScrollArea h={500} w={"100%"}>
                     <Table striped highlightOnHover withBorder withColumnBorders >
                         <thead>

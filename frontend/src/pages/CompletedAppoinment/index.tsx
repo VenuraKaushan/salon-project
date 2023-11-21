@@ -1,20 +1,20 @@
 import AdminDashboardNav from "../../components/adminDashboard";
-import { Appointments } from "../../components/NewAppointmentAdminPanel";
+import { CompleteAppointment } from "../../components/completedAppointment";
 import { Grid } from "@mantine/core";
 
-const AppointmentPage = () => {
+const CompletedAppintmentPage = () => {
     return (
       <div>
       <Grid>
           <Grid.Col span="content">
-            <AdminDashboardNav link_id={1}/>
+            <AdminDashboardNav link_id={3}/>
           </Grid.Col>
           <Grid.Col span={'auto'} >
-            <Appointments/>
+            <CompleteAppointment/>
           </Grid.Col>
         </Grid>
       </div>
     )
   }
   
-  export default AppointmentPage;
+  export default CompletedAppintmentPage;

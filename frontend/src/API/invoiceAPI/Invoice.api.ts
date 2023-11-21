@@ -3,7 +3,7 @@ import axios from "axios";
 const BASE_URL = "http://localhost:3001";
 
 
-class Invoice{
+class InvoiceAPI{
 
 
     static submitInvoice = (values : any) =>{
@@ -17,8 +17,12 @@ class Invoice{
 
     }
 
+    static addServiceInvoice = (values:any)=>{
+        return axios.post(`${BASE_URL}/admin/addinvoice`,values,{withCredentials:true});
+    }
+
 
 };
 
 
-export default Invoice;
+export default InvoiceAPI;
