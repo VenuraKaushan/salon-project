@@ -46,7 +46,7 @@ import { useQuery } from "@tanstack/react-query";
 import { IconFileBarcode } from "@tabler/icons-react";
 import { IconArrowNarrowRight } from "@tabler/icons-react";
 import { modals } from "@mantine/modals";
-import InvoiceAPI from "../../API/InvoiceAPI/Invoice.api";
+import InvoiceAPI from "../../API/invoiceAPI/Invoice.api";
 import InvoiceTemplate from "../Invoices/invoiceTemplate";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { StockPDF } from "../PDFRender/stockPDF";

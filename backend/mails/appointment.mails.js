@@ -34,7 +34,7 @@ export const sendAppointmentMail = async ( cusName, cusEmail,time,date) => {
   let details = {
     from: process.env.CLIENT_EMAIL,
     to: `${cusEmail}`,
-    subject: `Promotion Code`,
+    subject: `Appointment Details for ${cusName}`,
     html: emailBody,
     text: emailText,
   };

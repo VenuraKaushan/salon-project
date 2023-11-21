@@ -15,7 +15,7 @@ import { keys } from "@mantine/utils";
 import { IconDownload, IconSearch, IconX } from "@tabler/icons-react";
 import { useRef, useState } from "react";
 import { showNotification, updateNotification } from "@mantine/notifications";
-import InvoiceAPI from "../../API/InvoiceAPI/Invoice.api";
+import InvoiceAPI from "../../API/invoiceAPI/Invoice.api";
 import { useQuery } from "@tanstack/react-query";
 import { IconEye } from "@tabler/icons-react";
 import InvoiceTemplate from "./invoiceTemplate";
