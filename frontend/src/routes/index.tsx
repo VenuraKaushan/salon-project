@@ -13,6 +13,11 @@ import CatalogPage from "../pages/CatalogPage";
 import ClientPage from "../pages/registeredClients";
 import AppointmentPage from "../pages/NewAppointment";
 import AssignedAppointmentPage from "../pages/AssignedAppointment";
+import WorkerDashboaord from "../pages/WorkerDashboard/Invoice";
+import GenerateInvoicePage from "../pages/GenerateInvoice";
+import StockPage from "../pages/StockPage";
+import ProfitPage from "../pages/ProfitPage";
+import Invoice from "../API/Invoice.api";
 
 const AllRoutes = () => {
   const client = new QueryClient();//config query client
@@ -37,11 +42,15 @@ const AllRoutes = () => {
             <Route path="/admin/appointments" element={<AppointmentPage />} />
             <Route path="/admin/assigned" element = {<AssignedAppointmentPage/>}/>
 
+            <Route path="/worker/managestock" element={<WorkerDashboaord />} />
+            <Route path="/worker/invoice" element={<GenerateInvoicePage />} />
+            <Route path="/admin/stockpage" element={<StockPage />} />
+            <Route path="/admin/profitpage" element={<ProfitPage />} />
 
           </Routes>
         </Router>
       </QueryClientProvider>
-
+      
     </div>
   );
 };

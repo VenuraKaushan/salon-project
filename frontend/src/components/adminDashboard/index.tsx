@@ -96,6 +96,7 @@ const links = [
   { link: '/admin/assigned', label: 'Assigned Appointments', icon: IconDatabaseImport },
   { link: '/admin/clients', label: 'Clients', icon: IconUsers, },
   { link: '/admin/catalog', label: 'Inventory', icon: IconBuildingStore },
+  { link: '/admin/stockpage', label: 'Cash Management', icon: IconBuildingStore },
   { link: 'admin/catalog', label: 'Security', icon: IconLock },
   { link: 'admin/catalog', label: 'Other Settings', icon: IconSettings },
 ];

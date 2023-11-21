@@ -7,6 +7,8 @@ import ClientRoutes from './routes/client.routes.js';
 import cookieParser from "cookie-parser";
 import AppointmentRoutes from "./routes/appointment.routes.js";
 import ProductRoutes from "./routes/product.routes.js";
+import ItemRoutes from './routes/item.routes.js';
+import InvoiceRoutes from './routes/invoice.routes.js';
 
 //initialized express
 const app = express();
@@ -49,6 +51,12 @@ app.use('/appointment',AppointmentRoutes)
 
 //redirects to product routes
 app.use('/product',ProductRoutes)
+
+// redirects to batteries routes
+app.use('/batteries',ItemRoutes);
+
+// redirects to invoices routes
+app.use('/invoice', InvoiceRoutes);
 
 
 app.listen(PORT,()=>{
