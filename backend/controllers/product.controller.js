@@ -26,36 +26,77 @@ const generateStockId = async () => {
 
 //add items to the db
 export const addProduct = async (req, res) => {
-    try {
-  
-      //generate Stock ID
-      const customStockId = await generateStockId();
-  
-      const newProduct = new Product({
-        product_id: customStockId,
-        name: req.body.name,
-        brand: req.body.brand,
-        price: req.body.price,
-        description: req.body.description,
-        category: req.body.category,
-        code: req.body.code,
-        quantity: req.body.quantity,
-        added_date: req.body.added_date,
-        expire_date: req.body.expire_date,
-        supplier: req.body.supplier,
-        image: req.body.image,
+  try {
+    const customStockId = await generateStockId();
+    const product_id = customStockId;
+    const proName = req.body.name;
+    const proBrand = req.body.brand;
+    const proPrice = req.body.price;
+    const proDescription = req.body.description;
+    const proCategory = req.body.category;
+    const proCode = req.body.code;
+    const proQuantity = req.body.quantity;
+    const proAdded_date = req.body.added_date;
+    const proExpire_date = req.body.expire_date;
+    const proSupplier = req.body.supplier;
+    const proImage = req.body.image;
 
-      });
+    // Input validation can be added here
+
+    const newProduct = await Product.create({
+      product_id: product_id,
+      name: proName,
+      brand: proBrand,
+      price: proPrice,
+      description: proDescription,
+      category: proCategory,
+      code: proCode,
+      quantity: proQuantity,
+      added_date: proAdded_date,
+      expire_date: proExpire_date,
+      supplier: proSupplier,
+      image: proImage,
+    });
+
+    console.log(newProduct);
+    res.status(201).json(newProduct);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+// export const addProduct = async (req, res) => {
+//     try {
   
-      const savedProduct = await newProduct.save(); // Save the new product document to the database
+//       //generate Stock ID
+//       const customStockId = await generateStockId();
   
-      console.log(savedProduct);
+//       const newProduct = new Product({
+//         product_id: customStockId,
+//         name: req.body.name,
+//         brand: req.body.brand,
+//         price: req.body.price,
+//         description: req.body.description,
+//         category: req.body.category,
+//         code: req.body.code,
+//         quantity: req.body.quantity,
+//         added_date: req.body.added_date,
+//         expire_date: req.body.expire_date,
+//         supplier: req.body.supplier,
+//         image: req.body.image,
+
+//       });
   
-      res.status(201).json(savedProduct); // Send the saved product as the response
-    } catch (error) {
-      res.status(500).json({ message: "Failed to add Product", error });
-    }
-  };  
+//       const savedProduct = await newProduct.save(); // Save the new product document to the database
+  
+//       console.log(savedProduct);
+  
+//       res.status(201).json(savedProduct); // Send the saved product as the response
+//     } catch (error) {
+//       res.status(500).json({ message: "Failed to add Product", error });
+//     }
+//   };  
 
 //get all added data
 export const getAllItems = async (req, res) => {
@@ -64,6 +105,24 @@ export const getAllItems = async (req, res) => {
 
     res.status(200).json(product); // Send the product as the response
     console.log(product);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch product", error: error.message });
+  }
+};
+
+//get by id
+export const getProductById = async (req, res) => {
+  const productId = req.params.id; // Get the product ID from the request parameters
+
+  try {
+    const product = await Product.findById(productId); // Find the product by its ID
+
+    if (!product) {
+      // If the product is not found, send a 404 status code with a message
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    res.status(200).json(product); // Send the product details as the response
   } catch (error) {
     res.status(500).json({ message: "Failed to fetch product", error: error.message });
   }
@@ -86,6 +145,8 @@ export const updateProduct = async (req, res) => {
     added_date: req.body.added_date,
     expire_date: req.body.expire_date,
     supplier: req.body.supplier,
+    image: req.body.image,
+    
   };
 
   try {
@@ -106,47 +167,7 @@ export const updateProduct = async (req, res) => {
   }
 };
 
-//update only use products
-// export const updateUseProduct = async (req, res) => {
-//   const product_id = req.params.id;
 
-//   // Ensure that 'quantityUsed' is a valid positive number
-//   const quantityUsed = parseInt(req.body.quantityUsed);
-
-//   if (isNaN(quantityUsed) || quantityUsed <= 0) {
-//       return res.status(400).json({ message: "Invalid quantityUsed value" });
-//   }
-
-//   try {
-//       const product = await Product.findById(product_id);
-
-//       if (!product) {
-//           return res.status(404).json({ message: "Product not found" });
-//       }
-
-//       if (product.quantity < quantityUsed) {
-//           return res.status(400).json({ message: "Not enough quantity available" });
-//       }
-
-//       // Subtract 'quantityUsed' from the current 'quantity'
-//       product.quantity -= quantityUsed;
-
-//       // Add usage history to the product
-//       const newUsage = {
-//           quantityUsed,
-//           reasonForUse: req.body.reasonForUse,
-//       };
-
-//       product.usageHistory.push(newUsage);
-
-//       // Save the updated product
-//       const updatedProduct = await product.save();
-
-//       res.status(200).json(updatedProduct);
-//   } catch (error) {
-//       res.status(500).json({ message: "Failed to update Product", error });
-//   }
-// };
 export const updateUseProduct = async (req, res) => {
   const product_id = req.params.id;
 

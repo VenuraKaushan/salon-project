@@ -36,18 +36,19 @@ const productSchema = new mongoose.Schema({
     },
     added_date : {
         type : String,
-        // required : true
+        required : true
     },
     expire_date:{
         type : String,
-        // required : true
+        required : true
     },
     supplier : {
         type : String,
-        // required : true
+        required : true
     },
     image: {
         type : String,
+        required : true
     },
     // usageHistory: [
     //     {
