@@ -7,7 +7,7 @@
     "@emotion/styled": "^11.11.0",
     "@mantine/core": "^6.0.16",
     "@mantine/dates": "^6.0.16",
-    "@mantine/dropzone": "^6.0.19",
+    "@mantine/dropzone": "^6.0.21",
     "@mantine/ds": "^6.0.16",
     "@mantine/form": "^6.0.16",
     "@mantine/hooks": "^6.0.16",
