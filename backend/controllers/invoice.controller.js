@@ -1,6 +1,6 @@
 import Battery from "../models/battery.model.js";
 import Invoice from "../models/invoice.model.js";
-import { sendInvoiceMail } from "../Mails/customer.mails.js";
+import {sendInvoiceMail} from "../Mails/customer.mails.js";
 
 //generate Invoice Id
 const generateInvoiceId = async () => {
@@ -37,20 +37,20 @@ export const addInvoice = async (req, res) => {
       invoice_id: customInvoiceID,
       cusName: req.body.cusName,
       cusPhone: req.body.cusPhone,
-      cusEmail: req.body.cusEmail,
+      cusEmail : req.body.cusEmail,
       cusAddress: req.body.cusAddress,
       items: req.body.items,
       discount: req.body.discount,
       totalActualPrice: req.body.totalActualPrice,
       totalSoldPrice: req.body.totalSoldPrice,
     });
-
+    
     // store the invoice Object in the datasase
     const savedInvoice = await invoice.save();
 
 
     // after saving the invoice, send the invoice via email to the customer, if email mentioned
-    if (req.body.cusEmail.length > 0) {
+    if(req.body.cusEmail.length > 0){
 
       console.log(`Sending mail to ${invoice.cusEmail}....`)
       // mentioned here your sending email function
@@ -60,11 +60,11 @@ export const addInvoice = async (req, res) => {
 
     // reduce the quantities 
     const items = req.body.items;
-
+    
     //updating stocks
-    const updatedStocks = items.map((item) => {
-      Battery.findById({ _id: item._id }).then((data) => {
-        return Battery.findByIdAndUpdate({ _id: data._id }, { quantity: data.quantity - parseInt(item.quantity) }, { new: true });
+    const updatedStocks = items.map((item) =>{
+      Battery.findById({_id : item._id}).then((data)=>{
+        return Battery.findByIdAndUpdate({_id : data._id},{quantity : data.quantity - parseInt(item.quantity)},{new : true});
       })
     });
 

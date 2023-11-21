@@ -23,8 +23,12 @@
     "jsonwebtoken": "^9.0.2",
     "mailgen": "^2.0.28",
     "mongoose": "^7.6.2",
+    "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.7",
-    "nodeman": "^1.1.2"
+    "nodeman": "^1.1.2",
+    "path": "^0.12.7",
+    "react-chartjs-2": "^5.2.0",
+    "react-to-print": "^2.14.15"
   },
   "devDependencies": {
     "babel-node": "^0.0.1-security",
