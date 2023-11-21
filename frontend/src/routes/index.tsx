@@ -41,7 +41,7 @@ const AllRoutes = () => {
           </Routes>
         </Router>
       </QueryClientProvider>
-
+      
     </div>
   );
 };
