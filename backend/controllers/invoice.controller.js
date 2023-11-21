@@ -96,7 +96,7 @@ export const saveServiceInvoices = async (req, res) => {
   const customInvoiceID = await generateInvoiceId();
 
   try {
-    const invoice = new Invoice({
+    const invoices = new Invoice({
       cusName: req.body.clientName,
       invoice_id: customInvoiceID,
       cusPhone: req.body.clientPhone,
@@ -109,17 +109,9 @@ export const saveServiceInvoices = async (req, res) => {
       serviceCharge: req.body.serviceCharge,
     })
 
+    console.log(invoices)
     // store the invoice Object in the datasase
-    const savedInvoice = await invoice.save();
-
-    // //send 
-    // const cusName = req.body.clientName;
-    // const cusEmail = req.body.clientEmail;
-    // const time = req.body.time;
-    // const date = new Date(req.body.date);
-    // const formattedDate = date.toDateString();
-
-    // sendAppointmentMail(cusName, cusEmail, time, formattedDate)
+    const savedInvoice = await invoices.save();
 
     // send The success status to the frontend
     res.status(201).json(savedInvoice);
