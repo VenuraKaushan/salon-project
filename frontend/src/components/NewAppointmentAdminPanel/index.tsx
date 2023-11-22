@@ -1,7 +1,7 @@
 import { Badge, Button, Center, Group, Modal, ScrollArea, Table, Text, TextInput } from '@mantine/core';
 import { IconSearch, IconTicketOff } from '@tabler/icons-react';
 import { useQuery } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { showNotification, updateNotification } from '@mantine/notifications';
 import {
     IconX,
@@ -21,6 +21,7 @@ export const Appointments = () => {
     const [selectedDate, setSelectedDate] = useState(""); // Add selectedDate state
     const [timeSlotOpened, setTimeSlotOpened] = useState(false);
     const [assignWorkerModalOpen, setAssignWorkerModalOpen] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
 
 
     // specific appointment details
@@ -96,6 +97,17 @@ export const Appointments = () => {
     const openDateModal = () => {
         setDateModalOpened(true);
     };
+
+    // Filter appointments based on search term
+    const filteredAppointments = useMemo(() => {
+        return data.filter((appointment: any) => {
+            const searchString = `${appointment.clientName} ${appointment.clientEmail} ${appointment.clientPhone} ${appointment.time} ${new Date(appointment.date).toLocaleDateString("en-CA")} ${appointment.serviceType} ${appointment.status} ${appointment.id}`.toLowerCase();
+
+            // Check if any part of the searchString includes the searchTerm
+            return searchString.includes(searchTerm.toLowerCase());
+        });
+    }, [data, searchTerm]);
+
 
     //add appointment as admin
     const addAppointment = (values: {
@@ -236,8 +248,8 @@ export const Appointments = () => {
 
     // generate appointment table body
     const rows =
-        data.length > 0 ? (
-            data.map((appointment: any) => (
+        filteredAppointments.length > 0 ? (
+            filteredAppointments.map((appointment: any) => (
                 <tr
                     key={appointment._id}
                     onClick={() => {
@@ -524,7 +536,7 @@ export const Appointments = () => {
                 </ScrollArea>
             </Modal>
             <Text fw={700} fz={30} style={{ textAlign: "center" }}>New Appointments</Text>
-
+            {/* search bar */}
             <Group spacing={"md"}>
                 <TextInput
                     icon={<IconSearch size={15} />}
@@ -534,7 +546,8 @@ export const Appointments = () => {
                         width: '900px', // Increase length
                         padding: '10px', // Add margin to the bottom
                     }}
-
+                    value={searchTerm}
+                    onChange={(event) => setSearchTerm(event.currentTarget.value)}
                 />
                 <Button variant="gradient" gradient={{ from: 'indigo', to: 'cyan' }}
                     onClick={openDateModal}
