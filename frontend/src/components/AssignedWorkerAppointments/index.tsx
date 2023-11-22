@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import AdminAPI from "../../API/adminAPI/admin.api";
-import { useState,useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Badge, Button, Center, Group, Modal, ScrollArea, Table, Text, TextInput } from '@mantine/core';
 import { IconSearch, IconTicketOff } from '@tabler/icons-react';
 import { useForm } from "@mantine/form";
@@ -20,9 +20,11 @@ export const AssignedWorkerAppointments = () => {
     const [changeStatusOpended, setChangeStatusOpended] = useState(false);
     const [openedInvoiceModal, setOpenedInvoiceModal] = useState(false);
     const [invoiceData, setInvoiceData] = useState({});
-    const [charge,setCharge] = useState("")
+    const [charge, setCharge] = useState("")
     // show the loading overlay when adding invoice to the database
     const [invoiceOverlay, setInvoiceOverlay] = useState(false);
+    const [searchTerm, setSearchTerm] = useState("");
+
 
     // specific appointment details
     const [appointmentInfo, setAppointmentInfo] = useState({
@@ -63,6 +65,16 @@ export const AssignedWorkerAppointments = () => {
     // Filter PENDING and COMPLETE tickets
     const pendingAppointment = data.filter((appointment: any) => appointment.status === "PENDING");
 
+    // Filter appointments based on search term
+    const filteredAppointments = useMemo(() => {
+        return pendingAppointment.filter((appointment: any) => {
+            const searchString = `${appointment.clientName} ${appointment.clientEmail} ${appointment.clientPhone} ${appointment.time} ${new Date(appointment.date).toLocaleDateString("en-CA")} ${appointment.serviceType} ${appointment.status} ${appointment.id} ${appointment.workr}`.toLowerCase();
+
+            // Check if any part of the searchString includes the searchTerm
+            return searchString.includes(searchTerm.toLowerCase());
+        });
+    }, [pendingAppointment, searchTerm]);
+    
     //add service charge function
     const addServiceCharge = (values: {
         _id: string,
@@ -155,8 +167,8 @@ export const AssignedWorkerAppointments = () => {
 
     // generate appointment table body
     const rows =
-        pendingAppointment.length > 0 ? (
-            pendingAppointment.map((appointment: any) => (
+        filteredAppointments.length > 0 ? (
+            filteredAppointments.map((appointment: any) => (
                 <tr
                     key={appointment._id}
                     onClick={() => {
@@ -354,6 +366,8 @@ export const AssignedWorkerAppointments = () => {
                             width: '900px', // Increase length
                             padding: '10px', // Add margin to the bottom
                         }}
+                        value={searchTerm}
+                        onChange={(event) => setSearchTerm(event.currentTarget.value)}
 
                     />
                 </Center>

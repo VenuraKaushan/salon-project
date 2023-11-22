@@ -1,11 +1,12 @@
 import { Badge, Center, Group, ScrollArea, Table, Text, TextInput } from "@mantine/core";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { IconSearch, IconTicketOff } from '@tabler/icons-react';
 import { useQuery } from "@tanstack/react-query";
 import AdminAPI from "../../API/adminAPI/admin.api";
 
 
 export const CompleteAppointment = () => {
+    const [searchTerm, setSearchTerm] = useState("");
     // specific appointment details
     const [appointmentInfo, setAppointmentInfo] = useState({
         _id: "",
@@ -37,28 +38,39 @@ export const CompleteAppointment = () => {
 
     const completeAppointment = data.filter((appointment: any) => appointment.status === "COMPLETE");
 
+    // Filter appointments based on search term
+    const filteredAppointments = useMemo(() => {
+        return completeAppointment.filter((appointment: any) => {
+            const searchString = `${appointment.clientName} ${appointment.clientEmail} ${appointment.clientPhone} ${appointment.time} ${new Date(appointment.date).toLocaleDateString("en-CA")} ${appointment.serviceType} ${appointment.status} ${appointment.id} ${appointment.workr} ${appointment.serviceCharge}`.toLowerCase();
+
+            // Check if any part of the searchString includes the searchTerm
+            return searchString.includes(searchTerm.toLowerCase());
+        });
+    }, [completeAppointment, searchTerm]);
+
+
     // generate appointment table body
     const rows =
-        completeAppointment.length > 0 ? (
-            completeAppointment.map((appointment: any) => (
+        filteredAppointments.length > 0 ? (
+            filteredAppointments.map((appointment: any) => (
                 <tr
-                    // key={appointment._id}
-                    // onClick={() => {
-                    //     setAppointmentInfo({
-                    //         _id: appointment._id,
-                    //         aptid: appointment.id,
-                    //         clientName: appointment.clientName,
-                    //         clientEmail: appointment.clientEmail,
-                    //         clientPhone: appointment.clientPhone,
-                    //         time: appointment.time,
-                    //         date: new Date(appointment.date).toLocaleDateString("en-CA"),
-                    //         serviceType: appointment.serviceType,
-                    //         status: appointment.status,
-                    //         workr: appointment.workr,
-                    //         serviceCharge: appointment.serviceCharge,
-                    //     });
-                    // }}
-                    // style={{ cursor: "pointer" }}
+                // key={appointment._id}
+                // onClick={() => {
+                //     setAppointmentInfo({
+                //         _id: appointment._id,
+                //         aptid: appointment.id,
+                //         clientName: appointment.clientName,
+                //         clientEmail: appointment.clientEmail,
+                //         clientPhone: appointment.clientPhone,
+                //         time: appointment.time,
+                //         date: new Date(appointment.date).toLocaleDateString("en-CA"),
+                //         serviceType: appointment.serviceType,
+                //         status: appointment.status,
+                //         workr: appointment.workr,
+                //         serviceCharge: appointment.serviceCharge,
+                //     });
+                // }}
+                // style={{ cursor: "pointer" }}
                 >
                     <td>
                         {
@@ -102,16 +114,18 @@ export const CompleteAppointment = () => {
 
             <Group spacing={"md"}>
                 <Center ml={140}>
-                <TextInput
-                    icon={<IconSearch size={15} />}
-                    placeholder="Search..."
-                    size="xs"
-                    style={{
-                        width: '900px', // Increase length
-                        padding: '10px', // Add margin to the bottom
-                    }}
+                    <TextInput
+                        icon={<IconSearch size={15} />}
+                        placeholder="Search..."
+                        size="xs"
+                        style={{
+                            width: '900px', // Increase length
+                            padding: '10px', // Add margin to the bottom
+                        }}
+                        value={searchTerm}
+                        onChange={(event) => setSearchTerm(event.currentTarget.value)}
 
-                />
+                    />
                 </Center>
 
                 <ScrollArea h={500} w={"100%"}>
