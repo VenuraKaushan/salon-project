@@ -10,7 +10,7 @@ const LoginPage = forwardRef<HTMLInputElement>((props,ref) => {
     <div style={{ height: "100vh" , backgroundImage:`url(${backgroundimg})`, backgroundSize: 'cover', backgroundPosition: 'center', display: 'flex', justifyContent: 'center', alignItems: 'center'  }} ref={ref}>
       <Group position="center"  spacing={100}  >
           <AdminLogin />
-          <ClientLogin />
+          {/* <ClientLogin /> */}
       </Group>
     </div>
   );
