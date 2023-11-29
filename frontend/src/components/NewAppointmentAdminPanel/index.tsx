@@ -12,8 +12,6 @@ import {
 import { useForm } from '@mantine/form';
 import { DateInput } from '@mantine/dates';
 import AdminAPI from '../../API/adminAPI/admin.api';
-import { format } from 'date-fns';
-
 
 export const Appointments = () => {
     const [appointmentOpended, setAppointmentOpended] = useState(false);
@@ -120,8 +118,6 @@ export const Appointments = () => {
         serviceType: string,
     }) => {
         console.log(values.time)
-        const formattedDate = format(new Date(selectedDate), 'yyyy-MM-dd');
-
         showNotification({
             id: "Add client details",
             loading: true,
@@ -131,7 +127,7 @@ export const Appointments = () => {
         });
         AdminAPI.addAppintmentAsAdmin({
             ...values,
-            date: formattedDate,
+            date: selectedDate,
         })
             .then((Response) => {
                 updateNotification({
