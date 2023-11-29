@@ -1,7 +1,19 @@
-import { Badge, Button, Center, Group, Modal, ScrollArea, Table, Text, TextInput } from '@mantine/core';
+import {
+    Badge,
+    Button,
+    Center,
+    Group,
+    Modal,
+    ScrollArea,
+    Table,
+    Text,
+    TextInput,
+    ActionIcon,
+    Box
+} from '@mantine/core';
 import { IconSearch, IconTicketOff } from '@tabler/icons-react';
 import { useQuery } from '@tanstack/react-query';
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useRef, RefObject } from 'react';
 import { showNotification, updateNotification } from '@mantine/notifications';
 import {
     IconX,
@@ -10,7 +22,7 @@ import {
     IconClock,
 } from "@tabler/icons-react";
 import { useForm } from '@mantine/form';
-import { DateInput } from '@mantine/dates';
+import { DateInput, TimeInput } from '@mantine/dates';
 import AdminAPI from '../../API/adminAPI/admin.api';
 
 export const Appointments = () => {
@@ -22,6 +34,9 @@ export const Appointments = () => {
     const [timeSlotOpened, setTimeSlotOpened] = useState(false);
     const [assignWorkerModalOpen, setAssignWorkerModalOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
+    const [timeModalOpened, setTimeModalOpened] = useState(false);
+
+
 
 
     // specific appointment details
@@ -55,6 +70,15 @@ export const Appointments = () => {
         validateInputOnChange: true,
         initialValues: {
             date: "",
+
+        },
+    });
+
+    //declare add time form
+    const timeForm = useForm({
+        validateInputOnChange: true,
+        initialValues: {
+            time: "",
 
         },
     });
@@ -93,10 +117,15 @@ export const Appointments = () => {
         console.log(selectedTimeSlot)
     };
 
-    // Function to open the modal
+    // Function to open the date modal
     const openDateModal = () => {
         setDateModalOpened(true);
     };
+
+    //function to open time modal
+    const openTimeModal = () => {
+        setTimeModalOpened(true);
+    }
 
     // Filter appointments based on search term
     const filteredAppointments = useMemo(() => {
@@ -157,6 +186,7 @@ export const Appointments = () => {
             });
     }
 
+    //check date function
     const checkDate = (values: {
         date: string,
     }) => {
@@ -215,6 +245,64 @@ export const Appointments = () => {
             });
     }
 
+    //check time function
+    const checkTime = (values: {
+        time: string,
+    }) => {
+        if (!values.time) {
+            // Show an error notification or provide user feedback that a date should be selected.
+            showNotification({
+                id: "Missing Date",
+                color: "red",
+                title: "Missing Date",
+                message: "Please select a date before checking available time slots.",
+                icon: <IconX />,
+                autoClose: 2500,
+            });
+            return;
+        }
+
+        showNotification({
+            id: "Check appointment time",
+            loading: true,
+            title: "Checking time",
+            message: "Please wait while we Check the time..",
+            autoClose: false,
+        });
+        AdminAPI.checkTime(values)
+            .then((Response) => {
+                updateNotification({
+                    id: "Check appointment time",
+                    color: "teal",
+                    title: "Here last 7 free dates available in thet time slot",
+                    message: "Dates retrieved successfully..",
+                    icon: <IconCheck />,
+                    autoClose: 2500,
+                });
+
+                timeForm.reset();
+                setTimeModalOpened(false);
+                // setAppointmentTime(Response.data.free);
+
+                // Store the selected date in the state
+                // setSelectedDate(values.date);
+
+                // Open the timeSlotOpened modal only if a date has been selected
+                // setTimeSlotOpened(true);
+
+
+            })
+            .catch((error) => {
+                updateNotification({
+                    id: "Check appointment time",
+                    color: "red",
+                    title: "Something went wrong!",
+                    message: "There is a problem when Checking the time for appointment",
+                    icon: <IconX />,
+                    autoClose: 2500,
+                });
+            });
+    }
     //assign worker
     const assignWorker = (values: {
         _id: string,
@@ -482,8 +570,36 @@ export const Appointments = () => {
                     <br></br>
                     <br></br>
                     <br></br>
+
                     <Center>
                         <Button color="blue" radius="lg" type="submit"
+
+                        >
+                            Check
+                        </Button>
+                    </Center>
+                </form>
+            </Modal>
+
+            {/* time picker modal */}
+            <Modal
+                opened={timeModalOpened}
+                onClose={() => setTimeModalOpened(false)}
+                title="Appointment Time"
+                size="50%"
+
+            >
+                <form
+                    onSubmit={timeForm.onSubmit((values) => checkTime(values))}
+                >
+
+                    <TimeInput
+                        icon={<IconClock size="1rem" stroke={1.5} />}
+                        maw={400} mx="auto"
+                        {...timeForm.getInputProps("time")}
+                    />
+                    <Center>
+                        <Button mt={15} color="blue" radius="lg" type="submit"
 
                         >
                             Check
@@ -543,16 +659,23 @@ export const Appointments = () => {
                     placeholder="Search..."
                     size="xs"
                     style={{
-                        width: '900px', // Increase length
+                        width: '700px', // Increase length
                         padding: '10px', // Add margin to the bottom
                     }}
                     value={searchTerm}
                     onChange={(event) => setSearchTerm(event.currentTarget.value)}
                 />
-                <Button variant="gradient" gradient={{ from: 'indigo', to: 'cyan' }}
-                    onClick={openDateModal}
+                <Box>
+                    <Button mr={10} variant="gradient" gradient={{ from: 'indigo', to: 'cyan' }}
+                        onClick={openDateModal}
 
-                >Add Appointment</Button>
+                    >Add Appointment from date</Button>
+                    <Button variant="gradient" gradient={{ from: 'orange', to: 'red' }}
+                        onClick={openTimeModal}
+
+                    >Add Appointment from Time</Button>
+                </Box>
+
 
                 <ScrollArea h={500} w={"100%"}>
                     <Table striped highlightOnHover withBorder withColumnBorders >

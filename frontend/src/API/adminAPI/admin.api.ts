@@ -51,6 +51,13 @@ class AdminAPI {
         console.log(values)
         return axios.put(`${BASE_URL}/admin/add/amount/${values._id}`,values,{withCredentials:true});
     }
+
+    static checkTime (values:{
+        time:string,
+    }){
+        console.log(values)
+        return axios.post(`${BASE_URL}/appointment/time`,values,{withCredentials:true});
+    };
 }
 
 export default AdminAPI;

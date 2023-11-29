@@ -1,6 +1,7 @@
 import Appointment from "../models/appointment.model.js"
 import "dotenv/config";
 import { sendAppointmentMail } from "../mails/appointment.mails.js";
+import { addDays, eachDayOfInterval, format, parseISO } from 'date-fns';
 
 
 
@@ -145,4 +146,100 @@ export const getAllAssignedAppointmentsByAdmin = async (req, res) => {
         res.status(500).json({ message: "Failed to Get Appointments", err });
 
     }
+}
+
+export const checkTime = async (req, res) => {
+    try {
+        const time = req.body.time;
+        if (!time) {
+            return res.status(400).json({ error: 'Time is required.' });
+        }
+
+        //convert time to 12h
+        const convertedCheckingTime = convert24to12(time)
+
+        console.log("Checking time: " + convertedCheckingTime);
+
+        //get next 7 days including today
+        const today = new Date();
+        const next7Days = [];
+
+        for (let i = 0; i < 7; i++) {
+            const currentDate = addDays(today, i);
+            const formattedDate = format(currentDate, 'yyyy-MM-dd');
+            next7Days.push(formattedDate);
+        }
+        const formattedNext7Days = next7Days.map(dateString => format(parseISO(dateString), 'yyyy-MM-dd'));
+
+        console.log("next 7 days" + formattedNext7Days);
+
+        //get all pending appointments
+        const bookedDatesAtThatTime = await getPendingAppointments();
+
+        console.log(bookedDatesAtThatTime)
+
+        //comparing and store the already booked dates at that time
+        const bookedDates = [];
+        for (let i = 0; i < bookedDatesAtThatTime.length; i++) {
+            if (convertedCheckingTime == bookedDatesAtThatTime[i].time) {
+                const localDate = new Date(bookedDatesAtThatTime[i].date).toLocaleDateString();
+                bookedDates.push(localDate);
+            }
+        }
+
+        console.log("booked dates at that time:", bookedDates);
+
+
+        //comparing and store the free dates at that time
+        const freeDates = [];
+        for (let i = 0; i < formattedNext7Days.length; i++) {
+            const localFormattedDate = new Date(formattedNext7Days[i]).toLocaleDateString('en-US');
+            let isBooked = false;
+        
+            for (let j = 0; j < bookedDates.length; j++) {
+                const localBookedDate = new Date(bookedDates[j]).toLocaleDateString('en-US');
+        
+                if (localFormattedDate === localBookedDate) {
+                    // The date is already booked, set the flag to true and break out of the inner loop
+                    isBooked = true;
+                    break;
+                }
+            }
+            // If the date is not booked, add it to freeDates
+            if (!isBooked) {
+                freeDates.push(localFormattedDate);
+            }
+        }
+        console.log("Free dates:", freeDates);
+        
+
+        res.status(200).json({freeDates})
+
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ error: 'Internal server error.' });
+    }
+};
+
+async function getPendingAppointments() {
+    const pendingAppointments = await Appointment.find({ status: 'PENDING' });
+    return pendingAppointments.map(appointment => ({
+        date: appointment.date,
+        time: appointment.time,
+    }));
+}
+
+function convert24to12(time24h) {
+    const [hours, minutes] = time24h.split(':');
+    let period = 'AM';
+
+    let hours12 = parseInt(hours, 10);
+    if (hours12 >= 12) {
+        period = 'PM';
+        if (hours12 > 12) {
+            hours12 -= 12;
+        }
+    }
+
+    return `${String(hours12).padStart(2, '0')}:${minutes} ${period}`;
 }
