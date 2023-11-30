@@ -8,13 +8,25 @@ class AdminAPI {
         return axios.post(`${BASE_URL}/admin/login`,values,{withCredentials:true});
     }
 
-    static addAppintmentAsAdmin = (values:{
+    static addAppintmentAsAdminViaDate = (values:{
         clientName:string,
         clientEmail:string,
         clientPhone:string,
         time :String,
         serviceType :string,
         date :string,
+    }) =>{
+        console.log(values)
+        return axios.post(`${BASE_URL}/admin/appointment/add`,values,{withCredentials:true});
+    }
+
+    static addAppintmentAsAdminViaTime = (values:{
+        clientName:string,
+        clientEmail:string,
+        clientPhone:string,
+        date :String,
+        serviceType :string,
+        time :string,
     }) =>{
         console.log(values)
         return axios.post(`${BASE_URL}/admin/appointment/add`,values,{withCredentials:true});
