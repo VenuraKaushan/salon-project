@@ -67,7 +67,7 @@ export const addGuestAppointment = async (req, res) => {
 
 export const checkDate = async (req, res) => {
     try {
-        const date = req.body.date;
+        const date = new Date(req.body.date);
         const booked = [];
         const free = [];
 
