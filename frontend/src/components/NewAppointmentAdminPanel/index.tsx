@@ -826,7 +826,7 @@ export const Appointments = () => {
                     placeholder="Search..."
                     size="xs"
                     style={{
-                        width: '900px', // Increase length
+                        width: '750px', // Increase length
                         padding: '10px', // Add margin to the bottom
                     }}
                     value={searchTerm}

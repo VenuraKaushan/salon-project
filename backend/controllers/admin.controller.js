@@ -98,6 +98,12 @@ export const addAppintmentAsAdmin = async (req, res) => {
     console.log('Input Time:', req.body.time);
     console.log('Input date:', req.body.date);
 
+    const cusName = req.body.clientName;
+    const cusEmail = req.body.clientEmail;
+    const time = req.body.time;
+    const date = new Date(req.body.date);
+    const formattedDate = date.toDateString();
+
     const newAppointment = new Appointment({
       id: customAppointmentId,
       clientName: req.body.clientName,
@@ -105,19 +111,13 @@ export const addAppintmentAsAdmin = async (req, res) => {
       clientPhone: req.body.clientPhone,
       serviceType: req.body.serviceType,
       time: req.body.time,
-      date: req.body.date,
+      date: date,
     });
 
-
-    const cusName = req.body.clientName;
-    const cusEmail = req.body.clientEmail;
-    const time = req.body.time;
-    const date = new Date(req.body.date);
-    const formattedDate = date.toDateString();
-
-
+    console.log(date);
+    console.log(formattedDate);
     console.log(newAppointment);
-
+    
     const savedAppointment = await newAppointment.save()
 
     //send an email to the user
