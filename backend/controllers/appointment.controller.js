@@ -154,7 +154,6 @@ export const checkTime = async (req, res) => {
         if (!time) {
             return res.status(400).json({ error: 'Time is required.' });
         }
-
         //convert time to 12h
         const convertedCheckingTime = convert24to12(time)
 

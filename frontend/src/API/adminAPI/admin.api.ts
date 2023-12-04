@@ -1,4 +1,6 @@
 import axios from "axios";
+import { format } from 'date-fns';
+
 
 const BASE_URL = "http://localhost:3001";
 
@@ -20,17 +22,29 @@ class AdminAPI {
         return axios.post(`${BASE_URL}/admin/appointment/add`,values,{withCredentials:true});
     }
 
-    static addAppintmentAsAdminViaTime = (values:{
-        clientName:string,
-        clientEmail:string,
-        clientPhone:string,
-        date :String,
-        serviceType :string,
-        time :string,
-    }) =>{
-        console.log(values)
-        return axios.post(`${BASE_URL}/admin/appointment/add`,values,{withCredentials:true});
-    }
+    static addAppintmentAsAdminViaTime = (values: {
+        clientName: string,
+        clientEmail: string,
+        clientPhone: string,
+        date: string,
+        serviceType: string,
+        time: string,
+      }) => {
+        // Convert 24-hour time to 12-hour time
+        const formattedTime = format(new Date(`2022-01-01 ${values.time}`), 'hh:mm a');
+      
+        // Log the formatted time for debugging
+        console.log('Formatted Time:', formattedTime);
+      
+        // Include the formatted time in the request
+        const updatedValues = { ...values, time: formattedTime };
+      
+        // Log the updated values for debugging
+        console.log('Updated Values:', updatedValues);
+      
+        // Send the request with the updated values
+        return axios.post(`${BASE_URL}/admin/appointment/add`, updatedValues, { withCredentials: true });
+      };
 
     static getAllNewAppointmentsByAdmin = () =>{
 
