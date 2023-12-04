@@ -4,6 +4,7 @@ import User from "../models/users.model.js";
 import jwt from "jsonwebtoken";
 import Appointment from "../models/appointment.model.js";
 import { sendAppointmentMail } from "../mails/appointment.mails.js";
+import { format } from 'date-fns';
 
 //admin login function
 export const adminLogin = async (req, res) => {
@@ -94,6 +95,8 @@ const generateAppointmentID = async () => {
 export const addAppintmentAsAdmin = async (req, res) => {
   try {
     const customAppointmentId = await generateAppointmentID();
+    console.log('Input Time:', req.body.time);
+    console.log('Input date:', req.body.date);
 
     const newAppointment = new Appointment({
       id: customAppointmentId,
@@ -104,6 +107,7 @@ export const addAppintmentAsAdmin = async (req, res) => {
       time: req.body.time,
       date: req.body.date,
     });
+
 
     const cusName = req.body.clientName;
     const cusEmail = req.body.clientEmail;

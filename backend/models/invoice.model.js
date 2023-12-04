@@ -67,23 +67,18 @@ const invoiceSchema = new mongoose.Schema({
     },
     appointmentTime: {
         type: String,
-        required: true,
     },
     appointmentDate:{
         type: String,
-        required: true,
     },
     serviceType: {
         type: String,
-        required: true,
     },
     workr:{
         type: String,
-        required: true,
     },
     serviceCharge:{
         type: String,
-        required: true,
     },
 }, { timestamps: true });
 
