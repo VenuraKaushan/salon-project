@@ -13,7 +13,7 @@ import {
 } from "@tabler/icons-react";
 import { CompleteAppointment } from "../completedAppointment";
 import InvoiceTemplate from "../invoiceForserviceCharge/invoiceTemplate";
-import InvoiceAPI from "../../API/invoiceAPI/Invoice.api";
+import InvoiceAPI from "../../API/InvoiceAPI/Invoice.api";
 
 export const AssignedWorkerAppointments = () => {
 
