@@ -11,7 +11,7 @@ import {
   Tooltip,
 } from "@mantine/core";
 import AdminDashboardHeader from "../adminDashboardHeader";
-import InvoiceAPI from "../../API/invoiceAPI/Invoice.api";
+import InvoiceAPI from "../../API/InvoiceAPI/Invoice.api";
 import { useQuery } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import { DateInput } from "@mantine/dates";
