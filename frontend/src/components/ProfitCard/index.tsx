@@ -11,7 +11,6 @@ import {
   Tooltip,
 } from "@mantine/core";
 import AdminDashboardHeader from "../adminDashboardHeader";
-import InvoiceAPI from "../../API/InvoiceAPI/Invoice.api";
 import { useQuery } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import { DateInput } from "@mantine/dates";
@@ -24,6 +23,7 @@ import Chart from "../profitChart/chart";
 import { MonthPickerInput } from "@mantine/dates";
 import WeekProfitChart from "../Charts/weekProfitChart";
 import MonthlyProfitChart from "../Charts/monthlyProfitChart";
+import InvoiceAPI from "../../API/InvoiceAPI/Invoice.api";
 
 const useStyles = createStyles((theme) => ({
   label: {
