@@ -194,10 +194,10 @@ export const checkTime = async (req, res) => {
         for (let i = 0; i < formattedNext7Days.length; i++) {
             const localFormattedDate = new Date(formattedNext7Days[i]).toLocaleDateString('en-US');
             let isBooked = false;
-        
+
             for (let j = 0; j < bookedDates.length; j++) {
                 const localBookedDate = new Date(bookedDates[j]).toLocaleDateString('en-US');
-        
+
                 if (localFormattedDate === localBookedDate) {
                     // The date is already booked, set the flag to true and break out of the inner loop
                     isBooked = true;
@@ -210,9 +210,9 @@ export const checkTime = async (req, res) => {
             }
         }
         console.log("Free dates:", freeDates);
-        
 
-        res.status(200).json({freeDates})
+
+        res.status(200).json({ freeDates })
 
     } catch (err) {
         console.error(err);
