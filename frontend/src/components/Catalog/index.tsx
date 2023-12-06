@@ -495,17 +495,19 @@ const Catalog = () => {
             <Text size={15}></Text>
           </td> */}
           <td>
-            <Text size={15}>
-              {new Date(row.added_date).toLocaleDateString("en-GB").split("T")[0]}
-            </Text>
-          </td>
-          <td>
-            {daysDifference(new Date(row.expire_date), new Date()) <= 10 ? (
-              <Badge variant="outline" color="red">Expires in {daysDifference(new Date(row.expire_date), new Date())} Days</Badge>
-            ) : (
-              <Badge variant="outline" color="green">Expires in {daysDifference(new Date(row.expire_date), new Date())} Days</Badge>
-            )}
-          </td>
+              <Text size={15}>
+                {new Date(row.added_date).toLocaleDateString("en-GB").split("T")[0]}
+              </Text>
+            </td>
+            <td>
+              {new Date(row.expire_date) < new Date() ? (
+                <Badge variant="outline" color="red">Expired</Badge>
+              ) : daysDifference(new Date(row.expire_date), new Date()) <= 10 ? (
+                <Badge variant="outline" color="red">Expires in {daysDifference(new Date(row.expire_date), new Date())} Days</Badge>
+              ) : (
+                <Badge variant="outline" color="green">Expires in {daysDifference(new Date(row.expire_date), new Date())} Days</Badge>
+              )}
+            </td>
 
           <td>
             {
