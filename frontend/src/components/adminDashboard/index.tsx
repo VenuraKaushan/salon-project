@@ -93,7 +93,7 @@ const adminDashboardNav = createStyles((theme) => ({
 }));
 
 const links = [
-  { label: 'Dashboard', icon: IconGauge, link: '/admin/profitcard' },
+  { link: '/admin/dashboard',label: 'Dashboard', icon: IconGauge },
   { link: '/admin/appointments',label: 'New Appointments',  icon: IconCalendarFilled},
   { link: '/admin/assigned', label: 'Assigned Appointments', icon: IconDatabaseImport },
   { link: '/admin/completed', label: 'Completed Appointments', icon: IconSquareRoundedCheck},
