@@ -25,6 +25,7 @@ const generateInvoiceId = async () => {
   return `INVC-${newInvoiceId}`; //return new invoice ID
 };
 
+
 export const addInvoice = async (req, res) => {
   // generate the custom Invoice Id
   const customInvoiceID = await generateInvoiceId();

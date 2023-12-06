@@ -96,7 +96,7 @@ const useStyles = createStyles((theme) => ({
 const links = [
   { label: "Services", link: "/worker/manageStock" },
   { label: "Customer Invoices", link: "/worker/invoice" },
-  { label: "Pending Services", link: "/admin/stockpage" },
+  { label: "Pending Services", link: "/admin/stokepage" },
   { label: "Profit", link: "/admin/profitpage" },
   
 ];

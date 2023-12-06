@@ -18,6 +18,7 @@ import WorkerDashboaord from "../pages/WorkerDashboard/Invoice";
 import GenerateInvoicePage from "../pages/GenerateInvoice";
 import StockPage from "../pages/StockPage";
 import ProfitPage from "../pages/ProfitPage";
+import ProfitCard from "../components/ProfitCard";
 
 const AllRoutes = () => {
   const client = new QueryClient();//config query client
@@ -45,8 +46,10 @@ const AllRoutes = () => {
 
             <Route path="/worker/managestock" element={<WorkerDashboaord />} />
             <Route path="/worker/invoice" element={<GenerateInvoicePage />} />
-            <Route path="/admin/stockpage" element={<StockPage />} />
+            <Route path="/admin/workerdashboardHeader" element={<WorkerDashboaord />} />
             <Route path="/admin/profitpage" element={<ProfitPage />} />
+            <Route path="/admin/profitcard" element={<ProfitCard/>} />
+            <Route path="/admin/stokepage" element={<StockPage/>} />
 
           </Routes>
         </Router>
