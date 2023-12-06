@@ -1,7 +1,19 @@
-import { Badge, Button, Center, Group, Modal, ScrollArea, Table, Text, TextInput } from '@mantine/core';
+import {
+    Badge,
+    Button,
+    Center,
+    Group,
+    Modal,
+    ScrollArea,
+    Table,
+    Text,
+    TextInput,
+    ActionIcon,
+    Box
+} from '@mantine/core';
 import { IconSearch, IconTicketOff } from '@tabler/icons-react';
 import { useQuery } from '@tanstack/react-query';
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useRef, RefObject } from 'react';
 import { showNotification, updateNotification } from '@mantine/notifications';
 import {
     IconX,
@@ -10,11 +22,13 @@ import {
     IconClock,
 } from "@tabler/icons-react";
 import { useForm } from '@mantine/form';
-import { DateInput } from '@mantine/dates';
+import { DateInput, TimeInput } from '@mantine/dates';
 import AdminAPI from '../../API/adminAPI/admin.api';
+import { format } from 'date-fns';
+
 
 export const Appointments = () => {
-    const [appointmentOpended, setAppointmentOpended] = useState(false);
+    const [appointmentOpendedFromDate, setAppointmentOpendedFromDate] = useState(false);
     const [selectedTimeSlot, setSelectedTimeSlot] = useState("");
     const [dateModalOpened, setDateModalOpened] = useState(false);
     const [appointmentTime, setAppointmentTime] = useState([]); // Initialize with an empty array
@@ -22,6 +36,13 @@ export const Appointments = () => {
     const [timeSlotOpened, setTimeSlotOpened] = useState(false);
     const [assignWorkerModalOpen, setAssignWorkerModalOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
+
+    const [appointmentOpendedFromTime, setAppointmentOpendedFromTime] = useState(false);
+    const [timeModalOpened, setTimeModalOpened] = useState(false);
+    const [freeDates, setFreeDates] = useState([]);
+    const [selectedTimeForCheck, setSelectedTimeForCheck] = useState("");
+    const [dateSlotOpened, setDateSlotOpened] = useState(false);
+    const [selectedDateSlotForAppointment, setSelectedDateSlotForAppointment] = useState("");
 
 
     // specific appointment details
@@ -37,14 +58,27 @@ export const Appointments = () => {
         status: "",
     });
 
-    //declare add appointment form
-    const appointmentForm = useForm({
+    //declare add appointment form from date
+    const appointmentFormFromDate = useForm({
         validateInputOnChange: true,
         initialValues: {
             clientName: "",
             clientEmail: "",
             clientPhone: "",
             time: selectedTimeSlot,
+            serviceType: "",
+
+        },
+    });
+
+    //declare add appointment form from time
+    const appointmentFormFromTime = useForm({
+        validateInputOnChange: true,
+        initialValues: {
+            clientName: "",
+            clientEmail: "",
+            clientPhone: "",
+            date : selectedDateSlotForAppointment,
             serviceType: "",
 
         },
@@ -67,6 +101,15 @@ export const Appointments = () => {
         }
     })
 
+    //declare add time form
+    const timeForm = useForm({
+        validateInputOnChange: true,
+        initialValues: {
+            time: "",
+
+        },
+    });
+
     //use react query and fetch appointment data
     const {
         data = [],
@@ -82,21 +125,35 @@ export const Appointments = () => {
     );
 
     useEffect(() => {
-        appointmentForm.setFieldValue("time", selectedTimeSlot);
-    }, [selectedTimeSlot]);
+        appointmentFormFromDate.setFieldValue("time", selectedTimeSlot);
+        appointmentFormFromTime.setFieldValue("date",selectedDateSlotForAppointment);
+    }, [selectedTimeSlot,selectedDateSlotForAppointment]);
 
-    // Function to open the appointment modal
-    const openAppointmentModal = () => {
-        setAppointmentOpended(true);
+    // Function to open the appointment modal from date
+    const openAppointmentModalFromDate = () => {
+        setAppointmentOpendedFromDate(true);
         setTimeSlotOpened(false);
 
         console.log(selectedTimeSlot)
     };
 
-    // Function to open the modal
+    // Function to open the appointment modal from time
+    const openAppointmentModalFromTime = () => {
+        setAppointmentOpendedFromTime(true)
+        setDateSlotOpened(false);
+
+    }
+
+    // Function to open the date modal
     const openDateModal = () => {
         setDateModalOpened(true);
     };
+
+    // function to open time modal
+    const openTimeModal = () => {
+        setTimeModalOpened(true);
+    }
+
 
     // Filter appointments based on search term
     const filteredAppointments = useMemo(() => {
@@ -109,8 +166,8 @@ export const Appointments = () => {
     }, [data, searchTerm]);
 
 
-    //add appointment as admin
-    const addAppointment = (values: {
+    //add appointment as admin via date
+    const addAppintmentAsAdminViaDate = (values: {
         clientName: string,
         clientEmail: string,
         clientPhone: string,
@@ -118,6 +175,8 @@ export const Appointments = () => {
         serviceType: string,
     }) => {
         console.log(values.time)
+        const formattedDate = format(new Date(selectedDate), 'yyyy-MM-dd');
+
         showNotification({
             id: "Add client details",
             loading: true,
@@ -125,9 +184,9 @@ export const Appointments = () => {
             message: "Please wait while we add Your record..",
             autoClose: false,
         });
-        AdminAPI.addAppintmentAsAdmin({
+        AdminAPI.addAppintmentAsAdminViaDate({
             ...values,
-            date: selectedDate,
+            date: formattedDate,
         })
             .then((Response) => {
                 updateNotification({
@@ -139,8 +198,8 @@ export const Appointments = () => {
                     autoClose: 2500,
                 });
 
-                appointmentForm.reset();
-                setAppointmentOpended(false);
+                appointmentFormFromDate.reset();
+                setAppointmentOpendedFromDate(false);
 
                 refetch();
 
@@ -157,6 +216,7 @@ export const Appointments = () => {
             });
     }
 
+    //check date function
     const checkDate = (values: {
         date: string,
     }) => {
@@ -201,6 +261,7 @@ export const Appointments = () => {
                 // Open the timeSlotOpened modal only if a date has been selected
                 setTimeSlotOpened(true);
 
+                refetch();
 
             })
             .catch((error) => {
@@ -209,6 +270,108 @@ export const Appointments = () => {
                     color: "red",
                     title: "Something went wrong!",
                     message: "There is a problem when Checking the date for appointment",
+                    icon: <IconX />,
+                    autoClose: 2500,
+                });
+            });
+    }
+
+    //add appointment as admin via time
+    const addAppintmentAsAdminViaTime = (values: {
+        clientName: string,
+        clientEmail: string,
+        clientPhone: string,
+        date: string,
+        serviceType: string,
+    }) => {
+        console.log(values.date)
+        showNotification({
+            id: "Add client details",
+            loading: true,
+            title: "Adding Your record",
+            message: "Please wait while we add Your record..",
+            autoClose: false,
+        });
+        AdminAPI.addAppintmentAsAdminViaTime({
+            ...values,
+            time: selectedTimeForCheck,
+        })
+            .then((Response) => {
+                updateNotification({
+                    id: "Add client details",
+                    color: "teal",
+                    title: "Adding Your record",
+                    message: "Please wait while we add Your record..",
+                    icon: <IconCheck />,
+                    autoClose: 2500,
+                });
+
+                appointmentFormFromTime.reset();
+                setAppointmentOpendedFromTime(false);
+
+                refetch();
+
+            })
+            .catch((error) => {
+                updateNotification({
+                    id: "Add appointment",
+                    color: "red",
+                    title: "Something went wrong!",
+                    message: "There is a problem when adding Client appointment",
+                    icon: <IconX />,
+                    autoClose: 2500,
+                });
+            });
+    }
+    //check time function
+    const checkTime = (values: {
+        time: string,
+    }) => {
+        console.log(values.time);
+        if (!values.time) {
+            // Show an error notification or provide user feedback that a time should be selected.
+            showNotification({
+                id: "Missing Time",
+                color: "red",
+                title: "Missing Time",
+                message: "Please select a Time before checking available Dates.",
+                icon: <IconX />,
+                autoClose: 2500,
+            });
+            return;
+        }
+
+        showNotification({
+            id: "Check appointment time",
+            loading: true,
+            title: "Checking time",
+            message: "Please wait while we Check the time..",
+            autoClose: false,
+        });
+        AdminAPI.checkTime(values)
+            .then((Response) => {
+                updateNotification({
+                    id: "Check appointment time",
+                    color: "teal",
+                    title: "Here free dates available in thet time slot",
+                    message: "Dates retrieved successfully..",
+                    icon: <IconCheck />,
+                    autoClose: 2500,
+                });
+
+                timeForm.reset();
+                setTimeModalOpened(false);
+                setFreeDates(Response.data.freeDates);
+                setSelectedTimeForCheck(values.time)
+                setDateSlotOpened(true)
+
+            })
+            .catch((error) => {
+                updateNotification({
+                    id: "Check appointment time",
+                    color: "red",
+                    title: "Something went wrong!",
+                    message: "There is a problem when Checking the time for appointment",
                     icon: <IconX />,
                     autoClose: 2500,
                 });
@@ -399,21 +562,21 @@ export const Appointments = () => {
                 </Modal.Body>
             </Modal>
 
-            {/* admin add appointment modal */}
+            {/* admin add appointment modal FromDate*/}
             <Modal
-                opened={appointmentOpended}
-                onClose={() => setAppointmentOpended(false)}
+                opened={appointmentOpendedFromDate}
+                onClose={() => setAppointmentOpendedFromDate(false)}
                 size={"50%"}
             >
                 <form
-                    onSubmit={appointmentForm.onSubmit((values) => addAppointment(values))}
+                    onSubmit={appointmentFormFromDate.onSubmit((values) => addAppintmentAsAdminViaDate(values))}
                 >
                     <Text fw={700} style={{ textAlign: "center" }}>Enter Customer's details</Text>
 
                     <TextInput
                         placeholder="Enter Full Name"
                         label="Full Name"
-                        {...appointmentForm.getInputProps("clientName")}
+                        {...appointmentFormFromDate.getInputProps("clientName")}
                         radius="lg"
                         withAsterisk
                         required
@@ -421,14 +584,14 @@ export const Appointments = () => {
                     <TextInput
                         placeholder="Enter Working Email"
                         label="Email"
-                        {...appointmentForm.getInputProps("clientEmail")}
+                        {...appointmentFormFromDate.getInputProps("clientEmail")}
                         radius="lg"
 
                     />
                     <TextInput
                         placeholder="Enter Phone number"
                         label="Phone Number"
-                        {...appointmentForm.getInputProps("clientPhone")}
+                        {...appointmentFormFromDate.getInputProps("clientPhone")}
                         radius="lg"
                         withAsterisk
                         required
@@ -437,7 +600,7 @@ export const Appointments = () => {
                     <TextInput
                         placeholder="Enter Service type"
                         label="Service type"
-                        {...appointmentForm.getInputProps("serviceType")}
+                        {...appointmentFormFromDate.getInputProps("serviceType")}
                         radius="lg"
                     />
 
@@ -514,7 +677,8 @@ export const Appointments = () => {
                                         key={timeSlot}
                                         onClick={() => {
                                             setSelectedTimeSlot(timeSlot); // Set the selected time slot
-                                            openAppointmentModal(); // Open the appointment modal
+                                            console.log(selectedTimeSlot)
+                                            openAppointmentModalFromDate(); // Open the appointment modal
                                         }}
                                     >
                                         <td>{timeSlot}</td>
@@ -535,6 +699,128 @@ export const Appointments = () => {
 
                 </ScrollArea>
             </Modal>
+
+
+            {/* admin add appointment modal FromTime*/}
+            <Modal
+                opened={appointmentOpendedFromTime}
+                onClose={() => setAppointmentOpendedFromTime(false)}
+                size={"50%"}
+            >
+                <form
+                    onSubmit={appointmentFormFromTime.onSubmit((values) => addAppintmentAsAdminViaTime(values))}
+                >
+                    <Text fw={700} style={{ textAlign: "center" }}>Enter Customer's details</Text>
+
+                    <TextInput
+                        placeholder="Enter Full Name"
+                        label="Full Name"
+                        {...appointmentFormFromTime.getInputProps("clientName")}
+                        radius="lg"
+                        withAsterisk
+                        required
+                    />
+                    <TextInput
+                        placeholder="Enter Working Email"
+                        label="Email"
+                        {...appointmentFormFromTime.getInputProps("clientEmail")}
+                        radius="lg"
+
+                    />
+                    <TextInput
+                        placeholder="Enter Phone number"
+                        label="Phone Number"
+                        {...appointmentFormFromTime.getInputProps("clientPhone")}
+                        radius="lg"
+                        withAsterisk
+                        required
+                    />
+
+                    <TextInput
+                        placeholder="Enter Service type"
+                        label="Service type"
+                        {...appointmentFormFromTime.getInputProps("serviceType")}
+                        radius="lg"
+                    />
+
+                    <Button color="blue" radius="lg" type="submit"
+                        style={{ marginLeft: "250px", marginTop: '10px' }}
+                    >
+                        Add appointment
+                    </Button>
+                </form>
+            </Modal>
+            {/* time picker modal */}
+            <Modal
+                opened={timeModalOpened}
+                onClose={() => setTimeModalOpened(false)}
+                title="Appointment Time"
+                size="50%"
+
+            >
+                <form
+                    onSubmit={timeForm.onSubmit((values) => checkTime(values))}
+                >
+
+                    <TimeInput
+                        icon={<IconClock size="1rem" stroke={1.5} />}
+                        maw={400} mx="auto"
+                        {...timeForm.getInputProps("time")}
+                    />
+                    <Center>
+                        <Button mt={15} color="blue" radius="lg" type="submit"
+
+                        >
+                            Check
+                        </Button>
+                    </Center>
+                </form>
+            </Modal>
+
+            {/* free date slot modal */}
+            <Modal
+                opened={dateSlotOpened}
+                onClose={() => setDateSlotOpened(false)}
+                title="Available date Slots"
+                size="50%"
+            >
+                <Text fw={600} style={{ textAlign: "left" }}>To add an appointment click top of the date you want</Text>
+                <ScrollArea h={450}>
+                    <Table striped highlightOnHover withBorder withColumnBorders>
+                        <thead>
+                            <tr>
+                                <th>date Slot</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {freeDates.length > 0 ? (
+                                freeDates.map((date: any) => (
+                                    <tr
+                                        key={date}
+                                        onClick={() => {
+                                            setSelectedDateSlotForAppointment(date); // Set the selected date
+                                            console.log(selectedDateSlotForAppointment)
+                                            openAppointmentModalFromTime(); // Open the appointment modal
+                                        }}
+                                    >
+                                        <td>{date}</td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan={1}>
+                                        <Text align="center" weight={"bold"} size={20} pb={70}>
+                                            No Dates available!
+                                        </Text>
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+
+                    </Table>
+
+                </ScrollArea>
+            </Modal>
             <Text fw={700} fz={30} style={{ textAlign: "center" }}>New Appointments</Text>
             {/* search bar */}
             <Group spacing={"md"}>
@@ -543,16 +829,26 @@ export const Appointments = () => {
                     placeholder="Search..."
                     size="xs"
                     style={{
-                        width: '900px', // Increase length
+                        width: '750px', // Increase length
                         padding: '10px', // Add margin to the bottom
                     }}
                     value={searchTerm}
                     onChange={(event) => setSearchTerm(event.currentTarget.value)}
                 />
-                <Button variant="gradient" gradient={{ from: 'indigo', to: 'cyan' }}
-                    onClick={openDateModal}
+                <Box>
+                    <Button mr={10} variant="gradient" gradient={{ from: 'indigo', to: 'cyan' }}
+                        onClick={openDateModal}
 
-                >Add Appointment</Button>
+                    >
+                        Add Appointment from date
+                    </Button>
+                    <Button variant="gradient" gradient={{ from: 'orange', to: 'red' }}
+                        onClick={openTimeModal}
+
+                    >
+                        Add Appointment from Time
+                    </Button>
+                </Box>
 
                 <ScrollArea h={500} w={"100%"}>
                     <Table striped highlightOnHover withBorder withColumnBorders >
