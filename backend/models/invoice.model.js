@@ -80,6 +80,10 @@ const invoiceSchema = new mongoose.Schema({
     serviceCharge:{
         type: String,
     },
+    isHide:{
+        type: Boolean,
+        required: true
+    }
 }, { timestamps: true });
 
 const Invoice = mongoose.model("invoice", invoiceSchema);

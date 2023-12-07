@@ -67,6 +67,36 @@ export const Appointments = () => {
             serviceType: "",
 
         },
+        // Validate data in real-time
+        validate: {
+            clientEmail: (value) => {
+                if (!value) {
+                    return 'This field is required';
+                }
+                if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value)) {
+                    return 'Invalid Email';
+                }
+                return null;
+            },
+            clientPhone: (value) => {
+                if (!value) {
+                    return 'This field is required';
+                }
+
+                // Ensure only numeric values are allowed
+                if (!/^\d+$/.test(value)) {
+                    return 'Invalid phone number';
+                }
+
+                // Ensure the phone number has exactly 10 digits
+                if (value.length !== 10) {
+                    return 'Phone number must have 10 digits';
+                }
+
+                return null;
+            },
+        },
+
     });
 
     //declare add appointment form from time
@@ -76,10 +106,41 @@ export const Appointments = () => {
             clientName: "",
             clientEmail: "",
             clientPhone: "",
-            date : selectedDateSlotForAppointment,
+            date: selectedDateSlotForAppointment,
             serviceType: "",
 
         },
+
+        // Validate data in real-time
+        validate: {
+            clientEmail: (value) => {
+                if (!value) {
+                    return 'This field is required';
+                }
+                if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value)) {
+                    return 'Invalid Email';
+                }
+                return null;
+            },
+            clientPhone: (value) => {
+                if (!value) {
+                    return 'This field is required';
+                }
+
+                // Ensure only numeric values are allowed
+                if (!/^\d+$/.test(value)) {
+                    return 'Invalid phone number';
+                }
+
+                // Ensure the phone number has exactly 10 digits
+                if (value.length !== 10) {
+                    return 'Phone number must have 10 digits';
+                }
+
+                return null;
+            },
+        },
+
     });
 
     //declare add date form
@@ -124,8 +185,8 @@ export const Appointments = () => {
 
     useEffect(() => {
         appointmentFormFromDate.setFieldValue("time", selectedTimeSlot);
-        appointmentFormFromTime.setFieldValue("date",selectedDateSlotForAppointment);
-    }, [selectedTimeSlot,selectedDateSlotForAppointment]);
+        appointmentFormFromTime.setFieldValue("date", selectedDateSlotForAppointment);
+    }, [selectedTimeSlot, selectedDateSlotForAppointment]);
 
     // Function to open the appointment modal from date
     const openAppointmentModalFromDate = () => {

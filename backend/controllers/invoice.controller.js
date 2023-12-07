@@ -44,6 +44,7 @@ export const addInvoice = async (req, res) => {
       discount: req.body.discount,
       totalActualPrice: req.body.totalActualPrice,
       totalSoldPrice: req.body.totalSoldPrice,
+      isHide: false,
     });
     
     // store the invoice Object in the datasase
@@ -80,7 +81,7 @@ export const addInvoice = async (req, res) => {
 export const getAllInvocies = async (req, res) => {
   try {
     // get invoices data
-    const invoices = await Invoice.find();
+    const invoices = await Invoice.find({isHide: false});
 
     // return data
     if (invoices.length === 0) {
@@ -108,6 +109,7 @@ export const saveServiceInvoices = async (req, res) => {
       serviceType: req.body.serviceType,
       workr: req.body.workr,
       serviceCharge: req.body.serviceCharge,
+      isHide : false,
     })
 
     console.log(invoices)
