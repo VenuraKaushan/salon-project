@@ -28,7 +28,7 @@ const options = {
     },
     title: {
       display: true,
-      text: 'Weekly Profit Line Chart',
+      text: 'Weekly Revenue Line Chart',
     },
   },
 };

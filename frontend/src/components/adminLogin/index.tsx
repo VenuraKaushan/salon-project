@@ -25,10 +25,10 @@ const AdminLogin = () => {
 
       <Card.Section inheritPadding>
         <Text weight={400} p={20} style={{ textAlign: "justify" }}>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iusto illum
-          nihil animi quisquam minima? Voluptas beatae vero omnis necessitatibus
-          culpa numquam animi accusamus rerum similique voluptatum. Laborum
-          nobis sequi veniam?
+        Admin login provides secure access to the administrative dashboard,
+        allowing authorized users to manage and control various aspects of a system or application.
+        With heightened privileges, administrators can oversee user accounts, configure settings,
+        monitor activities, and perform essential tasks to ensure the smooth and secure operation of the platform.
         </Text>
       </Card.Section>
       <Card.Section>
