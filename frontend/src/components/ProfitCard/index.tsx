@@ -153,7 +153,8 @@ export function StatsProfitCard() {
   });
 
   // expand monthly chart modal
-  const [openedMonthlyProfitChart, setOpenedMonthlyProfitChart] = useState(false);
+  const [openedMonthlyProfitChart, setOpenedMonthlyProfitChart] =
+    useState(false);
   // expand weekly chart modal
   const [openedWeeklyProfitChart, setOpenedWeeklyProfitChart] = useState(false);
 
@@ -170,7 +171,7 @@ export function StatsProfitCard() {
   if (isError) {
     showNotification({
       title: "Cannot fetching Profit Data",
-      message: "Check internet connection",
+      message: "check internet connection",
       color: "red",
       icon: <IconX />,
       autoClose: 1500,
@@ -381,7 +382,7 @@ export function StatsProfitCard() {
 
       if (isWithinMonth(date, issuedDate)) {
         setMonthProfit(
-          (prev) => prev + invoice.totalSoldPrice + invoice.totalActualPrice  
+          (prev) => prev + invoice.totalSoldPrice - invoice.totalActualPrice  
         );
 
         invoice.items.forEach((items: any) => {
@@ -419,7 +420,7 @@ export function StatsProfitCard() {
   return (
     <>
           <center>
-            <h1>REVENUE OF THE DAY</h1>
+            <h1>PROFIT OF THE DAY</h1>
           </center>
 
       {/* weekly profit expandable modal */}
@@ -519,7 +520,7 @@ export function StatsProfitCard() {
             style={{ height: "430px" }}
           >
             <Text weight={500} size={30}>
-              <center>WEEKLY REVENUE & SERVICE COUNT</center>
+              <center>WEEKLY PROFIT & SERVICE COUNT</center>
             </Text>
             <div className={classes.dateInputContainer}>
               <DateInput
@@ -543,7 +544,7 @@ export function StatsProfitCard() {
               </Text>
             ) : (
               <Text weight={600} size={20} color="blue">
-                <center>Service Count - {weekItemCount}</center>
+                <center>Item Count - {weekItemCount}</center>
                 <center> Rs.{weekProfit}</center>
               </Text>
             )}
@@ -581,7 +582,7 @@ export function StatsProfitCard() {
             style={{ height: "430px" }}
           >
             <Text weight={500} size={30}>
-              <center>MONTHLY REVENUE & SERVICE COUNT</center>
+              <center>MONTHLY PROFIT & SERVICE COUNT</center>
             </Text>
             <div className={classes.dateInputContainer}>
               <MonthPickerInput
@@ -604,7 +605,7 @@ export function StatsProfitCard() {
               </Text>
             ) : (
               <Text weight={600} size={20} color="blue">
-                <center>Service Count - {monthItemCount}</center>
+                <center>Item Count - {monthItemCount}</center>
                 <center> Rs.{monthProfit}</center>
               </Text>
             )}
