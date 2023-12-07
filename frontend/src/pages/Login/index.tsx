@@ -3,6 +3,8 @@ import ClientLogin from "../../components/clientLogin";
 import AdminLogin from "../../components/adminLogin";
 import backgroundimg from "../../assets/backgroundimg.jpg"
 import { forwardRef } from "react";
+import { getHotkeyHandler } from '@mantine/hooks';
+
 
 const LoginPage = forwardRef<HTMLInputElement>((props,ref) => {
 
@@ -11,6 +13,9 @@ const LoginPage = forwardRef<HTMLInputElement>((props,ref) => {
       <Group position="center"  spacing={100}  >
           <AdminLogin />
           {/* <ClientLogin /> */}
+          {/* onKeyDown={getHotkeyHandler([
+
+          ])} */}
       </Group>
     </div>
   );
