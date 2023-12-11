@@ -77,9 +77,6 @@ const invoiceSchema = new mongoose.Schema({
     workr:{
         type: String,
     },
-    serviceCharge:{
-        type: String,
-    },
     isHide:{
         type: Boolean,
         required: true

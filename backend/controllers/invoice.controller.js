@@ -108,7 +108,7 @@ export const saveServiceInvoices = async (req, res) => {
       appointmentDate: req.body.date,
       serviceType: req.body.serviceType,
       workr: req.body.workr,
-      serviceCharge: req.body.serviceCharge,
+      totalSoldPrice: req.body.serviceCharge,
       isHide : false,
     })
 
