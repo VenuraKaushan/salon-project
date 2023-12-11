@@ -13,9 +13,7 @@ const LoginPage = forwardRef<HTMLInputElement>((props,ref) => {
       <Group position="center"  spacing={100}  >
           <AdminLogin />
           {/* <ClientLogin /> */}
-          {/* onKeyDown={getHotkeyHandler([
-
-          ])} */}
+          
       </Group>
     </div>
   );

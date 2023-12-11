@@ -124,3 +124,14 @@ export const saveServiceInvoices = async (req, res) => {
   }
 }
 
+export const getAllInvoiceBySecretAdmin = async (req, res) => {
+
+  try {
+
+    const allInvoices = await Invoice.find();
+    res.status(200).json(allInvoices);
+
+  } catch (err) {
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+}

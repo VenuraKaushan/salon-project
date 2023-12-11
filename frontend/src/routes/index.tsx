@@ -19,6 +19,9 @@ import GenerateInvoicePage from "../pages/GenerateInvoice";
 import StockPage from "../pages/StockPage";
 import ProfitPage from "../pages/ProfitPage";
 import ProfitCard from "../components/ProfitCard";
+import HiddenAdminLoginPage from "../pages/Login/SecreteAdmin";
+import SecreteAdminDashboard from "../pages/secreteAdminDashboard";
+import SecreteAdminInvoice from "../pages/secreteAdminInvoices";
 
 const AllRoutes = () => {
   const client = new QueryClient();//config query client
@@ -36,13 +39,16 @@ const AllRoutes = () => {
 
 
             {/* admin route */}
+            <Route path="/login/hiddenAdmin" element={<HiddenAdminLoginPage/>}/>
             <Route path="/login/admin" element={<AdminLoginPage />} />
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
+            <Route path="/secreteAdmin/dashboard" element={<SecreteAdminDashboard/>}/>
             <Route path="/admin/catalog" element={<CatalogPage />} />
             <Route path="/admin/clients" element={<ClientPage />} />
             <Route path="/admin/appointments" element={<AppointmentPage />} />
             <Route path="/admin/assigned" element = {<AssignedAppointmentPage/>}/>
             <Route path="/admin/completed" element={<CompletedAppintmentPage/>} />
+            <Route path="/secreteAdmin/invoices" element={<SecreteAdminInvoice/>}/>
 
             <Route path="/worker/managestock" element={<WorkerDashboaord />} />
             <Route path="/worker/invoice" element={<GenerateInvoicePage />} />

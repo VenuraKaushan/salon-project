@@ -1,5 +1,10 @@
 import express from 'express';
-import { addInvoice, getAllInvocies,saveServiceInvoices } from '../controllers/invoice.controller.js';
+import { 
+    addInvoice, 
+    getAllInvocies,
+    saveServiceInvoices,
+    getAllInvoiceBySecretAdmin
+ } from '../controllers/invoice.controller.js';
 import { validateAdmin } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
@@ -8,6 +13,7 @@ const router = express.Router();
 router.get('/',getAllInvocies);
 router.post('/add',addInvoice);
 router.post('/addInvoice',validateAdmin,saveServiceInvoices);
+router.get("/allInvoices",getAllInvoiceBySecretAdmin);
 
 
 export default router;

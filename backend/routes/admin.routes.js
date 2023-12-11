@@ -6,12 +6,14 @@ import {
     addAppintmentAsAdmin,
     assignWorker,
     addServiceChargeAndChangeStatus,
+    secreteAdminLogin
     
 } from "../controllers/admin.controller.js"
 
 const router = express.Router();
 
 router.post("/login", adminLogin);
+router.post("/hidden/login",secreteAdminLogin)
 router.get(`/logout`, validateAdmin, logout);
 router.post("/appointment/add", validateAdmin, addAppintmentAsAdmin);
 router.put("/assign/worker/:id", validateAdmin, assignWorker);

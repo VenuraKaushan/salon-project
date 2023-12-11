@@ -10,6 +10,10 @@ class AdminAPI {
         return axios.post(`${BASE_URL}/admin/login`,values,{withCredentials:true});
     }
 
+    static hiddenLogin (values : {email : string, password : string}) {
+        return axios.post(`${BASE_URL}/admin/hidden/login`,values,{withCredentials:true});
+    }
+
     static addAppintmentAsAdminViaDate = (values:{
         clientName:string,
         clientEmail:string,

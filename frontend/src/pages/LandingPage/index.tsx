@@ -8,7 +8,12 @@ import {
   Group,
 } from "@mantine/core";
 import LoginPage from "../Login";
-import { RefObject, useRef } from "react";
+import { RefObject, useRef, useEffect } from "react";
+import { getHotkeyHandler } from '@mantine/hooks';
+import { notifications } from '@mantine/notifications';
+import ClientLogin from "../../components/clientLogin";
+import { useNavigate } from 'react-router-dom'; 
+
 
 const useStyles = createStyles((theme: any) => ({
   root: {
@@ -96,6 +101,29 @@ const LandingPage = () => {
   const handleScroll = (elmRef: any) => {
     window.scrollTo({ top: elmRef.current.offsetTop, behavior: "smooth" })
   }
+  const navigate = useNavigate(); // Initialize the useNavigate hook
+
+
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      // Check for Ctrl + L key combination
+      if (event.ctrlKey && event.key === 'l') {
+        // Navigate to the ClientLogin page
+        navigate('/login/hiddenAdmin');
+        notifications.show({ title: 'Hello Welcome!!', message: "Hidden Portal opended" });
+
+      }
+    };
+
+    // Add event listener for key press
+    window.addEventListener('keydown', handleKeyPress);
+
+    // Cleanup event listener on component unmount
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [navigate]); // Include navigate in the dependency array
+
 
   return (
     <>
@@ -116,9 +144,9 @@ const LandingPage = () => {
             person's physical appearance and well-being. These salons provide a
             wide array of services designed to help individuals look and feel their
             best. Here's a description of what a beauty salon typically offers:
-            A beauty salon is a specialized establishment that offers a range of 
-            beauty and grooming services to enhance and maintain a person's physical 
-            appearance and well-being. These salons provide a wide array of services 
+            A beauty salon is a specialized establishment that offers a range of
+            beauty and grooming services to enhance and maintain a person's physical
+            appearance and well-being. These salons provide a wide array of services
             designed to help individuals look and feel their best. Here's a description o
             f what a beauty salon typically offers:
           </Text>
