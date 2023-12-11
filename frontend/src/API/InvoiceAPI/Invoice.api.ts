@@ -15,6 +15,10 @@ class InvoiceAPI{
         console.log(values);
         return axios.post(`${BASE_URL}/invoice/addInvoice`,values,{withCredentials:true});
     }
+
+    static getAllInvoiceBySecretAdmin = ()=>{
+        return axios.get(`${BASE_URL}/invoice/allInvoices`,{withCredentials:true})
+    }
 };
 
 export default InvoiceAPI;
