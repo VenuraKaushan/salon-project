@@ -885,6 +885,7 @@ export const Appointments = () => {
             {/* search bar */}
             <Group spacing={"md"}>
                 <TextInput
+                    mt={50}
                     icon={<IconSearch size={15} />}
                     placeholder="Search..."
                     size="xs"

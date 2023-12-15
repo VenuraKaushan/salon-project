@@ -276,7 +276,7 @@ const ManageStocks = () => {
       id: "add-items",
       loading: true,
       title: "Adding New Service",
-      message: "Please wait while we add Service record..",
+      message: "Please wait while we add service record..",
       autoClose: false,
     });
     BatteryAPI.addBattery(values)
@@ -302,7 +302,7 @@ const ManageStocks = () => {
           color: "red",
           title: "Service Adding failed",
           icon: <IconX />,
-          message: "We were unable to add the Service",
+          message: "We were unable to add the service",
           // icon: <IconAlertTriangle />,
           autoClose: 5000,
         });
@@ -324,8 +324,8 @@ const ManageStocks = () => {
     showNotification({
       id: "update-items",
       loading: true,
-      title: "Updating Service record",
-      message: "Please wait while we update Service record..",
+      title: "Updating service record",
+      message: "Please wait while we update service record..",
       autoClose: false,
     });
     BatteryAPI.updateBattery(values)
@@ -907,7 +907,7 @@ const ManageStocks = () => {
 
   if (isError) {
     showNotification({
-      title: "Cannot fetching Stock Data",
+      title: "Cannot fetching Service Data",
       message: "Check internet connection",
       color: "red",
       icon: <IconX />,
@@ -990,7 +990,11 @@ const ManageStocks = () => {
         title="Customer Details"
         size={"lg"}
         zIndex={1000}
+<<<<<<< Updated upstream
         style={{ marginLeft: "100px" }}
+=======
+        style={{ margin: "130px" }}
+>>>>>>> Stashed changes
       >
         <form
           onSubmit={customerForm.onSubmit((values) => {
@@ -1055,7 +1059,11 @@ const ManageStocks = () => {
         onClose={() => setCartOpened(false)}
         title="Cart"
         size={"80%"}
+<<<<<<< Updated upstream
         style={{ marginLeft: "120px" }}
+=======
+        style={{ margin: "130px" }}
+>>>>>>> Stashed changes
       >
         <Group position="right">
           <Button
@@ -1369,6 +1377,7 @@ const ManageStocks = () => {
           addForm.reset();
           setOpened(false);
         }}
+        style={{ margin: "70px" }}
         title="Add New Service"
         ml={80}
       >
@@ -1408,6 +1417,7 @@ const ManageStocks = () => {
           editForm.reset();
           setEditOpened(false);
         }}
+        style={{ margin: "70px" }}
         title="Update Service Record"
         ml={100}
       >
@@ -1447,18 +1457,29 @@ const ManageStocks = () => {
         </form>
       </Modal>
       <div>
+<<<<<<< Updated upstream
         <Text fw={700} fz={30} style={{ textAlign: "center" }}>
           Services
         </Text>
         <Group spacing={35} mb={70} mt={50}>
+=======
+      <Text fw={700} fz={30} style={{ textAlign: "center" }}>Services</Text>
+
+        <Group spacing={35} mb={70} mt={30}>
+>>>>>>> Stashed changes
           {/* search bar */}
           <TextInput
             placeholder="Search..."
             ml={"12%"}
             icon={<IconSearch size="0.9rem" stroke={1.5} />}
+<<<<<<< Updated upstream
             w={"40%"}
+=======
+            w={"50%"}
+>>>>>>> Stashed changes
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            style={{ marginLeft: "100px" }}
           />
           <Group spacing={"lg"} ml={-10}>
             {" "}
@@ -1503,20 +1524,30 @@ const ManageStocks = () => {
         </Group>
         <ScrollArea
           w={"100mw"}
-          h={600}
+          h={500}
           onScrollPositionChange={({ y }) => setScrolled(y !== 0)}
         >
+          
           <Table
             highlightOnHover
             horizontalSpacing={60}
+<<<<<<< Updated upstream
             //verticalSpacing={10}
+=======
+            verticalSpacing={10}
+>>>>>>> Stashed changes
             miw={700}
             sx={{ tableLayout: "fixed" }}
             striped
             withBorder
             withColumnBorders
+<<<<<<< Updated upstream
             style={{ marginLeft: "0px" }}
+=======
+            style={{ marginLeft: "-0px" }}
+>>>>>>> Stashed changes
           >
+            
             <thead
               className={cx(classes.header, { [classes.scrolled]: scrolled })}
             >

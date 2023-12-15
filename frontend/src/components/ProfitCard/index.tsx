@@ -170,7 +170,7 @@ export function StatsProfitCard() {
 
   if (isError) {
     showNotification({
-      title: "Cannot fetching Profit Data",
+      title: "Cannot fetching Revenue Data",
       message: "check internet connection",
       color: "red",
       icon: <IconX />,
@@ -419,6 +419,12 @@ export function StatsProfitCard() {
 
   return (
     <>
+<<<<<<< Updated upstream
+=======
+          <center>
+            <h1>REVENUE OF THE DAY</h1>
+          </center>
+>>>>>>> Stashed changes
 
       {/* weekly profit expandable modal */}
       <Modal
@@ -541,7 +547,7 @@ export function StatsProfitCard() {
               </Text>
             ) : (
               <Text weight={600} size={20} color="blue">
-                <center>Item Count - {weekItemCount}</center>
+                <center>Service Count - {weekItemCount}</center>
                 <center> Rs.{weekProfit}</center>
               </Text>
             )}
@@ -602,7 +608,7 @@ export function StatsProfitCard() {
               </Text>
             ) : (
               <Text weight={600} size={20} color="blue">
-                <center>Item Count - {monthItemCount}</center>
+                <center>Service Count - {monthItemCount}</center>
                 <center> Rs.{monthProfit}</center>
               </Text>
             )}

@@ -335,7 +335,11 @@ const Invoices = () => {
 
       {/* more Information Modal */}
       <Modal
+<<<<<<< Updated upstream
         style={{ marginLeft: "120px" }}
+=======
+        style={{ margin: "130px" }}
+>>>>>>> Stashed changes
         size={"80%"}
         opened={openedMoreInfo}
         onClose={() => {
@@ -375,17 +379,31 @@ const Invoices = () => {
         <Text weight={600} size={"lg"} align="center" mb={40}>
           {`${row.invoice_id} (Service Details)`}
         </Text>
+        
         <Table
           highlightOnHover
+<<<<<<< Updated upstream
           horizontalSpacing={60}
           verticalSpacing={10}
+=======
+          horizontalSpacing={40}
+          verticalSpacing="lg"
+>>>>>>> Stashed changes
           miw={700}
+          mt={10}
           sx={{ tableLayout: "fixed" }}
+<<<<<<< Updated upstream
           striped
           withBorder
           withColumnBorders
           style={{ marginLeft: "0px" }}
+=======
+          striped 
+          withBorder 
+          //withColumnBorders
+>>>>>>> Stashed changes
         >
+          
           <thead
             className={cx(classes.header, { [classes.scrolled]: scrolled })}
           >
@@ -399,6 +417,7 @@ const Invoices = () => {
           <tbody>{moreInfoRows}</tbody>
         </Table>
       </Modal>
+<<<<<<< Updated upstream
       {/* search bar */}
       <Text fw={700} fz={30} style={{ textAlign: "center" }}>
         Invoices
@@ -413,14 +432,21 @@ const Invoices = () => {
         w={800}
         style={{ position: "relative", left: "50%", translate: "-50%" }}
       />
+=======
+      
+      
+      <Text fw={700} fz={30} mb={30} style={{ textAlign: "center" }}>Customer Invoices</Text>
+>>>>>>> Stashed changes
 
       <ScrollArea
         w={"100mw"}
         h={600}
+        mt={60}
         onScrollPositionChange={({ y }) => setScrolled(y !== 0)}
       >
         <Table
           highlightOnHover
+<<<<<<< Updated upstream
           //horizontalSpacing={60}
           //verticalSpacing={20}
           //sx={{ tableLayout: "fixed" }}
@@ -428,6 +454,15 @@ const Invoices = () => {
           withBorder
           withColumnBorders
           style={{ marginLeft: "0px", textAlign: "start" }}
+=======
+          horizontalSpacing={20}
+          verticalSpacing="md"
+          miw={700}
+          sx={{ tableLayout: "fixed" }}
+          striped 
+          withBorder 
+          //withColumnBorders
+>>>>>>> Stashed changes
         >
           <thead
             className={cx(classes.header, { [classes.scrolled]: scrolled })}
