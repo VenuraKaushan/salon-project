@@ -990,11 +990,7 @@ const ManageStocks = () => {
         title="Customer Details"
         size={"lg"}
         zIndex={1000}
-<<<<<<< Updated upstream
-        style={{ marginLeft: "100px" }}
-=======
         style={{ margin: "130px" }}
->>>>>>> Stashed changes
       >
         <form
           onSubmit={customerForm.onSubmit((values) => {
@@ -1059,11 +1055,7 @@ const ManageStocks = () => {
         onClose={() => setCartOpened(false)}
         title="Cart"
         size={"80%"}
-<<<<<<< Updated upstream
-        style={{ marginLeft: "120px" }}
-=======
         style={{ margin: "130px" }}
->>>>>>> Stashed changes
       >
         <Group position="right">
           <Button
@@ -1457,26 +1449,16 @@ const ManageStocks = () => {
         </form>
       </Modal>
       <div>
-<<<<<<< Updated upstream
         <Text fw={700} fz={30} style={{ textAlign: "center" }}>
           Services
         </Text>
         <Group spacing={35} mb={70} mt={50}>
-=======
-      <Text fw={700} fz={30} style={{ textAlign: "center" }}>Services</Text>
-
-        <Group spacing={35} mb={70} mt={30}>
->>>>>>> Stashed changes
           {/* search bar */}
           <TextInput
             placeholder="Search..."
             ml={"12%"}
             icon={<IconSearch size="0.9rem" stroke={1.5} />}
-<<<<<<< Updated upstream
             w={"40%"}
-=======
-            w={"50%"}
->>>>>>> Stashed changes
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             style={{ marginLeft: "100px" }}
@@ -1531,21 +1513,13 @@ const ManageStocks = () => {
           <Table
             highlightOnHover
             horizontalSpacing={60}
-<<<<<<< Updated upstream
-            //verticalSpacing={10}
-=======
             verticalSpacing={10}
->>>>>>> Stashed changes
             miw={700}
             sx={{ tableLayout: "fixed" }}
             striped
             withBorder
             withColumnBorders
-<<<<<<< Updated upstream
             style={{ marginLeft: "0px" }}
-=======
-            style={{ marginLeft: "-0px" }}
->>>>>>> Stashed changes
           >
             
             <thead

@@ -195,11 +195,7 @@ const StockTable = () => {
     showNotification({
       id: "update-items",
       loading: true,
-<<<<<<< Updated upstream
       title: "Updating service record",
-=======
-      title: "Updating Service record",
->>>>>>> Stashed changes
       message: "Please wait while we update service record..",
       autoClose: false,
     });
@@ -225,11 +221,7 @@ const StockTable = () => {
         updateNotification({
           id: "update-items",
           color: "red",
-<<<<<<< Updated upstream
           title: "Service updatimg failed",
-=======
-          title: "Service updating failed",
->>>>>>> Stashed changes
           icon: <IconX />,
           message: "We were unable to update the service",
           // icon: <IconAlertTriangle />,
@@ -248,11 +240,7 @@ const StockTable = () => {
           Are you sure you want to reject this service? This action cannot be undone later.
         </Text>
       ),
-<<<<<<< Updated upstream
       labels: { confirm: 'Reject service', cancel: "No don't reject it" },
-=======
-      labels: { confirm: 'Remove service', cancel: "No don't reject it" },
->>>>>>> Stashed changes
       confirmProps: { color: 'red' },
       onCancel: () => modals.close,
       onConfirm: () => deleteSpecificStock(stockId),
@@ -349,11 +337,7 @@ const StockTable = () => {
 
   if (isError) {
     showNotification({
-<<<<<<< Updated upstream
       title: "Cannot fetching service Data",
-=======
-      title: "Cannot fetching Service Data",
->>>>>>> Stashed changes
       message: "Check internet connection",
       color: "red",
       icon: <IconX />,
@@ -373,11 +357,7 @@ const StockTable = () => {
           setEditOpened(false);
         }}
         title="Update Service Record"
-<<<<<<< Updated upstream
         style={{ marginLeft: '120px' }} 
-=======
-        style={{ margin: "130px" }}
->>>>>>> Stashed changes
       >
         <form onSubmit={editForm.onSubmit((values) => updateRequestedStocks(values))}>
           <TextInput
@@ -430,7 +410,6 @@ const StockTable = () => {
       >
         <Table
           highlightOnHover
-<<<<<<< Updated upstream
           horizontalSpacing={60}
           verticalSpacing={10}
           mt={50}
@@ -439,15 +418,6 @@ const StockTable = () => {
           withBorder
           withColumnBorders
           style={{ marginLeft: '0px' }}
-=======
-          horizontalSpacing={70}
-          verticalSpacing={15}
-          miw={700}
-          sx={{ tableLayout: "fixed" }} 
-          striped 
-          withBorder 
-          withColumnBorders
->>>>>>> Stashed changes
         >
           <thead
             className={cx(classes.header, classes.tableHeader, { [classes.scrolled]: scrolled })}

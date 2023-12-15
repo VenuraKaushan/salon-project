@@ -20,12 +20,8 @@ import {
   Image,
   NumberInput,
   Badge,
-<<<<<<< Updated upstream
-} from "@mantine/core";
-=======
   Center,
 } from '@mantine/core';
->>>>>>> Stashed changes
 import {
   IconSearch,
   IconCheck,
@@ -1015,17 +1011,10 @@ const Catalog = () => {
         )}
       </Modal>
 
-<<<<<<< Updated upstream
 
       <Text fw={700} fz={30} style={{ textAlign: "center" }}>Inventory Management</Text>
 
 
-=======
-      <Center mt={-20}>
-        <h1>Inventory Management</h1>
-      </Center>
-
->>>>>>> Stashed changes
       <div style={{ display: "flex", alignItems: "center" }}>
         <TextInput
           placeholder="Search..."
@@ -1049,13 +1038,8 @@ const Catalog = () => {
         >
           <Button
             variant="gradient"
-<<<<<<< Updated upstream
             ml={10}
             gradient={{ from: "orange", to: "red" }}
-=======
-            gradient={{ from: "orange", to: "red" }}
-            ml={10}
->>>>>>> Stashed changes
             leftIcon={<IconFileBarcode size={20} />}
           >
             Generate Report

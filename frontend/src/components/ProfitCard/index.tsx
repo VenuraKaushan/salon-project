@@ -419,13 +419,6 @@ export function StatsProfitCard() {
 
   return (
     <>
-<<<<<<< Updated upstream
-=======
-          <center>
-            <h1>REVENUE OF THE DAY</h1>
-          </center>
->>>>>>> Stashed changes
-
       {/* weekly profit expandable modal */}
       <Modal
         opened={openedWeeklyProfitChart}

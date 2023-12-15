@@ -35,16 +35,12 @@ const InvoiceTemplate = (props: any) => {
         </Text>
 
         <Group position="left">
-<<<<<<< Updated upstream
           <Image
             src={logo}
             width={200}
             height={200}
             style={{ marginLeft: "40px" }}
           />
-=======
-          <Image src={logo} width={180} height={180} mb={-80} ml={40}/>
->>>>>>> Stashed changes
         </Group>
 
         <Text size="md" weight={500} align="right" mb={-20}>

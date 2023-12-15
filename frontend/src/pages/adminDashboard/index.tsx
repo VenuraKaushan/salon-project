@@ -13,12 +13,9 @@ const AdminDashboard = () => {
         </Grid.Col>
 
         <Grid.Col span={"auto"}>
-<<<<<<< Updated upstream
           <center>
             <h1>REVENUE OF THE DAY</h1>
           </center>
-=======
->>>>>>> Stashed changes
           <StatsProfitCard />
           {/* <Chart/> */}
         </Grid.Col>

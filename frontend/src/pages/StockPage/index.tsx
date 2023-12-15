@@ -8,16 +8,10 @@ const StockPage = () => {
   return (
     <div>
       <Grid>
-<<<<<<< Updated upstream
         <Grid.Col span={"content"}>
           <AdminDashboardNav link_id={6} />
         </Grid.Col>
 
-=======
-      <Grid.Col span="content">
-            <AdminDashboardNav link_id={6}/>
-          </Grid.Col>
->>>>>>> Stashed changes
         <Grid.Col span={"auto"}>
           <StockTable />
         </Grid.Col>
