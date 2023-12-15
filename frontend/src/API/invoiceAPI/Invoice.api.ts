@@ -19,6 +19,11 @@ class InvoiceAPI{
     static getAllInvoiceBySecretAdmin = ()=>{
         return axios.get(`${BASE_URL}/invoice/allInvoices`,{withCredentials:true})
     }
+
+    static saveSecretServiceInvoice = (values:any)=>{
+        return axios.post(`${BASE_URL}/invoice/secret/addInvoice`,values,{withCredentials:true});
+
+    }
 };
 
 export default InvoiceAPI;

@@ -62,7 +62,7 @@ export const SecreteAdminInvoices = () => {
                     <td>{invoice.cusEmail}</td>
                     <td>{invoice.cusPhone}</td>
                     <td>{new Date(invoice.issuedDate).toLocaleDateString("en-CA")}</td>
-                    <td>{invoice.serviceCharge}</td>
+                    <td>{invoice.totalSoldPrice}</td>
                 </tr>
             ))
         ) : (

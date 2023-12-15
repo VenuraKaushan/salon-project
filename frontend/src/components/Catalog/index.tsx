@@ -439,31 +439,38 @@ const Catalog = () => {
     ? filteredData?.map((row: any) => (
         <tr key={row._id}>
           <td>
-            <Text size={15}>{row.product_id}</Text>
+            <Text size={15} style={{ cursor: 'pointer' }}
+              onClick={() => getProductDetails(row._id)}>{row.product_id}</Text>
           </td>
           <td>
-            <Image height={"5vh"} width={"8vh"} src={row.image} />
+            <Image height={"5vh"} width={"8vh"} src={row.image} style={{ cursor: 'pointer' }}
+              onClick={() => getProductDetails(row._id)}/>
           </td>
           <td>
-            <Text size={15}>{row.code}</Text>
+            <Text size={15} style={{ cursor: 'pointer' }}
+              onClick={() => getProductDetails(row._id)}>{row.code}</Text>
           </td>
           <td>
             <Text
               size={15}
               style={{ cursor: "pointer", textDecoration: "underline" }}
+
               onClick={() => getProductDetails(row._id)}
             >
               {row.name}
             </Text>
           </td>
           <td>
-            <Text size={15}>{row.brand}</Text>
+            <Text size={15} style={{ cursor: 'pointer' }}
+              onClick={() => getProductDetails(row._id)}>{row.brand}</Text>
           </td>
           <td>
-            <Text size={15}>{row.category}</Text>
+            <Text size={15} style={{ cursor: 'pointer' }}
+              onClick={() => getProductDetails(row._id)}>{row.category}</Text>
           </td>
           <td>
-            <Text size={15}>{row.price}</Text>
+            <Text size={15} style={{ cursor: 'pointer' }}
+              onClick={() => getProductDetails(row._id)}>{row.price}</Text>
           </td>
           {/* <td>
             <Text size={15}>{row.price}</Text>
@@ -472,7 +479,8 @@ const Catalog = () => {
             <Text size={15}>{row.price}</Text>
           </td> */}
           <td>
-            <Text size={15}>{row.quantity}</Text>
+            <Text size={15} style={{ cursor: 'pointer' }}
+              onClick={() => getProductDetails(row._id)}>{row.quantity}</Text>
           </td>
           <td>
             {/* Use button to reduce quantity */}
@@ -882,30 +890,53 @@ const Catalog = () => {
               position="center"
               spacing="xl"
               style={{ minHeight: rem(220), pointerEvents: "none" }}
-            >
-              <Dropzone.Accept>
-                <IconUpload size="3.2rem" stroke={1.5} />
-              </Dropzone.Accept>
-              <Dropzone.Reject>
-                <IconX size="3.2rem" stroke={1.5} />
-              </Dropzone.Reject>
-              <Dropzone.Idle>
-                <IconPhoto size="3.2rem" stroke={1.5} />
-              </Dropzone.Idle>
+            />
+              <Group
+                position="center"
+                spacing="xl"
+                style={{ minHeight: rem(220), pointerEvents: "none" }}
+              >
+                <Dropzone.Accept>
+                  <IconUpload
+                    size="3.2rem"
+                    stroke={1.5}
+                  />
+                </Dropzone.Accept>
+                <Dropzone.Reject>
+                  <IconX
+                    size="3.2rem"
+                    stroke={1.5}
+                  />
+                </Dropzone.Reject>
+                <Dropzone.Idle>
+                  <IconPhoto size="3.2rem" stroke={1.5} />
+                </Dropzone.Idle>
+  
+                <div>
+                  <Text size="xl" align="center">
+                    Drag image here or click to select files
+                  </Text>
+                </div>
+              </Group>
+              {files.length > 0 && ( // Display preview only if files are uploaded
+                <div>
+                  <Text size="xl" align="center">
+                    Uploaded Image Preview:
+                  </Text>
+                  {files.map((file, index) => (
+                    <img
+                      key={index}
+                      src={URL.createObjectURL(file)} // Use createObjectURL to generate a preview URL
+                      alt={`Preview ${index}`}
+                      height="100px"
+                      width="100px"
+                    />
+                  ))}
+                </div>
+              )}
+            </Dropzone>
 
-              <div>
-                <Text size="xl" align="center">
-                  Drag image here or click to select files
-                </Text>
-              </div>
-            </Group>
-          </Dropzone>
-
-          <Button
-            color="blue"
-            sx={{ marginTop: "10px", width: "100%" }}
-            type="submit"
-          >
+          <Button color="blue" sx={{ marginTop: '10px', width: '100%' }} type="submit">
             Save
           </Button>
         </form>
