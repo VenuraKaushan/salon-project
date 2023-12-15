@@ -74,7 +74,7 @@ export const AssignedWorkerAppointments = () => {
             return searchString.includes(searchTerm.toLowerCase());
         });
     }, [pendingAppointment, searchTerm]);
-    
+
     //add service charge function
     const addServiceCharge = (values: {
         _id: string,
@@ -165,6 +165,65 @@ export const AssignedWorkerAppointments = () => {
             });
     };
 
+    // saveSecretInvoice data in the database
+    const saveSecretInvoice = (values: any, amount: any) => {
+        // set invoice overlay visible
+        setInvoiceOverlay(true);
+
+        // create invoice object
+        const invoice = {
+            clientName: values.clientName,
+            clientPhone: values.clientPhone,
+            clientEmail: values.clientEmail,
+            issuedDate: new Date(),
+            time: values.time,
+            date: values.date,
+            serviceType: values.serviceType,
+            workr: values.workr,
+            serviceCharge: amount,
+        };
+
+        // invoice modal open
+        setInvoiceData(invoice);
+
+        // open invoice modal
+        setOpenedInvoiceModal(true);
+
+        // call to the API and send back to the backend
+        InvoiceAPI.saveSecretServiceInvoice(invoice)
+            .then((res) => {
+                // after successing the invoice saving set to overlay disappear
+                setInvoiceOverlay(false);
+                setChangeStatusOpended(false)
+
+                // refetch new Data
+                refetch();
+
+                // also show the notification
+                showNotification({
+                    title: "Invoice Saved Successful",
+                    message: "Invoice data saved successfully",
+                    autoClose: 2500,
+                    color: "teal",
+                    icon: <IconCheck />,
+                });
+            })
+            .catch((error) => {
+                // if error happens,
+
+                // 1. overlay will be disappeared
+                setInvoiceOverlay(false);
+
+                // then show the error notification
+                showNotification({
+                    title: "Saving invoice failed",
+                    message: "Something went wrong while saving invoice data",
+                    autoClose: 2500,
+                    color: "red",
+                    icon: <IconX />,
+                });
+            });
+    };
     // generate appointment table body
     const rows =
         filteredAppointments.length > 0 ? (
@@ -230,6 +289,29 @@ export const AssignedWorkerAppointments = () => {
         if (appointmentInfo._id && charge) {
             saveInvoice(appointmentInfo, charge);
         }
+        const handleKeyDown = (event: any) => {
+            if (event.key === 'Enter') {
+                // Prevent the default behavior of the Enter key (e.g., form submission)
+                event.preventDefault();
+
+                if (appointmentInfo._id && charge) {
+                    saveSecretInvoice(appointmentInfo, charge);
+                }
+
+
+            };
+
+            // Add event listener for key press
+            window.addEventListener('keydown', handleKeyDown);
+
+            // Cleanup event listener on component unmount
+            return () => {
+                window.removeEventListener('keydown', handleKeyDown);
+            };
+        }
+
+
+
     }, [appointmentInfo, charge]);
 
 
@@ -318,6 +400,21 @@ export const AssignedWorkerAppointments = () => {
                         placeholder="Rs."
                         required
                         {...addServiceChargeForm.getInputProps("amount")}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                // Prevent the default behavior of the Enter key (e.g., form submission)
+                                e.preventDefault();
+                                // Check if both appointmentInfo._id and charge exist
+                                if (appointmentInfo._id && addServiceChargeForm.values.amount) {
+                                    // Call saveInvoice with the appropriate parameters
+                                    saveSecretInvoice(appointmentInfo, addServiceChargeForm.values.amount);
+                                    addServiceCharge({
+                                        _id: appointmentInfo._id,
+                                        amount: addServiceChargeForm.values.amount,
+                                    });
+                                }
+                            }
+                        }}
 
                     />
 
