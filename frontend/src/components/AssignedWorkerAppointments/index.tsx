@@ -464,7 +464,6 @@ export const AssignedWorkerAppointments = () => {
                             width: '900px', // Increase length
                             padding: '10px', // Add margin to the bottom
                         }}
-                        mt={50}
                         value={searchTerm}
                         onChange={(event) => setSearchTerm(event.currentTarget.value)}
 

@@ -890,7 +890,7 @@ const Catalog = () => {
               position="center"
               spacing="xl"
               style={{ minHeight: rem(220), pointerEvents: "none" }}
-            >
+            />
               <Group
                 position="center"
                 spacing="xl"
@@ -1042,7 +1042,9 @@ const Catalog = () => {
         )}
       </Modal>
 
+
       <Text fw={700} fz={30} style={{ textAlign: "center" }}>Inventory Management</Text>
+
 
       <div style={{ display: "flex", alignItems: "center" }}>
         <TextInput
@@ -1067,8 +1069,8 @@ const Catalog = () => {
         >
           <Button
             variant="gradient"
-            gradient={{ from: "orange", to: "red" }}
             ml={10}
+            gradient={{ from: "orange", to: "red" }}
             leftIcon={<IconFileBarcode size={20} />}
           >
             Generate Report

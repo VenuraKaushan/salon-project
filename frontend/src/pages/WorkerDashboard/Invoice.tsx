@@ -7,21 +7,13 @@ const WorkerDashboaord = () => {
   return (
     <div>
       <Grid>
-<<<<<<< Updated upstream
         <Grid.Col span={"content"}>
-=======
-        <Grid.Col span="content">
->>>>>>> Stashed changes
           <AdminDashboardNav link_id={5} />
         </Grid.Col>
         <Grid.Col span={"auto"}>
           <ManageStocks />
         </Grid.Col>
-<<<<<<< Updated upstream
       </Grid>   
-=======
-      </Grid>
->>>>>>> Stashed changes
     </div>
   );
 };

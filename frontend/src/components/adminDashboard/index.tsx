@@ -18,11 +18,8 @@ import {
   IconSquareRoundedCheck,
   IconReportMoney,
   IconFileInvoice,
-<<<<<<< Updated upstream
   IconCalendarCheck,
-=======
   IconTableImport,
->>>>>>> Stashed changes
 } from '@tabler/icons-react';
 
 const adminDashboardNav = createStyles((theme) => ({
@@ -106,13 +103,8 @@ const links = [
   // { link: '/admin/clients', label: 'Clients', icon: IconUsers, },
   { link: '/admin/catalog', label: 'Inventory', icon: IconBuildingStore },
   { link: '/admin/workerdashboardHeader', label: 'Services', icon: IconReportMoney },
-<<<<<<< Updated upstream
-  { link: '/admin/stokepage', label: 'Pending Services', icon: IconCalendarCheck },
-  { link: '/worker/invoice', label: 'Invoices', icon: IconFileInvoice },
-=======
   { link: '/admin/stokepage', label: 'Pending Services', icon: IconTableImport },
   { link: '/worker/invoice', label: 'Customer Invoices', icon: IconFileInvoice },
->>>>>>> Stashed changes
 ];
 
 
