@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useDisclosure } from '@mantine/hooks';
+import { useState } from "react";
+import { useDisclosure } from "@mantine/hooks";
 import {
   createStyles,
   Table,
@@ -14,12 +14,13 @@ import {
   Select,
   Tooltip,
   ActionIcon,
-  Progress, 
+  Progress,
   Box,
   FileInput,
   Image,
   NumberInput,
   Badge,
+  Center,
 } from '@mantine/core';
 import {
   IconSearch,
@@ -31,27 +32,27 @@ import {
   IconMinus,
   IconUpload,
   IconPhoto,
-} from '@tabler/icons-react';
+} from "@tabler/icons-react";
 import {
   Dropzone,
   IMAGE_MIME_TYPE,
   DropzoneProps,
   FileWithPath,
 } from "@mantine/dropzone";
-import { useForm } from '@mantine/form';
-import { showNotification, updateNotification } from '@mantine/notifications';
-import ProductsAPI from '../../API/productsAPI/products.api';
-import { useQuery } from '@tanstack/react-query';
-import { PDFDownloadLink } from '@react-pdf/renderer';
-import { ProductPDF } from '../PDFRender/productPDF';
-import { DateInput } from '@mantine/dates';
+import { useForm } from "@mantine/form";
+import { showNotification, updateNotification } from "@mantine/notifications";
+import ProductsAPI from "../../API/productsAPI/products.api";
+import { useQuery } from "@tanstack/react-query";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import { ProductPDF } from "../PDFRender/productPDF";
+import { DateInput } from "@mantine/dates";
 
 const useStyles = createStyles((theme) => ({
   tableHeader: {
     backgroundColor: theme.colors.gray[2],
   },
   th: {
-    padding: '0 !important',
+    padding: "0 !important",
   },
   icon: {
     width: rem(21),
@@ -59,20 +60,20 @@ const useStyles = createStyles((theme) => ({
     borderRadius: rem(21),
   },
   header: {
-    position: 'sticky',
+    position: "sticky",
     zIndex: 100,
     top: 0,
     backgroundColor:
-      theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
-    transition: 'box-shadow 150ms ease',
-    '&::after': {
+      theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.white,
+    transition: "box-shadow 150ms ease",
+    "&::after": {
       content: '""',
-      position: 'absolute',
+      position: "absolute",
       left: 0,
       right: 0,
       bottom: 0,
       borderBottom: `${rem(1)} solid ${
-        theme.colorScheme === 'dark'
+        theme.colorScheme === "dark"
           ? theme.colors.dark[3]
           : theme.colors.gray[2]
       }`,
@@ -132,13 +133,15 @@ const Catalog = () => {
   const [scrolled, setScrolled] = useState(false);
   const [opened, setOpened] = useState(false);
   const [editOpened, setEditOpened] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   //image upload
   const [files, setFiles] = useState<FileWithPath[]>([]);
   const [loading, setLoading] = useState(false);
-  
+
   //get details by id
-  const [selectedProduct, setSelectedProduct] = useState<ProductData | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<ProductData | null>(
+    null
+  );
 
   let imageUrl: string;
   const previews = files.map((file, index) => {
@@ -177,46 +180,46 @@ const Catalog = () => {
     isLoading,
     refetch,
   } = useQuery(
-    ['productData'],
+    ["productData"],
     () => {
       return ProductsAPI.getAllItems().then((res) => res.data);
     },
     { initialData: [] }
   );
 
-  //define form for adding   
+  //define form for adding
   const productForm = useForm({
     initialValues: {
-      name: '',
-      brand: '',
-      price: '',
-      description: '',
-      category: '',
-      code: '',
-      quantity: '',
-      added_date:'',
-      expire_date:'',
-      supplier:'',
-      image: '',
+      name: "",
+      brand: "",
+      price: "",
+      description: "",
+      category: "",
+      code: "",
+      quantity: "",
+      added_date: "",
+      expire_date: "",
+      supplier: "",
+      image: "",
     },
   });
 
   //define form for editing
   const productEditForm = useForm({
     initialValues: {
-      _id: '',
-      product_id: '',
-      name: '',
-      brand: '',
-      price: '',
-      description: '',
-      category: '',
-      code: '',
-      quantity: '',
-      added_date:'',
-      expire_date:'',
-      supplier:'',
-      image: '',
+      _id: "",
+      product_id: "",
+      name: "",
+      brand: "",
+      price: "",
+      description: "",
+      category: "",
+      code: "",
+      quantity: "",
+      added_date: "",
+      expire_date: "",
+      supplier: "",
+      image: "",
     },
   });
 
@@ -224,39 +227,39 @@ const Catalog = () => {
   const addProduct = async () => {
     try {
       setLoading(true);
-  
+
       if (files.length === 0) {
         showNotification({
-          id: 'Add Product',
-          title: 'File not uploaded',
-          message: 'Please upload an image for the product',
-          color: 'red',
+          id: "Add Product",
+          title: "File not uploaded",
+          message: "Please upload an image for the product",
+          color: "red",
           icon: <IconX />,
           autoClose: 2500,
         });
-  
+
         setLoading(false);
         return;
       }
-  
+
       const base64 = await convertBase64();
       const productData = productForm.values;
-  
+
       ProductsAPI.addProduct({
         ...productData,
         image: base64,
       }).then((res) => {
         setLoading(false);
-  
+
         showNotification({
-          id: 'Add Product',
-          title: 'Product record added',
-          message: 'Product record has been added successfully',
-          color: 'teal',
+          id: "Add Product",
+          title: "Product record added",
+          message: "Product record has been added successfully",
+          color: "teal",
           icon: <IconCheck />,
           autoClose: 2500,
         });
-  
+
         URL.revokeObjectURL(imageUrl);
         setFiles([]);
         productForm.reset();
@@ -265,24 +268,24 @@ const Catalog = () => {
       });
     } catch (error) {
       updateNotification({
-        id: 'Add Product',
-        title: 'Failed to add Product record',
-        message: 'Failed to add Product record, please try again',
-        color: 'red',
+        id: "Add Product",
+        title: "Failed to add Product record",
+        message: "Failed to add Product record, please try again",
+        color: "red",
         icon: <IconX />,
         autoClose: 2500,
       });
     }
   };
-  
+
   //update product
   const updateProduct = async (values: ProductEditData) => {
     try {
       showNotification({
-        id: 'update-Product',
+        id: "update-Product",
         loading: true,
-        title: 'Updating Product record',
-        message: 'Please wait while we update Product record..',
+        title: "Updating Product record",
+        message: "Please wait while we update Product record..",
         autoClose: false,
       });
 
@@ -294,11 +297,11 @@ const Catalog = () => {
         image: base64,
       }).then((response) => {
         updateNotification({
-          id: 'update-Product',
-          color: 'teal',
+          id: "update-Product",
+          color: "teal",
           icon: <IconCheck />,
-          title: 'Product updated successfully',
-          message: 'Product data updated successfully.',
+          title: "Product updated successfully",
+          message: "Product data updated successfully.",
           autoClose: 5000,
         });
 
@@ -310,41 +313,40 @@ const Catalog = () => {
       });
     } catch (error) {
       updateNotification({
-        id: 'update-Product',
-        color: 'red',
-        title: 'Product updating failed',
+        id: "update-Product",
+        color: "red",
+        title: "Product updating failed",
         icon: <IconX />,
-        message: 'We were unable to update the Product',
+        message: "We were unable to update the Product",
         autoClose: 5000,
       });
     }
   };
 
+  // Function to fetch product details by ID
+  const getProductDetails = async (productId: string) => {
+    try {
+      const response = await ProductsAPI.getProductById({ _id: productId });
+      setSelectedProduct(response.data);
+    } catch (error) {
+      // Handle errors or show a notification
+      console.log(error);
+    }
+  };
 
-    // Function to fetch product details by ID
-    const getProductDetails = async (productId: string) => {
-      try {
-        const response = await ProductsAPI.getProductById({ _id: productId });
-        setSelectedProduct(response.data);
-      } catch (error) {
-        // Handle errors or show a notification
-        console.log(error);
-      }
-    };
-  
-    // Function to reset the selected product when the modal is closed
-    const resetSelectedProduct = () => {
-      setSelectedProduct(null);
-    };
+  // Function to reset the selected product when the modal is closed
+  const resetSelectedProduct = () => {
+    setSelectedProduct(null);
+  };
 
-   // Function to handle reducing stock quantity
-   const handleUseProduct = (productId: string, currentQuantity: number) => {
+  // Function to handle reducing stock quantity
+  const handleUseProduct = (productId: string, currentQuantity: number) => {
     const updatedQuantity = currentQuantity - 1;
 
     ProductsAPI.updateUseProduct({
       _id: productId,
-      product_id: "", 
-      quantity: updatedQuantity.toString(), 
+      product_id: "",
+      quantity: updatedQuantity.toString(),
     })
       .then((response) => {
         updateNotification({
@@ -367,7 +369,7 @@ const Catalog = () => {
           autoClose: 5000,
         });
       });
-  }
+  };
   // Function to handle reducing stock quantity
   // const handleUseProduct = (productId: string, currentQuantity: number) => {
   //   // You can add your logic here to reduce the quantity
@@ -404,31 +406,32 @@ const Catalog = () => {
   //     });
   // };
 
-  
- // // Add this function to calculate the availability percentage
+  // // Add this function to calculate the availability percentage
   // function calculateAvailabilityPercentage(quantity: number) {
   //   // Define a threshold for what is considered "available"
-  //   const availableThreshold = 10; 
+  //   const availableThreshold = 10;
 
   //   // Calculate the percentage
   //   const percentage = (quantity / availableThreshold) * 100;
 
   //   // Ensure the percentage is within the range [0, 100]
   //   return Math.min(100, Math.max(0, percentage));
-  // } 
+  // }
 
   //searching data
-  const filteredData = data.filter((product: Data) =>
-    product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    product.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    product.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    product.code.toLowerCase().includes(searchTerm.toLowerCase()) 
-
+  const filteredData = data.filter(
+    (product: Data) =>
+      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.code.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const daysDifference = (date1: Date, date2: Date) => {
     const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
-    const diffDays = Math.round(Math.abs((date1.getTime() - date2.getTime()) / oneDay));
+    const diffDays = Math.round(
+      Math.abs((date1.getTime() - date2.getTime()) / oneDay)
+    );
     return diffDays;
   };
 
@@ -450,7 +453,8 @@ const Catalog = () => {
           <td>
             <Text
               size={15}
-              style={{ cursor: 'pointer' }}
+              style={{ cursor: "pointer", textDecoration: "underline" }}
+
               onClick={() => getProductDetails(row._id)}
             >
               {row.name}
@@ -479,42 +483,58 @@ const Catalog = () => {
               onClick={() => getProductDetails(row._id)}>{row.quantity}</Text>
           </td>
           <td>
-          {/* Use button to reduce quantity */}
-          
-              <>
-                <Group spacing={"sm"}>
-                  {/* edit button */}
-                  <Tooltip label="Use Product">
-                    <ActionIcon
-                      style={{ marginLeft: '10px', backgroundColor: 'red', borderRadius: '50%', padding: '5px' }}
-                      onClick={() => handleUseProduct(row._id, Number(row.quantity))}
-                    >
-                      <IconMinus 
-                      style={{ color: 'white'  }}
-                      size={30} />
-                    </ActionIcon>
-                  </Tooltip>
+            {/* Use button to reduce quantity */}
 
-                </Group>
-              </>
-        </td>
+            <>
+              <Group spacing={"sm"}>
+                {/* edit button */}
+                <Tooltip label="Use Product">
+                  <ActionIcon
+                    style={{
+                      marginLeft: "10px",
+                      backgroundColor: "red",
+                      borderRadius: "50%",
+                      padding: "5px",
+                    }}
+                    onClick={() =>
+                      handleUseProduct(row._id, Number(row.quantity))
+                    }
+                  >
+                    <IconMinus style={{ color: "white" }} size={30} />
+                  </ActionIcon>
+                </Tooltip>
+              </Group>
+            </>
+          </td>
           {/* <td>
             <Text size={15}></Text>
           </td> */}
           <td>
-              <Text size={15}>
-                {new Date(row.added_date).toLocaleDateString("en-GB").split("T")[0]}
-              </Text>
-            </td>
-            <td>
-              {new Date(row.expire_date) < new Date() ? (
-                <Badge variant="outline" color="red">Expired</Badge>
-              ) : daysDifference(new Date(row.expire_date), new Date()) <= 10 ? (
-                <Badge variant="outline" color="red">Expires in {daysDifference(new Date(row.expire_date), new Date())} Days</Badge>
-              ) : (
-                <Badge variant="outline" color="green">Expires in {daysDifference(new Date(row.expire_date), new Date())} Days</Badge>
-              )}
-            </td>
+            <Text size={15}>
+              {
+                new Date(row.added_date)
+                  .toLocaleDateString("en-GB")
+                  .split("T")[0]
+              }
+            </Text>
+          </td>
+          <td>
+            {new Date(row.expire_date) < new Date() ? (
+              <Badge variant="outline" color="red">
+                Expired
+              </Badge>
+            ) : daysDifference(new Date(row.expire_date), new Date()) <= 10 ? (
+              <Badge variant="outline" color="red">
+                Expires in{" "}
+                {daysDifference(new Date(row.expire_date), new Date())} Days
+              </Badge>
+            ) : (
+              <Badge variant="outline" color="green">
+                Expires in{" "}
+                {daysDifference(new Date(row.expire_date), new Date())} Days
+              </Badge>
+            )}
+          </td>
 
           <td>
             {
@@ -526,15 +546,19 @@ const Catalog = () => {
                       color="teal"
                       onClick={() => {
                         // Assuming row.added_date is a valid date string or a Date object
-                        const formattedAddedDate = new Date(row.added_date).toLocaleDateString('en-US', {
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric',
+                        const formattedAddedDate = new Date(
+                          row.added_date
+                        ).toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
                         });
-                        const formattedExDate = new Date(row.expire_date).toLocaleDateString('en-US', {
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric',
+                        const formattedExDate = new Date(
+                          row.expire_date
+                        ).toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
                         });
                         productEditForm.setValues({
                           _id: row._id,
@@ -557,7 +581,6 @@ const Catalog = () => {
                       <IconEdit size={30} />
                     </ActionIcon>
                   </Tooltip>
-
                 </Group>
               </>
             }
@@ -580,15 +603,8 @@ const Catalog = () => {
     });
   }
 
-
-  
-
-
   return (
-    <Box
-    sx={{justifyContent: "space-between" }}
-      pos="relative"
-      >
+    <Box sx={{ justifyContent: "space-between" }} pos="relative">
       {/* Add new product modal */}
       <Modal
         opened={opened}
@@ -600,7 +616,6 @@ const Catalog = () => {
           blur: 3,
         }}
         title="Add New Product"
-
         centered
       >
         <form onSubmit={productForm.onSubmit(addProduct)}>
@@ -609,8 +624,8 @@ const Catalog = () => {
             name="name"
             placeholder="Enter product name"
             required
-            {...productForm.getInputProps('name')}
-            style={{ display:'inline-block' }}
+            {...productForm.getInputProps("name")}
+            style={{ display: "inline-block" }}
           />
 
           <TextInput
@@ -618,8 +633,12 @@ const Catalog = () => {
             label="Brand Name"
             placeholder="Enter brand name"
             required
-            {...productForm.getInputProps('brand')}
-            style={{ display:'inline-block', marginLeft:'10px', width:'50%' }}
+            {...productForm.getInputProps("brand")}
+            style={{
+              display: "inline-block",
+              marginLeft: "10px",
+              width: "50%",
+            }}
           />
 
           <TextInput
@@ -627,8 +646,7 @@ const Catalog = () => {
             label="Price"
             placeholder="Enter price"
             required
-            {...productForm.getInputProps('price')}
-            
+            {...productForm.getInputProps("price")}
           />
 
           <TextInput
@@ -636,7 +654,7 @@ const Catalog = () => {
             label="Description"
             placeholder="Enter description"
             required
-            {...productForm.getInputProps('description')}
+            {...productForm.getInputProps("description")}
           />
 
           <Select
@@ -645,11 +663,11 @@ const Catalog = () => {
             placeholder="Select category"
             required
             data={[
-              { value: 'face', label: 'Face' },
-              { value: 'hair', label: 'Hair' },
-              { value: 'body', label: 'Body' },
+              { value: "face", label: "Face" },
+              { value: "hair", label: "Hair" },
+              { value: "body", label: "Body" },
             ]}
-            {...productForm.getInputProps('category')}
+            {...productForm.getInputProps("category")}
           />
 
           <TextInput
@@ -657,7 +675,7 @@ const Catalog = () => {
             name="code"
             placeholder="Enter Code"
             required
-            {...productForm.getInputProps('code')}
+            {...productForm.getInputProps("code")}
           />
 
           <NumberInput
@@ -665,7 +683,7 @@ const Catalog = () => {
             label="Quantity"
             placeholder="Enter quantity"
             required
-            {...productForm.getInputProps('quantity')}
+            {...productForm.getInputProps("quantity")}
           />
 
           <DateInput
@@ -673,7 +691,7 @@ const Catalog = () => {
             label="added_date"
             placeholder="Enter added_date"
             required
-            {...productForm.getInputProps('added_date')}
+            {...productForm.getInputProps("added_date")}
           />
 
           <DateInput
@@ -681,7 +699,7 @@ const Catalog = () => {
             label="expire_date"
             placeholder="Enter expire_date"
             required
-            {...productForm.getInputProps('expire_date')}
+            {...productForm.getInputProps("expire_date")}
           />
 
           <TextInput
@@ -689,54 +707,52 @@ const Catalog = () => {
             label="supplier"
             placeholder="Enter supplier"
             required
-            {...productForm.getInputProps('supplier')}
+            {...productForm.getInputProps("supplier")}
           />
 
-              <Dropzone
-              accept={IMAGE_MIME_TYPE}
-              onDrop={(files) => setFiles(files)}
-              onReject={(files) => {
-                showNotification({
-                  title: "File upload Error",
-                  message: "try to reupload another file",
-                  autoClose: 1500,
-                  icon: <IconX />,
-                  color: "red",
-                });
-              }}
-              maxSize={3 * 1024 ** 2}
-              maxFiles={1}
+          <Dropzone
+            accept={IMAGE_MIME_TYPE}
+            onDrop={(files) => setFiles(files)}
+            onReject={(files) => {
+              showNotification({
+                title: "File upload Error",
+                message: "try to reupload another file",
+                autoClose: 1500,
+                icon: <IconX />,
+                color: "red",
+              });
+            }}
+            maxSize={3 * 1024 ** 2}
+            maxFiles={1}
+          >
+            <Group
+              position="center"
+              spacing="xl"
+              style={{ minHeight: rem(220), pointerEvents: "none" }}
             >
-              <Group
-                position="center"
-                spacing="xl"
-                style={{ minHeight: rem(220), pointerEvents: "none" }}
-              >
-                <Dropzone.Accept>
-                  <IconUpload
-                    size="3.2rem"
-                    stroke={1.5}
-                  />
-                </Dropzone.Accept>
-                <Dropzone.Reject>
-                  <IconX
-                    size="3.2rem"
-                    stroke={1.5}
-                  />
-                </Dropzone.Reject>
-                <Dropzone.Idle>
-                  <IconPhoto size="3.2rem" stroke={1.5} />
-                </Dropzone.Idle>
-  
-                <div>
-                  <Text size="xl" align="center">
-                    Drag image here or click to select files
-                  </Text>
-                </div>
-              </Group>
-            </Dropzone>
+              <Dropzone.Accept>
+                <IconUpload size="3.2rem" stroke={1.5} />
+              </Dropzone.Accept>
+              <Dropzone.Reject>
+                <IconX size="3.2rem" stroke={1.5} />
+              </Dropzone.Reject>
+              <Dropzone.Idle>
+                <IconPhoto size="3.2rem" stroke={1.5} />
+              </Dropzone.Idle>
 
-          <Button color="blue" sx={{ marginTop: '10px', width: '100%' }} type="submit" >
+              <div>
+                <Text size="xl" align="center">
+                  Drag image here or click to select files
+                </Text>
+              </div>
+            </Group>
+          </Dropzone>
+
+          <Button
+            color="blue"
+            sx={{ marginTop: "10px", width: "100%" }}
+            type="submit"
+          >
             Save
           </Button>
         </form>
@@ -755,19 +771,21 @@ const Catalog = () => {
         title="Update Product Details"
         size="30%"
       >
-        <form onSubmit={productEditForm.onSubmit((values) => updateProduct(values))}>
-        <TextInput
+        <form
+          onSubmit={productEditForm.onSubmit((values) => updateProduct(values))}
+        >
+          <TextInput
             label="Product Id"
             name="product_id"
             disabled
-            {...productEditForm.getInputProps('product_id')}
+            {...productEditForm.getInputProps("product_id")}
           />
           <TextInput
             label="Product Name"
             name="name"
             placeholder="Enter product name"
             required
-            {...productEditForm.getInputProps('name')}
+            {...productEditForm.getInputProps("name")}
           />
 
           <TextInput
@@ -775,7 +793,7 @@ const Catalog = () => {
             label="Brand Name"
             placeholder="Enter brand name"
             required
-            {...productEditForm.getInputProps('brand')}
+            {...productEditForm.getInputProps("brand")}
           />
 
           <TextInput
@@ -783,7 +801,7 @@ const Catalog = () => {
             label="Price"
             placeholder="Enter price"
             required
-            {...productEditForm.getInputProps('price')}
+            {...productEditForm.getInputProps("price")}
           />
 
           <TextInput
@@ -791,7 +809,7 @@ const Catalog = () => {
             label="Description"
             placeholder="Enter description"
             required
-            {...productEditForm.getInputProps('description')}
+            {...productEditForm.getInputProps("description")}
           />
 
           <Select
@@ -800,11 +818,11 @@ const Catalog = () => {
             placeholder="Select category"
             required
             data={[
-              { value: 'face', label: 'Face' },
-              { value: 'hair', label: 'Hair' },
-              { value: 'body', label: 'Body' },
+              { value: "face", label: "Face" },
+              { value: "hair", label: "Hair" },
+              { value: "body", label: "Body" },
             ]}
-            {...productEditForm.getInputProps('category')}
+            {...productEditForm.getInputProps("category")}
           />
 
           <TextInput
@@ -812,7 +830,7 @@ const Catalog = () => {
             name="code"
             placeholder="Enter Code"
             required
-            {...productEditForm.getInputProps('code')}
+            {...productEditForm.getInputProps("code")}
           />
 
           <TextInput
@@ -820,15 +838,15 @@ const Catalog = () => {
             label="Quantity"
             placeholder="Enter quantity"
             required
-            {...productEditForm.getInputProps('quantity')}
+            {...productEditForm.getInputProps("quantity")}
           />
-        
-        <TextInput
+
+          <TextInput
             name="added_date"
             label="added_date"
             placeholder="Enter added_date"
             disabled
-            {...productEditForm.getInputProps('added_date')}
+            {...productEditForm.getInputProps("added_date")}
           />
 
           <TextInput
@@ -836,7 +854,7 @@ const Catalog = () => {
             label="expire_date"
             placeholder="Enter expire_date"
             disabled
-            {...productEditForm.getInputProps('expire_date')}
+            {...productEditForm.getInputProps("expire_date")}
           />
 
           <TextInput
@@ -844,25 +862,34 @@ const Catalog = () => {
             label="supplier"
             placeholder="Enter supplier"
             required
-            {...productEditForm.getInputProps('supplier')}
+            {...productEditForm.getInputProps("supplier")}
           />
-           <label htmlFor="image">Image</label>
-          <Image src={productEditForm.values.image} height="15vh" width="15vh" />
-           <label htmlFor="image">Change Image</label>   
+          <label htmlFor="image">Image</label>
+          <Image
+            src={productEditForm.values.image}
+            height="15vh"
+            width="15vh"
+          />
+          <label htmlFor="image">Change Image</label>
           <Dropzone
-              accept={IMAGE_MIME_TYPE}
-              onDrop={(files) => setFiles(files)}
-              onReject={(files) => {
-                showNotification({
-                  title: "File upload Error",
-                  message: "try to reupload another file",
-                  autoClose: 1500,
-                  icon: <IconX />,
-                  color: "red",
-                });
-              }}
-              maxSize={3 * 1024 ** 2}
-              maxFiles={1}
+            accept={IMAGE_MIME_TYPE}
+            onDrop={(files) => setFiles(files)}
+            onReject={(files) => {
+              showNotification({
+                title: "File upload Error",
+                message: "try to reupload another file",
+                autoClose: 1500,
+                icon: <IconX />,
+                color: "red",
+              });
+            }}
+            maxSize={3 * 1024 ** 2}
+            maxFiles={1}
+          >
+            <Group
+              position="center"
+              spacing="xl"
+              style={{ minHeight: rem(220), pointerEvents: "none" }}
             >
               <Group
                 position="center"
@@ -915,8 +942,8 @@ const Catalog = () => {
         </form>
       </Modal>
 
-       {/* Details modal */}
-       <Modal
+      {/* Details modal */}
+      <Modal
         opened={Boolean(selectedProduct)}
         onClose={resetSelectedProduct}
         overlayProps={{
@@ -926,7 +953,7 @@ const Catalog = () => {
       >
         {selectedProduct && (
           <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
               <div>
                 <Text size="xl" weight={500}>
                   Product Name:
@@ -956,7 +983,7 @@ const Catalog = () => {
                 </Text>
               </div>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
               <div>
                 <Text size="xl" weight={500}>
                   Product Code:
@@ -979,14 +1006,18 @@ const Catalog = () => {
                   {selectedProduct.quantity}
                 </Text>
                 <Text size="sm" weight={500}>
-                {new Date(selectedProduct.added_date).toLocaleDateString("en-GB")}
+                  {new Date(selectedProduct.added_date).toLocaleDateString(
+                    "en-GB"
+                  )}
                 </Text>
                 <Text size="sm" weight={500}>
-                {new Date(selectedProduct.expire_date).toLocaleDateString("en-GB")}
+                  {new Date(selectedProduct.expire_date).toLocaleDateString(
+                    "en-GB"
+                  )}
                 </Text>
               </div>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
               <div>
                 <Text size="xl" weight={500}>
                   Supplier:
@@ -1004,21 +1035,18 @@ const Catalog = () => {
                 </Text>
               </div>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
-              
+            <div style={{ display: "flex", justifyContent: "center" }}>
               <Image src={selectedProduct.image} height="15vh" width="15vh" />
             </div>
           </div>
         )}
       </Modal>
 
-      
+      <Text fw={700} fz={30} style={{ textAlign: "center" }}>Inventory Management</Text>
 
-      <h1>Inventory Management</h1>
-
-      <div style={{ display: 'flex', alignItems: 'center' }}>
+      <div style={{ display: "flex", alignItems: "center" }}>
         <TextInput
-          placeholder="Search by any field"
+          placeholder="Search..."
           mt={50}
           mb={50}
           icon={<IconSearch size="0.9rem" stroke={1.5} />}
@@ -1026,33 +1054,40 @@ const Catalog = () => {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <Button leftIcon={<IconPlus size={20} />} ml={10} onClick={()=>setOpened(true)}>
+        <Button
+          leftIcon={<IconPlus size={20} />}
+          ml={10}
+          onClick={() => setOpened(true)}
+        >
           Add New Product
         </Button>
         <PDFDownloadLink
-              document={<ProductPDF data={data} />}
-              fileName={`Product Report ${new Date().toLocaleDateString()}`}
-            >
-              <Button
-                variant="outline"
-                ml={10}
-                leftIcon={<IconFileBarcode size={20} />}
-              >
-                Generate Report
-              </Button>
+          document={<ProductPDF data={data} />}
+          fileName={`Product Report ${new Date().toLocaleDateString()}`}
+        >
+          <Button
+            variant="gradient"
+            gradient={{ from: "orange", to: "red" }}
+            ml={10}
+            leftIcon={<IconFileBarcode size={20} />}
+          >
+            Generate Report
+          </Button>
         </PDFDownloadLink>
       </div>
 
       <div>
         <ScrollArea
-          w={'100mw'}
+          w={"100mw"}
           h={600}
           onScrollPositionChange={({ y }) => setScrolled(y !== 0)}
         >
-          <Table
-            striped highlightOnHover withBorder withColumnBorders
-          >
-            <thead className={cx(classes.header, classes.tableHeader, { [classes.scrolled]: scrolled })}>
+          <Table striped highlightOnHover withBorder withColumnBorders>
+            <thead
+              className={cx(classes.header, classes.tableHeader, {
+                [classes.scrolled]: scrolled,
+              })}
+            >
               <tr>
                 <th>ID</th>
                 <th>Image</th>
@@ -1072,23 +1107,21 @@ const Catalog = () => {
               </tr>
             </thead>
             <tbody>
-            {rows !== null ? (
-              rows.length > 0 ? (
-                rows
-              ) : (
-                <tr>
-                  <td>
-                    <Text weight={500} align="center">
-                      Nothing found
-                    </Text>
-                  </td>
-                </tr>
-              )
-            ) : null}
+              {rows !== null ? (
+                rows.length > 0 ? (
+                  rows
+                ) : (
+                  <tr>
+                    <td>
+                      <Text weight={500} align="center">
+                        Nothing found
+                      </Text>
+                    </td>
+                  </tr>
+                )
+              ) : null}
             </tbody>
-            <tbody>
-              {/* Render your data here */}
-            </tbody>
+            <tbody>{/* Render your data here */}</tbody>
           </Table>
         </ScrollArea>
       </div>

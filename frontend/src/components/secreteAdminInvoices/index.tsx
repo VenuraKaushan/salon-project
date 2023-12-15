@@ -91,8 +91,10 @@ export const SecreteAdminInvoices = () => {
                     size="xs"
                     style={{
                         width: '750px', // Increase length
-                        padding: '10px', // Add margin to the bottom
+                        padding: '10px',
+                        marginLeft: '160px' // Add margin to the bottom
                     }}
+                    mt={50}
                 // value={searchTerm}
                 // onChange={(event) => setSearchTerm(event.currentTarget.value)}
                 />

@@ -456,6 +456,7 @@ export const AssignedWorkerAppointments = () => {
                 <Center ml={140}>
 
                     <TextInput
+                        mt={50}
                         icon={<IconSearch size={15} />}
                         placeholder="Search..."
                         size="xs"
@@ -463,6 +464,7 @@ export const AssignedWorkerAppointments = () => {
                             width: '900px', // Increase length
                             padding: '10px', // Add margin to the bottom
                         }}
+                        mt={50}
                         value={searchTerm}
                         onChange={(event) => setSearchTerm(event.currentTarget.value)}
 

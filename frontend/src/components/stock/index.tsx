@@ -131,8 +131,8 @@ const StockTable = () => {
     BatteryAPI.acceptStock(stockId)
       .then((res) => {
         showNotification({
-          title: `Stock was accepted`,
-          message: "Stock was accepted successfully",
+          title: `Service was accepted`,
+          message: "Service was accepted successfully",
           autoClose: 1500,
           icon: <IconCheck />,
           color: "teal",
@@ -143,8 +143,8 @@ const StockTable = () => {
       })
       .catch((err) => {
         showNotification({
-          title: `stock was not accepted`,
-          message: "Stock was not accpeted",
+          title: `Service was not accepted`,
+          message: "Service was not accpeted",
           autoClose: 1500,
           icon: <IconX />,
           color: "red",
@@ -152,15 +152,15 @@ const StockTable = () => {
       });
   };
 
-
+  
 
   // delete Stock function
   const deleteSpecificStock = (stockId: string) => {
     BatteryAPI.rejectBattery(stockId)
       .then((res) => {
         showNotification({
-          title: `Stock was deleted`,
-          message: "Stock was deleted successfully",
+          title: `Service was deleted`,
+          message: "Service was deleted successfully",
           autoClose: 1500,
           icon: <IconCheck />,
           color: "teal",
@@ -172,8 +172,8 @@ const StockTable = () => {
       })
       .catch((err) => {
         showNotification({
-          title: `stock was not deleted`,
-          message: "Stock was not deleted",
+          title: `Service was not deleted`,
+          message: "Service was not deleted",
           autoClose: 1500,
           icon: <IconX />,
           color: "red",
@@ -195,8 +195,12 @@ const StockTable = () => {
     showNotification({
       id: "update-items",
       loading: true,
-      title: "Updating Items record",
-      message: "Please wait while we update Items record..",
+<<<<<<< Updated upstream
+      title: "Updating service record",
+=======
+      title: "Updating Service record",
+>>>>>>> Stashed changes
+      message: "Please wait while we update service record..",
       autoClose: false,
     });
     console.log(values);
@@ -206,8 +210,8 @@ const StockTable = () => {
           id: "update-items",
           color: "teal",
           icon: <IconCheck />,
-          title: "Items updated successfully",
-          message: "Items data updated successfully.",
+          title: "Service updated successfully",
+          message: "Service data updated successfully.",
           //icon: <IconCheck />,
           autoClose: 5000,
         });
@@ -221,9 +225,13 @@ const StockTable = () => {
         updateNotification({
           id: "update-items",
           color: "red",
-          title: "Items updatimg failed",
+<<<<<<< Updated upstream
+          title: "Service updatimg failed",
+=======
+          title: "Service updating failed",
+>>>>>>> Stashed changes
           icon: <IconX />,
-          message: "We were unable to update the Items",
+          message: "We were unable to update the service",
           // icon: <IconAlertTriangle />,
           autoClose: 5000,
         });
@@ -237,10 +245,14 @@ const StockTable = () => {
       centered: true,
       children: (
         <Text size="sm">
-          Are you sure you want to reject this stock? This action cannot be undone later.
+          Are you sure you want to reject this service? This action cannot be undone later.
         </Text>
       ),
-      labels: { confirm: 'Reject stock', cancel: "No don't reject it" },
+<<<<<<< Updated upstream
+      labels: { confirm: 'Reject service', cancel: "No don't reject it" },
+=======
+      labels: { confirm: 'Remove service', cancel: "No don't reject it" },
+>>>>>>> Stashed changes
       confirmProps: { color: 'red' },
       onCancel: () => modals.close,
       onConfirm: () => deleteSpecificStock(stockId),
@@ -252,7 +264,7 @@ const StockTable = () => {
     title: 'Please confirm your action',
     children: (
       <Text size="sm">
-        Are you sure you want to accept this stock? This stcok will be added to the stock.
+        Are you sure you want to accept this service? This service will be added to the service.
       </Text>
     ),
     labels: { confirm: 'Accept', cancel: 'Cancel' },
@@ -337,7 +349,11 @@ const StockTable = () => {
 
   if (isError) {
     showNotification({
-      title: "Cannot fetching Stock Data",
+<<<<<<< Updated upstream
+      title: "Cannot fetching service Data",
+=======
+      title: "Cannot fetching Service Data",
+>>>>>>> Stashed changes
       message: "Check internet connection",
       color: "red",
       icon: <IconX />,
@@ -348,7 +364,6 @@ const StockTable = () => {
 
   // table
   return (
-
     <div>
       {/* items edit model */}
       <Modal
@@ -357,7 +372,12 @@ const StockTable = () => {
           editForm.reset();
           setEditOpened(false);
         }}
-        title="Update Item Record"
+        title="Update Service Record"
+<<<<<<< Updated upstream
+        style={{ marginLeft: '120px' }} 
+=======
+        style={{ margin: "130px" }}
+>>>>>>> Stashed changes
       >
         <form onSubmit={editForm.onSubmit((values) => updateRequestedStocks(values))}>
           <TextInput
@@ -399,18 +419,35 @@ const StockTable = () => {
       </Modal>
       {/* search bar */}
       
+      <Text fw={700} fz={30} style={{ textAlign: "center" }}>Pending Services</Text>
 
       <ScrollArea
         w={"100mw"}
         h={600}
+        mb={70}
+        mt={50}
         onScrollPositionChange={({ y }) => setScrolled(y !== 0)}
       >
         <Table
           highlightOnHover
-          horizontalSpacing={70}
-          verticalSpacing="lg"
+<<<<<<< Updated upstream
+          horizontalSpacing={60}
+          verticalSpacing={10}
+          mt={50}
           miw={700}
-          sx={{ tableLayout: "fixed" }}
+          sx={{ tableLayout: "fixed" }} striped
+          withBorder
+          withColumnBorders
+          style={{ marginLeft: '0px' }}
+=======
+          horizontalSpacing={70}
+          verticalSpacing={15}
+          miw={700}
+          sx={{ tableLayout: "fixed" }} 
+          striped 
+          withBorder 
+          withColumnBorders
+>>>>>>> Stashed changes
         >
           <thead
             className={cx(classes.header, classes.tableHeader, { [classes.scrolled]: scrolled })}

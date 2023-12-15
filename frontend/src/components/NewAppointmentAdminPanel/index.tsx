@@ -532,6 +532,7 @@ export const Appointments = () => {
                 opened={assignWorkerModalOpen}
                 onClose={() => setAssignWorkerModalOpen(false)}
                 size={"50%"}
+                style={{marginLeft: '150px'}}
             >
                 <Modal.Header>
                     <Text weight={"bold"} size={30}>
@@ -675,6 +676,7 @@ export const Appointments = () => {
                 onClose={() => setDateModalOpened(false)}
                 title="Appointment Date"
                 size="50%"
+                style={{marginLeft: '100px'}}
 
             >
                 <form
@@ -718,6 +720,7 @@ export const Appointments = () => {
                 onClose={() => setTimeSlotOpened(false)}
                 title="Available Time Slots"
                 size="50%"
+                style={{ marginLeft: '130px'}}
             >
                 <Text fw={600} style={{ textAlign: "left" }}>To add an appointment click top of the time you want</Text>
                 <ScrollArea h={450}>
@@ -813,7 +816,7 @@ export const Appointments = () => {
                 onClose={() => setTimeModalOpened(false)}
                 title="Appointment Time"
                 size="50%"
-
+                style={{marginLeft: '120px'}}
             >
                 <form
                     onSubmit={timeForm.onSubmit((values) => checkTime(values))}
@@ -882,6 +885,7 @@ export const Appointments = () => {
             {/* search bar */}
             <Group spacing={"md"}>
                 <TextInput
+                    mt={50}
                     icon={<IconSearch size={15} />}
                     placeholder="Search..."
                     size="xs"
@@ -889,17 +893,18 @@ export const Appointments = () => {
                         width: '750px', // Increase length
                         padding: '10px', // Add margin to the bottom
                     }}
+                    mt={50}
                     value={searchTerm}
                     onChange={(event) => setSearchTerm(event.currentTarget.value)}
                 />
                 <Box>
-                    <Button mr={10} variant="gradient" gradient={{ from: 'indigo', to: 'cyan' }}
+                    <Button mr={10} mt={50} variant="gradient" gradient={{ from: 'indigo', to: 'cyan' }}
                         onClick={openDateModal}
 
                     >
                         Add Appointment from date
                     </Button>
-                    <Button variant="gradient" gradient={{ from: 'orange', to: 'red' }}
+                    <Button variant="gradient"  gradient={{ from: 'orange', to: 'red' }}
                         onClick={openTimeModal}
 
                     >

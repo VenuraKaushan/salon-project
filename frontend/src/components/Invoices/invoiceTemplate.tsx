@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import {useReactToPrint} from "react-to-print";
+import { useReactToPrint } from "react-to-print";
 import { Box, Group, Text, Button, Table, Image } from "@mantine/core";
 import logo from "../../assets/shopLogo.png";
 
@@ -30,8 +30,21 @@ const InvoiceTemplate = (props: any) => {
   return (
     <>
       <Box ref={componentRef} p={30} mb={30}>
+        <Text size={30} weight={500} align="center" mb={50} mt={-40}>
+          Invoice
+        </Text>
+
         <Group position="left">
-          <Image src={logo} width={280} height={80} />
+<<<<<<< Updated upstream
+          <Image
+            src={logo}
+            width={200}
+            height={200}
+            style={{ marginLeft: "40px" }}
+          />
+=======
+          <Image src={logo} width={180} height={180} mb={-80} ml={40}/>
+>>>>>>> Stashed changes
         </Group>
 
         <Text size="md" weight={500} align="right" mb={-20}>
@@ -104,10 +117,17 @@ const InvoiceTemplate = (props: any) => {
             </tr>
           </tbody>
         </Table>
-        <Text mt={40} size={"lg"} weight={600} align="center">Thank You!</Text>
+        
+        <Text mt={40} size={"lg"} weight={400} align="center" style={{ color: "red" }}>
+          All The Vat & Tax Are Includeed In Total Price
+        </Text>
+        <Text mt={40} size={"lg"} weight={600} align="center">
+          Thank You!
+        </Text>
       </Box>
       <Group grow>
-      <Button onClick={handlePrint}>Print</Button></Group>
+        <Button onClick={handlePrint}>Print</Button>
+      </Group>
     </>
   );
 };
