@@ -28,7 +28,7 @@ const options = {
     },
     title: {
       display: true,
-      text: "Monthly Profit Line Chart",
+      text: "Monthly Revenue Line Chart",
     },
   },
 };

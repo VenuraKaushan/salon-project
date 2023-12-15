@@ -3,7 +3,8 @@ import {
     addInvoice, 
     getAllInvocies,
     saveServiceInvoices,
-    getAllInvoiceBySecretAdmin
+    getAllInvoiceBySecretAdmin,
+    saveSecretServiceInvoice
  } from '../controllers/invoice.controller.js';
 import { validateAdmin } from "../middlewares/authMiddleware.js";
 
@@ -14,6 +15,6 @@ router.get('/',getAllInvocies);
 router.post('/add',addInvoice);
 router.post('/addInvoice',validateAdmin,saveServiceInvoices);
 router.get("/allInvoices",getAllInvoiceBySecretAdmin);
-
+router.post("/secret/addInvoice",saveSecretServiceInvoice)
 
 export default router;

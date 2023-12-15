@@ -132,7 +132,7 @@ export function StatsProfitCard() {
     labels: [""],
     datasets: [
       {
-        label: "Weekly Profit(LKR)",
+        label: "Weekly Revenue(LKR)",
         data: [0],
         borderColor: getRandomRGBColor(),
         backgroundColor: getRandomRGBColor(),
@@ -144,7 +144,7 @@ export function StatsProfitCard() {
     labels: [""],
     datasets: [
       {
-        label: "Monthly Profit(LKR)",
+        label: "Monthly Revenue(LKR)",
         data: [0],
         borderColor: getRandomRGBColor(),
         backgroundColor: getRandomRGBColor(),
@@ -222,9 +222,7 @@ export function StatsProfitCard() {
             return {
               ...dayData,
               profit:
-                dayData.profit +
-                (parseFloat(invoice.totalSoldPrice) -
-                  parseFloat(invoice.totalActualPrice)),
+                dayData.profit + (parseFloat(invoice.totalSoldPrice) + parseFloat(invoice.totalActualPrice)),
             };
           } else {
             return dayData;
@@ -324,9 +322,7 @@ export function StatsProfitCard() {
               return {
                 ...day,
                 profit:
-                  day.profit +
-                  (parseFloat(invoice.totalSoldPrice) -
-                    parseFloat(invoice.totalActualPrice)),
+                  day.profit + (parseFloat(invoice.totalSoldPrice) + parseFloat(invoice.totalActualPrice)),
               };
             } else {
               return day;
@@ -363,7 +359,7 @@ export function StatsProfitCard() {
 
       if (isWithinLast7Days(selectedDate, issuedDate)) {
         setWeekProfit(
-          (prev) => prev + invoice.totalSoldPrice - invoice.totalActualPrice
+          (prev) => prev + invoice.totalSoldPrice + invoice.totalActualPrice
         );
 
         invoice.items.forEach((items: any) => {
@@ -386,7 +382,7 @@ export function StatsProfitCard() {
 
       if (isWithinMonth(date, issuedDate)) {
         setMonthProfit(
-          (prev) => prev + invoice.totalSoldPrice - invoice.totalActualPrice
+          (prev) => prev + invoice.totalSoldPrice - invoice.totalActualPrice  
         );
 
         invoice.items.forEach((items: any) => {
@@ -411,7 +407,7 @@ export function StatsProfitCard() {
         issuedDate.getMonth() === date.getMonth()
       ) {
         setProfit(
-          (prev) => prev + invoice.totalSoldPrice - invoice.totalActualPrice
+          (prev) => prev + invoice.totalSoldPrice + invoice.totalActualPrice,
         );
 
         invoice?.items.map((items: any) => {
@@ -423,6 +419,10 @@ export function StatsProfitCard() {
 
   return (
     <>
+          <center>
+            <h1>PROFIT OF THE DAY</h1>
+          </center>
+
       {/* weekly profit expandable modal */}
       <Modal
         opened={openedWeeklyProfitChart}
@@ -449,7 +449,7 @@ export function StatsProfitCard() {
         <DateInput
           className={classes.dateInput}
           placeholder="Choose Date"
-          label="Choose Date to view profit"
+          label="Choose Date to view revenue"
           valueFormat="YYYY MMM DD"
           withAsterisk
           onChange={calculateProfit}
@@ -479,7 +479,7 @@ export function StatsProfitCard() {
               />
             </center>
             <Text weight={500} size={30}>
-              <center>Profit</center>
+              <center>Revenue</center>
             </Text>
             <Text weight={600} size={20} color="blue">
               <center> Rs.{profit}</center>
@@ -520,13 +520,13 @@ export function StatsProfitCard() {
             style={{ height: "430px" }}
           >
             <Text weight={500} size={30}>
-              <center>WEEKLY PROFIT & ITEM COUNT</center>
+              <center>WEEKLY PROFIT & SERVICE COUNT</center>
             </Text>
             <div className={classes.dateInputContainer}>
               <DateInput
                 className={classes.dateInput}
                 placeholder="Choose Date"
-                label="Choose Date to view profit"
+                label="Choose Date to view revenue"
                 valueFormat="YYYY MMM DD"
                 withAsterisk
                 size="xs"
@@ -568,7 +568,7 @@ export function StatsProfitCard() {
               </Tooltip>
             </Group>
             <Text weight={500} size={30} mb={40} mt={-35}>
-              <center>WEEKLY PROFIT</center>
+              <center>WEEKLY REVENUE</center>
             </Text>
             <WeekProfitChart profitData={weekProfitData} />
           </Card>
@@ -582,7 +582,7 @@ export function StatsProfitCard() {
             style={{ height: "430px" }}
           >
             <Text weight={500} size={30}>
-              <center>MONTHLY PROFIT & ITEM COUNT</center>
+              <center>MONTHLY PROFIT & SERVICE COUNT</center>
             </Text>
             <div className={classes.dateInputContainer}>
               <MonthPickerInput
@@ -628,7 +628,7 @@ export function StatsProfitCard() {
               </Tooltip>
             </Group>
             <Text weight={500} size={30} mb={40} mt={-35}>
-              <center>MONTHLY PROFIT</center>
+              <center>MONTHLY REVENUE</center>
             </Text>
 
             <MonthlyProfitChart profitData={monthlyProfitData} />

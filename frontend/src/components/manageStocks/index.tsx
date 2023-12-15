@@ -143,6 +143,7 @@ const ManageStocks = () => {
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [editOpened, setEditOpened] = useState(false);
   const [sortedData, setSortedData] = useState<Data[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   // for number quantity Input
   const [qvalue, setQValue] = useState<number | "">(0);
@@ -380,7 +381,8 @@ const ManageStocks = () => {
       issuedDate: new Date(),
       discount: calculateDiscount(),
       vat: calculateVat(),
-      totalSoldPrice: calculateTotalPrice() - calculateDiscount() + calculateVat(),
+      totalSoldPrice:
+        calculateTotalPrice() - calculateDiscount() + calculateVat(),
       totalActualPrice: calculateActualTotal(),
     };
 
@@ -595,7 +597,7 @@ const ManageStocks = () => {
         </td>
         <td>
           <Text size={15}>{rupee.format(row.sellingPrice)}</Text>
-        </td>   
+        </td>
         <td>
           {
             <>
@@ -750,7 +752,7 @@ const ManageStocks = () => {
         <td>
           <Text size={15}>{rupee.format(row.sellingPrice)}</Text>
         </td>
-        
+
         <td>
           {
             <>
@@ -766,8 +768,7 @@ const ManageStocks = () => {
                   }}
                   disabled={
                     // row.quantity === 0 ||
-                    cartOpened === true ||
-                    openedInvoiceModal === true
+                    cartOpened === true || openedInvoiceModal === true
                       ? true
                       : false
                   }
@@ -813,7 +814,6 @@ const ManageStocks = () => {
                       </ActionIcon>
                     </Group>
 
-                    
                     <Group position="center" spacing={"sm"} grow>
                       <Button
                         size="xs"
@@ -936,11 +936,10 @@ const ManageStocks = () => {
   const calculateVat = () => {
     if (vatType === "PERCENTAGE") {
       return (calculateTotalPrice() * cartVat) / 100;
-    }
-    else {
+    } else {
       return cartVat;
     }
-  }
+  };
 
   const handleEmailChange = (val: string) => {
     window.clearTimeout(timeoutRef.current);
@@ -1148,9 +1147,7 @@ const ManageStocks = () => {
                 size="xs"
                 defaultChecked
                 value={vatType}
-                data={[
-                  { value: "PERCENTAGE", label: "Percentage" },
-                ]}
+                data={[{ value: "PERCENTAGE", label: "Percentage" }]}
                 onChange={(e) => {
                   setVatType(e ? e : "");
                 }}
@@ -1220,27 +1217,27 @@ const ManageStocks = () => {
                 <td>{`- ${rupee.format(calculateDiscount())}`}</td>
               </tr>
             ) : null}
-            
+
             {cartDiscount !== 0 ? (
-            <tr>
-              <td colSpan={4}>
-                <Text weight={500} align="center">
-                  VAT
-                </Text>
-              </td>
-              <td>{`+ ${rupee.format(calculateVat())}`}</td>
-            </tr>
+              <tr>
+                <td colSpan={4}>
+                  <Text weight={500} align="center">
+                    VAT
+                  </Text>
+                </td>
+                <td>{`+ ${rupee.format(calculateVat())}`}</td>
+              </tr>
             ) : null}
 
             {cartDiscount === 0 ? (
-            <tr>
-              <td colSpan={4}>
-                <Text weight={500} align="center">
-                  VAT
-                </Text>
-              </td>
-              <td>{`+ ${rupee.format(calculateVat())}`}</td>
-            </tr>
+              <tr>
+                <td colSpan={4}>
+                  <Text weight={500} align="center">
+                    VAT
+                  </Text>
+                </td>
+                <td>{`+ ${rupee.format(calculateVat())}`}</td>
+              </tr>
             ) : null}
 
             {cartData.length !== 0 ? (
@@ -1263,7 +1260,7 @@ const ManageStocks = () => {
                 </td>
               </tr>
             ) : null}
-            
+
             {cartDiscount !== 0 ? (
               <tr>
                 <td colSpan={4}>
@@ -1275,21 +1272,20 @@ const ManageStocks = () => {
                   {
                     <Text weight={600} size={21}>
                       {rupee.format(
-                        calculateTotalPrice() - calculateDiscount() + calculateVat()
+                        calculateTotalPrice() -
+                          calculateDiscount() +
+                          calculateVat()
                       )}
                     </Text>
                   }
                 </td>
               </tr>
             ) : null}
-
           </tbody>
         </Table>
 
-        <Text>
-          All the Vat and Tax are includeed in Total Price
-        </Text>
-        
+        <Text>All the Vat and Tax are includeed in Total Price</Text>
+
         <Group position="right" mt={10} mb={10}>
           <Button
             rightIcon={<IconArrowNarrowRight size={18} />}
@@ -1450,11 +1446,11 @@ const ManageStocks = () => {
           {/* search bar */}
           <TextInput
             placeholder="Search by any field"
-            icon={<IconSearch size="0.9rem" stroke={1.5} />}
-            value={search}
-            onChange={handleSearchChange}
             ml={"12%"}
+            icon={<IconSearch size="0.9rem" stroke={1.5} />}
             w={"60%"}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
           <Group spacing={"lg"} ml={-10}>
             {" "}

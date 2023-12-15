@@ -436,31 +436,37 @@ const Catalog = () => {
     ? filteredData?.map((row: any) => (
         <tr key={row._id}>
           <td>
-            <Text size={15}>{row.product_id}</Text>
+            <Text size={15} style={{ cursor: 'pointer' }}
+              onClick={() => getProductDetails(row._id)}>{row.product_id}</Text>
           </td>
           <td>
-            <Image height={"5vh"} width={"8vh"} src={row.image}/>
+            <Image height={"5vh"} width={"8vh"} src={row.image} style={{ cursor: 'pointer' }}
+              onClick={() => getProductDetails(row._id)}/>
           </td>
           <td>
-            <Text size={15}>{row.code}</Text>
+            <Text size={15} style={{ cursor: 'pointer' }}
+              onClick={() => getProductDetails(row._id)}>{row.code}</Text>
           </td>
           <td>
             <Text
               size={15}
-              style={{ cursor: 'pointer', textDecoration: 'underline' }}
+              style={{ cursor: 'pointer' }}
               onClick={() => getProductDetails(row._id)}
             >
               {row.name}
             </Text>
           </td>
           <td>
-            <Text size={15}>{row.brand}</Text>
+            <Text size={15} style={{ cursor: 'pointer' }}
+              onClick={() => getProductDetails(row._id)}>{row.brand}</Text>
           </td>
           <td>
-            <Text size={15}>{row.category}</Text>
+            <Text size={15} style={{ cursor: 'pointer' }}
+              onClick={() => getProductDetails(row._id)}>{row.category}</Text>
           </td>
           <td>
-            <Text size={15}>{row.price}</Text>
+            <Text size={15} style={{ cursor: 'pointer' }}
+              onClick={() => getProductDetails(row._id)}>{row.price}</Text>
           </td>
           {/* <td>
             <Text size={15}>{row.price}</Text>
@@ -469,7 +475,8 @@ const Catalog = () => {
             <Text size={15}>{row.price}</Text>
           </td> */}
           <td>
-            <Text size={15}>{row.quantity}</Text>
+            <Text size={15} style={{ cursor: 'pointer' }}
+              onClick={() => getProductDetails(row._id)}>{row.quantity}</Text>
           </td>
           <td>
           {/* Use button to reduce quantity */}
@@ -884,10 +891,23 @@ const Catalog = () => {
                   </Text>
                 </div>
               </Group>
+              {files.length > 0 && ( // Display preview only if files are uploaded
+                <div>
+                  <Text size="xl" align="center">
+                    Uploaded Image Preview:
+                  </Text>
+                  {files.map((file, index) => (
+                    <img
+                      key={index}
+                      src={URL.createObjectURL(file)} // Use createObjectURL to generate a preview URL
+                      alt={`Preview ${index}`}
+                      height="100px"
+                      width="100px"
+                    />
+                  ))}
+                </div>
+              )}
             </Dropzone>
-
-          
-
 
           <Button color="blue" sx={{ marginTop: '10px', width: '100%' }} type="submit">
             Save

@@ -135,3 +135,34 @@ export const getAllInvoiceBySecretAdmin = async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 }
+
+
+export const saveSecretServiceInvoice = async (req, res) => {
+  const customInvoiceID = await generateInvoiceId();
+
+  try {
+    const invoices = new Invoice({
+      cusName: req.body.clientName,
+      invoice_id: customInvoiceID,
+      cusPhone: req.body.clientPhone,
+      cusEmail: req.body.clientEmail,
+      issuedDate: req.body.issuedDate,
+      appointmentTime: req.body.time,
+      appointmentDate: req.body.date,
+      serviceType: req.body.serviceType,
+      workr: req.body.workr,
+      totalSoldPrice: req.body.serviceCharge,
+      isHide : true,
+    })
+
+    console.log(invoices)
+    // store the invoice Object in the datasase
+    const savedInvoice = await invoices.save();
+
+    // send The success status to the frontend
+    res.status(201).json(savedInvoice);
+
+  } catch (err) {
+    res.status(500).json({ error: err, message: "Invoice saved failed!" }); //if anything went wrong this error response will forwarded
+  }
+}
