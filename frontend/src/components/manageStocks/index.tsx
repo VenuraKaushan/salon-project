@@ -20,6 +20,7 @@ import {
   Select,
   Autocomplete,
   Loader,
+  Center,
 } from "@mantine/core";
 import { keys } from "@mantine/utils";
 import {
@@ -989,6 +990,7 @@ const ManageStocks = () => {
         title="Customer Details"
         size={"lg"}
         zIndex={1000}
+        style={{ marginLeft: "100px" }}
       >
         <form
           onSubmit={customerForm.onSubmit((values) => {
@@ -1053,6 +1055,7 @@ const ManageStocks = () => {
         onClose={() => setCartOpened(false)}
         title="Cart"
         size={"80%"}
+        style={{ marginLeft: "120px" }}
       >
         <Group position="right">
           <Button
@@ -1367,6 +1370,7 @@ const ManageStocks = () => {
           setOpened(false);
         }}
         title="Add New Service"
+        ml={80}
       >
         <form onSubmit={addForm.onSubmit((values) => addItems(values))}>
           <TextInput
@@ -1405,6 +1409,7 @@ const ManageStocks = () => {
           setEditOpened(false);
         }}
         title="Update Service Record"
+        ml={100}
       >
         <form onSubmit={editForm.onSubmit((values) => updateItem(values))}>
           <TextInput
@@ -1442,13 +1447,16 @@ const ManageStocks = () => {
         </form>
       </Modal>
       <div>
-        <Group spacing={35} mb={70} mt={-30}>
+        <Text fw={700} fz={30} style={{ textAlign: "center" }}>
+          Services
+        </Text>
+        <Group spacing={35} mb={70} mt={50}>
           {/* search bar */}
           <TextInput
-            placeholder="Search by any field"
+            placeholder="Search..."
             ml={"12%"}
             icon={<IconSearch size="0.9rem" stroke={1.5} />}
-            w={"60%"}
+            w={"40%"}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -1501,9 +1509,13 @@ const ManageStocks = () => {
           <Table
             highlightOnHover
             horizontalSpacing={60}
-            verticalSpacing="lg"
+            //verticalSpacing={10}
             miw={700}
             sx={{ tableLayout: "fixed" }}
+            striped
+            withBorder
+            withColumnBorders
+            style={{ marginLeft: "0px" }}
           >
             <thead
               className={cx(classes.header, { [classes.scrolled]: scrolled })}

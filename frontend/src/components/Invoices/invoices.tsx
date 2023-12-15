@@ -85,14 +85,14 @@ interface Data {
 }
 
 function filterData(data: Data[], search: string) {
-    const query = search.toString().toLowerCase().trim();
-  
-    return data.filter((item) =>
-      keys(data[0]).some((key) =>
-        item[key].toString().toLowerCase().includes(query)
-      )
-    );
-  }
+  const query = search.toString().toLowerCase().trim();
+
+  return data.filter((item) =>
+    keys(data[0]).some((key) =>
+      item[key].toString().toLowerCase().includes(query)
+    )
+  );
+}
 
 interface ItemData {
   _id: string;
@@ -130,6 +130,7 @@ interface moreInfo {
   totalSoldPrice: number;
 
   discount: number;
+
 }
 const Invoices = () => {
   const [search, setSearch] = useState("");
@@ -138,12 +139,16 @@ const Invoices = () => {
   const [sortedData, setSortedData] = useState<Data[]>([]);
 
   // use react query and fetch data
-  const { data = [], isLoading, isError } = useQuery(
+  const {
+    data = [],
+    isLoading,
+    isError,
+  } = useQuery(
     ["invoiceData"],
     () => {
       return InvoiceAPI.getAllInvoice().then((res) => res.data);
     },
-    { initialData: []}
+    { initialData: [] }
   );
 
   // Format the prices
@@ -157,10 +162,10 @@ const Invoices = () => {
   const [openedMoreInfo, setOpenedMoreInfo] = useState(false);
 
   // invoice modal
-  const[opnedInvoiceModal,setOpenedInvoiceModal] = useState(false);
+  const [opnedInvoiceModal, setOpenedInvoiceModal] = useState(false);
 
-  const[invoiceData,setInvoiceData] = useState();
-  
+  const [invoiceData, setInvoiceData] = useState();
+
   // store row information
   const [row, setRow] = useState<moreInfo>({
     _id: "",
@@ -192,7 +197,6 @@ const Invoices = () => {
     discount: 0,
   });
 
-  
   // search filter
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.currentTarget;
@@ -202,78 +206,94 @@ const Invoices = () => {
       setSortedData([]);
     }
   };
-  
-
 
   // rows map
-  const rows = Array.isArray(data) ? data?.map((row: any) => (
-    <tr key={row._id}>
-      <td>
-        <Text size={15}>{row.invoice_id}</Text>
-      </td>
-      <td>
-        <Text size={15}>{row.cusName}</Text>
-      </td>
-      <td>
-        {row.cusAddress.length === 0 ? (<Text size={15} color={"red"}>N/A</Text>):<Text size={15}>{row.cusAddress}</Text>}
-      </td>
-      <td>
-        <Text size={15}>{row.cusPhone}</Text>
-      </td>
-      <td>
-        {row.cusEmail.length === 0 ? (<Text size={15} color={"red"}>N/A</Text>):<Text size={15}>{row.cusEmail}</Text>}
-      </td>
-      <td>
-        <Text size={15}>
-          {row.discount === 0 ? (
-            <Text color="red" weight={500}>
-              NO DISCOUNT
+  const rows = Array.isArray(data)
+    ? data?.map((row: any) => (
+        <tr key={row._id}>
+          <td>
+            <Text size={15}>{row.invoice_id}</Text>
+          </td>
+          <td>
+            <Text size={15}>{row.cusName}</Text>
+          </td>
+          <td>
+            {row.cusAddress.length === 0 ? (
+              <Text size={15} color={"red"}>
+                N/A
+              </Text>
+            ) : (
+              <Text size={15}>{row.cusAddress}</Text>
+            )}
+          </td>
+          <td>
+            <Text size={15}>{row.cusPhone}</Text>
+          </td>
+          <td>
+            {row.cusEmail.length === 0 ? (
+              <Text size={15} color={"red"}>
+                N/A
+              </Text>
+            ) : (
+              <Text size={15}>{row.cusEmail}</Text>
+            )}
+          </td>
+          <td>
+            <Text size={15}>
+              {row.discount === 0 ? (
+                <Text color="red" weight={500}>
+                  NO DISCOUNT
+                </Text>
+              ) : (
+                rupee.format(row.discount)
+              )}
             </Text>
-          ) : (
-            rupee.format(row.discount)
-          )}
-        </Text>
-      </td>
-      <td>
-        <Text size={15}>{rupee.format(row.totalSoldPrice)}</Text>
-      </td>
-      <td>
-        <td>
-          {new Date(row.issuedDate).toLocaleDateString("en-GB").split("T")[0]}
-        </td>
-        <Text size={15}>{row.sellingPrice}</Text>
-      </td>
-      <td>
-        <Group spacing={"sm"}>
-          <Tooltip label="View more information">
-            <ActionIcon
-              color="teal"
-              size={"sm"}
-              onClick={() => {
-                setRow(row);
-                setOpenedMoreInfo(true);
-              }}
-            >
-              <IconEye />
-            </ActionIcon>
-          </Tooltip>
+          </td>
+          <td>
+            <Text size={15}>{rupee.format(row.totalSoldPrice)}</Text>
+          </td>
+          <td>
+            <td>
+              {
+                new Date(row.issuedDate)
+                  .toLocaleDateString("en-GB")
+                  .split("T")[0]
+              }
+            </td>
+            <Text size={15}>{row.sellingPrice}</Text>
+          </td>
+          <td>
+            <Group spacing={"sm"}>
+              <Tooltip label="View more information">
+                <ActionIcon
+                  color="teal"
+                  size={"sm"}
+                  onClick={() => {
+                    setRow(row);
+                    setOpenedMoreInfo(true);
+                  }}
+                >
+                  <IconEye />
+                </ActionIcon>
+              </Tooltip>
 
-          <Tooltip label="Download Invoice">
-            <ActionIcon
-              color="blue"
-              size={"sm"}
-              onClick={() => {
-                setOpenedInvoiceModal(true);
-                setInvoiceData(row);
-              }}
-            >
-              <IconDownload />
-            </ActionIcon>
-          </Tooltip>
-        </Group>
-      </td>
-    </tr>
-  )):null;
+              <Tooltip label="Download Invoice">
+                <ActionIcon
+                  color="blue"
+                  size={"sm"}
+                  onClick={() => {
+                    setOpenedInvoiceModal(true);
+                    setInvoiceData(row);
+                  }}
+                >
+                  <IconDownload />
+                </ActionIcon>
+              </Tooltip>
+            </Group>
+          </td>
+        </tr>
+      ))
+    : null;
 
   // if data is fetching this overalay will be shows to the user
   if (isLoading) {
@@ -292,7 +312,7 @@ const Invoices = () => {
 
   const moreInfoRows = row.items.map((item: ItemData) => (
     <tr id={item._id}>
-      <td>{item.brand}</td>      
+      <td>{item.brand}</td>
       <td>{rupee.format(item.price)}</td>
       <td>{item.quantity}</td>
       <td>{rupee.format(item.totalPrice)}</td>
@@ -302,14 +322,20 @@ const Invoices = () => {
   // table
   return (
     <div>
-
       {/* invoice moda */}
-      <Modal onClose={()=>{setOpenedInvoiceModal(false);}} opened={opnedInvoiceModal} size={"50%"}>
-        <InvoiceTemplate data={invoiceData}/>
+      <Modal
+        onClose={() => {
+          setOpenedInvoiceModal(false);
+        }}
+        opened={opnedInvoiceModal}
+        size={"50%"}
+      >
+        <InvoiceTemplate data={invoiceData} />
       </Modal>
 
       {/* more Information Modal */}
       <Modal
+        style={{ marginLeft: "120px" }}
         size={"80%"}
         opened={openedMoreInfo}
         onClose={() => {
@@ -342,25 +368,29 @@ const Invoices = () => {
             totalSoldPrice: 0,
 
             discount: 0,
+
           });
         }}
       >
-        <Text weight={600} size={"lg"} align="center">
-          {`${row.invoice_id} (Items)`}
+        <Text weight={600} size={"lg"} align="center" mb={40}>
+          {`${row.invoice_id} (Service Details)`}
         </Text>
         <Table
           highlightOnHover
-          horizontalSpacing={100}
-          verticalSpacing="md"
-          mt={10}
+          horizontalSpacing={60}
+          verticalSpacing={10}
           miw={700}
           sx={{ tableLayout: "fixed" }}
+          striped
+          withBorder
+          withColumnBorders
+          style={{ marginLeft: "0px" }}
         >
           <thead
             className={cx(classes.header, { [classes.scrolled]: scrolled })}
           >
             <tr>
-              <th>Service</th>              
+              <th>Service</th>
               <th>Price</th>
               <th>Quantity</th>
               <th>Total Price</th>
@@ -370,8 +400,11 @@ const Invoices = () => {
         </Table>
       </Modal>
       {/* search bar */}
+      <Text fw={700} fz={30} style={{ textAlign: "center" }}>
+        Invoices
+      </Text>
       <TextInput
-        placeholder="Search by any field"
+        placeholder="Search..."
         mt={50}
         mb={50}
         icon={<IconSearch size="0.9rem" stroke={1.5} />}
@@ -388,10 +421,13 @@ const Invoices = () => {
       >
         <Table
           highlightOnHover
-          horizontalSpacing={100}
-          verticalSpacing="md"
-          miw={700}
-          sx={{ tableLayout: "fixed" }}
+          //horizontalSpacing={60}
+          //verticalSpacing={20}
+          //sx={{ tableLayout: "fixed" }}
+          striped
+          withBorder
+          withColumnBorders
+          style={{ marginLeft: "0px", textAlign: "start" }}
         >
           <thead
             className={cx(classes.header, { [classes.scrolled]: scrolled })}
@@ -409,17 +445,19 @@ const Invoices = () => {
             </tr>
           </thead>
           <tbody>
-            {rows !== null ? rows.length > 0 ? (
-              rows
-            ) : (
-              <tr>
-                <td colSpan={9}>
-                  <Text weight={500} align="center">
-                    Nothing found
-                  </Text>
-                </td>
-              </tr>
-            ):null}
+            {rows !== null ? (
+              rows.length > 0 ? (
+                rows
+              ) : (
+                <tr>
+                  <td colSpan={9}>
+                    <Text weight={500} align="center">
+                      Nothing found
+                    </Text>
+                  </td>
+                </tr>
+              )
+            ) : null}
           </tbody>
         </Table>
       </ScrollArea>

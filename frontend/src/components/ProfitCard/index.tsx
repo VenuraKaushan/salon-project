@@ -382,7 +382,7 @@ export function StatsProfitCard() {
 
       if (isWithinMonth(date, issuedDate)) {
         setMonthProfit(
-          (prev) => prev + invoice.totalSoldPrice - invoice.totalActualPrice  
+          (prev) => prev + invoice.totalSoldPrice + invoice.totalActualPrice  
         );
 
         invoice.items.forEach((items: any) => {
@@ -419,9 +419,6 @@ export function StatsProfitCard() {
 
   return (
     <>
-          <center>
-            <h1>PROFIT OF THE DAY</h1>
-          </center>
 
       {/* weekly profit expandable modal */}
       <Modal
@@ -520,7 +517,7 @@ export function StatsProfitCard() {
             style={{ height: "430px" }}
           >
             <Text weight={500} size={30}>
-              <center>WEEKLY PROFIT & SERVICE COUNT</center>
+              <center>WEEKLY REVENUE & SERVICE COUNT</center>
             </Text>
             <div className={classes.dateInputContainer}>
               <DateInput
@@ -582,13 +579,13 @@ export function StatsProfitCard() {
             style={{ height: "430px" }}
           >
             <Text weight={500} size={30}>
-              <center>MONTHLY PROFIT & SERVICE COUNT</center>
+              <center>MONTHLY REVENUE & SERVICE COUNT</center>
             </Text>
             <div className={classes.dateInputContainer}>
               <MonthPickerInput
                 className={classes.dateInput}
                 placeholder="Choose a Month"
-                label="Choose a Month to view profit"
+                label="Choose a Month to view revenue"
                 valueFormat="YYYY MMM DD"
                 withAsterisk
                 onChange={calculateMonthlyProfitAndItemCount} // Update the onChange function to the new one

@@ -1,4 +1,4 @@
-import { Grid } from "@mantine/core";
+import { Center, Grid } from "@mantine/core";
 import ManageStocks from "../../components/manageStocks";
 import WorkerDashboardHeader from "../../components/workerDashboardHeader";
 import AdminDashboardNav from "../../components/adminDashboard";
@@ -6,8 +6,14 @@ import AdminDashboardNav from "../../components/adminDashboard";
 const WorkerDashboaord = () => {
   return (
     <div>
-      <WorkerDashboardHeader link_id={0} />
-      <ManageStocks />
+      <Grid>
+        <Grid.Col span={"content"}>
+          <AdminDashboardNav link_id={5} />
+        </Grid.Col>
+        <Grid.Col span={"auto"}>
+          <ManageStocks />
+        </Grid.Col>
+      </Grid>   
     </div>
   );
 };

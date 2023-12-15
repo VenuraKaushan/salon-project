@@ -14,7 +14,7 @@ const AdminDashboard = () => {
 
         <Grid.Col span={"auto"}>
           <center>
-            <h1>PROFIT OF THE DAY</h1>
+            <h1>REVENUE OF THE DAY</h1>
           </center>
           <StatsProfitCard />
           {/* <Chart/> */}

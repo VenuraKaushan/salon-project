@@ -17,6 +17,8 @@ import {
   IconLock,
   IconSquareRoundedCheck,
   IconReportMoney,
+  IconFileInvoice,
+  IconCalendarCheck,
 } from '@tabler/icons-react';
 
 const adminDashboardNav = createStyles((theme) => ({
@@ -99,9 +101,9 @@ const links = [
   { link: '/admin/completed', label: 'Completed Appointments', icon: IconSquareRoundedCheck},
   // { link: '/admin/clients', label: 'Clients', icon: IconUsers, },
   { link: '/admin/catalog', label: 'Inventory', icon: IconBuildingStore },
-  { link: '/admin/workerdashboardHeader', label: 'Cash Management', icon: IconReportMoney },
-  { link: 'admin/catalog', label: 'Security', icon: IconLock },
-  { link: 'admin/catalog', label: 'Other Settings', icon: IconSettings },
+  { link: '/admin/workerdashboardHeader', label: 'Services', icon: IconReportMoney },
+  { link: '/admin/stokepage', label: 'Pending Services', icon: IconCalendarCheck },
+  { link: '/worker/invoice', label: 'Invoices', icon: IconFileInvoice },
 ];
 
 
