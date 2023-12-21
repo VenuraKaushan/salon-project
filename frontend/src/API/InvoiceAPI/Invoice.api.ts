@@ -24,6 +24,10 @@ class InvoiceAPI{
         return axios.post(`${BASE_URL}/invoice/secret/addInvoice`,values,{withCredentials:true});
 
     }
+
+    static getNonHideInvoice = ()=>{
+        return axios.get(`${BASE_URL}/invoice/nonhideinvoice`,{withCredentials:true});
+    }
 };
 
 export default InvoiceAPI;

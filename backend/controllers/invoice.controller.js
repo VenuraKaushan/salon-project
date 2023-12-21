@@ -166,3 +166,14 @@ export const saveSecretServiceInvoice = async (req, res) => {
     res.status(500).json({ error: err, message: "Invoice saved failed!" }); //if anything went wrong this error response will forwarded
   }
 }
+
+export const getNonHideInvoice = async(req,res)=>{
+  try{
+    const allNonHideInvoice = await Invoice.find({isHide:false});
+
+    res.status(200).json(allNonHideInvoice);
+
+  }catch(err){
+    res.status(500).json({message:"Failed to fetch",error:err })
+  }
+}
