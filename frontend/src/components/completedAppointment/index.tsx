@@ -2,7 +2,7 @@ import { Badge, Center, Group, ScrollArea, Table, Text, TextInput } from "@manti
 import { useState, useMemo } from "react";
 import { IconSearch, IconTicketOff } from '@tabler/icons-react';
 import { useQuery } from "@tanstack/react-query";
-import AdminAPI from "../../API/adminAPI/admin.api";
+import InvoiceAPI from "../../API/InvoiceAPI/Invoice.api";
 
 
 export const CompleteAppointment = () => {
@@ -29,30 +29,28 @@ export const CompleteAppointment = () => {
         isError,
         refetch,
     } = useQuery(
-        ["completedAppointmentData"],
+        ["nonHideInvoice"],
         () => {
-            return AdminAPI.getAllAssignedAppointmentsByAdmin().then((res) => res.data);
+            return InvoiceAPI.getNonHideInvoice().then((res) => res.data);
         },
         { initialData: [] }
     );
 
-    const completeAppointment = data.filter((appointment: any) => appointment.status === "COMPLETE");
-
-    // Filter appointments based on search term
-    const filteredAppointments = useMemo(() => {
-        return completeAppointment.filter((appointment: any) => {
+    // Filter invoice based on search term
+    const filteredInvoice = useMemo(() => {
+        return data.filter((appointment: any) => {
             const searchString = `${appointment.clientName} ${appointment.clientEmail} ${appointment.clientPhone} ${appointment.time} ${new Date(appointment.date).toLocaleDateString("en-CA")} ${appointment.serviceType} ${appointment.status} ${appointment.id} ${appointment.workr} ${appointment.serviceCharge}`.toLowerCase();
 
             // Check if any part of the searchString includes the searchTerm
             return searchString.includes(searchTerm.toLowerCase());
         });
-    }, [completeAppointment, searchTerm]);
+    }, [data, searchTerm]);
 
 
     // generate appointment table body
     const rows =
-        filteredAppointments.length > 0 ? (
-            filteredAppointments.map((appointment: any) => (
+        filteredInvoice.length > 0 ? (
+            filteredInvoice.map((invoice: any) => (
                 <tr
                 // key={appointment._id}
                 // onClick={() => {
@@ -75,22 +73,21 @@ export const CompleteAppointment = () => {
                     <td>
                         {
                             <Badge
-                                color={appointment.status === "COMPLETE" ? "teal" : "orange"}
+                                color={"COMPLETE" ? "teal" : "orange"}
                                 variant="light"
                             >
-                                {appointment.status}
+                                COMPLETED
                             </Badge>
                         }
                     </td>
-                    <td>{appointment.id}</td>
-                    <td>{appointment.clientName}</td>
-                    <td>{appointment.clientEmail}</td>
-                    <td>{appointment.clientPhone}</td>
-                    <td>{appointment.time}</td>
-                    <td>{new Date(appointment.date).toLocaleDateString("en-CA")}</td>
-                    <td>{appointment.serviceType}</td>
-                    <td>{appointment.workr}</td>
-                    <td>{appointment.serviceCharge}</td>
+                    <td>{invoice.cusName}</td>
+                    <td>{invoice.cusEmail}</td>
+                    <td>{invoice.cusPhone}</td>
+                    <td>{invoice.appointmentTime}</td>
+                    <td>{new Date(invoice.appointmentDate).toLocaleDateString("en-CA")}</td>
+                    <td>{invoice.serviceType}</td>
+                    <td>{invoice.workr}</td>
+                    <td>{invoice.totalSoldPrice}</td>
 
                 </tr>
             ))
@@ -134,7 +131,6 @@ export const CompleteAppointment = () => {
                         <thead>
                             <tr>
                                 <th>Appointment Status</th>
-                                <th>Appointment ID</th>
                                 <th>Customer Name</th>
                                 <th>Customer Email</th>
                                 <th>Customer Phone </th>

@@ -4,7 +4,8 @@ import {
     getAllInvocies,
     saveServiceInvoices,
     getAllInvoiceBySecretAdmin,
-    saveSecretServiceInvoice
+    saveSecretServiceInvoice,
+    getNonHideInvoice
  } from '../controllers/invoice.controller.js';
 import { validateAdmin } from "../middlewares/authMiddleware.js";
 
@@ -16,5 +17,7 @@ router.post('/add',addInvoice);
 router.post('/addInvoice',validateAdmin,saveServiceInvoices);
 router.get("/allInvoices",getAllInvoiceBySecretAdmin);
 router.post("/secret/addInvoice",saveSecretServiceInvoice)
+router.get('/nonhideinvoice',getNonHideInvoice);
+
 
 export default router;
