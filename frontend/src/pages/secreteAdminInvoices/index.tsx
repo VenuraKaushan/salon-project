@@ -8,7 +8,7 @@ const SecreteAdminInvoice = () => {
     <div>
       <Grid>
         <Grid.Col span={"content"}>
-          <SecreteAdminDashboardNav link_id={1} />
+          <SecreteAdminDashboardNav link_id={0} />
         </Grid.Col>
 
         <Grid.Col span={"auto"}>
