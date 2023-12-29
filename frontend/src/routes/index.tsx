@@ -20,7 +20,7 @@ import StockPage from "../pages/StockPage";
 import ProfitPage from "../pages/ProfitPage";
 import ProfitCard from "../components/ProfitCard";
 import HiddenAdminLoginPage from "../pages/Login/SecreteAdmin";
-import SecreteAdminDashboard from "../pages/secreteAdminDashboard";
+// import SecreteAdminDashboard from "../pages/secreteAdminDashboard";
 import SecreteAdminInvoice from "../pages/secreteAdminInvoices";
 
 const AllRoutes = () => {
@@ -42,7 +42,7 @@ const AllRoutes = () => {
             <Route path="/login/hiddenAdmin" element={<HiddenAdminLoginPage/>}/>
             <Route path="/login/admin" element={<AdminLoginPage />} />
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
-            <Route path="/secreteAdmin/dashboard" element={<SecreteAdminDashboard/>}/>
+            {/* <Route path="/secreteAdmin/dashboard" element={<SecreteAdminDashboard/>}/> */}
             <Route path="/admin/catalog" element={<CatalogPage />} />
             <Route path="/admin/clients" element={<ClientPage />} />
             <Route path="/admin/appointments" element={<AppointmentPage />} />

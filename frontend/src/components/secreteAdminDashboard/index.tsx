@@ -82,9 +82,8 @@ const secreteAdminDashboardNav = createStyles((theme) => ({
 }));
 
 const links = [
-  { link: '/secreteAdmin/profit',label: 'Dashboard', icon: IconGauge },
+  // { link: '/secreteAdmin/profit',label: 'Dashboard', icon: IconGauge },
   { link: '/secreteAdmin/invoices', label: 'Invoices', icon: IconCash },
-  { link: 'admin/catalog', label: 'Other Settings', icon: IconSettings },
 ];
 
 
@@ -124,7 +123,7 @@ const SecreteAdminDashboardNav = ({link_id} : any) => {
         <Navbar.Section className={classes.footer} >
           <a
           
-            href="/admin/logout"
+            href="/"
             className={classes.link}
           >
             <IconLogout className={classes.linkIcon} stroke={1.5} />

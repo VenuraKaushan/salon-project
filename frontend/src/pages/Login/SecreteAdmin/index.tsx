@@ -59,7 +59,7 @@ import {
           localStorage.setItem("email", response.data.email);
   
           // navigate to the worker dashboard
-          window.location.href = '/secreteAdmin/dashboard';
+          window.location.href = '/secreteAdmin/invoices';
         })
         .catch((error) => {
           showNotification({
